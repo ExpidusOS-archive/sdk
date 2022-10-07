@@ -5,6 +5,6 @@ bindir=@SDK_BINDIR@
 Name: expidus-sdk
 Description: The ExpidusOS SDK
 URL: https://github.com/ExpidusOS/sdk
-Version: @SMALL_VERSION@
+Version: @VERSION@
 Libs: -L${libdir}/lib
 Cflags: -I${libdir}/include
