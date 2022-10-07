@@ -39,13 +39,14 @@
         let
           pkgs = nixpkgsFor.${system};
           systemPackages = packagesFor.${system};
+          sdk-pkg = packages.${system}.default;
         in {
           default = pkgs.mkShell {
             packages = systemPackages.nativeBuildInputs ++ systemPackages.buildInputs;
           };
 
           wrapped = pkgs.mkShell {
-            packages = packages.${system}.default;
+            packages = [ sdk-pkg ];
           };
         });
     };

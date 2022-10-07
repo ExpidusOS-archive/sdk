@@ -8,6 +8,7 @@ datadir = prefix / get_option('datadir')
 libdir = prefix / get_option('libdir')
 libexecdir = prefix / get_option('libexecdir')
 localstatedir = get_option('localstatedir')
+sysconfdir = get_option('sysconfdir')
 
 longver = '@0@'.format(meson.project_version())
 shortver = longver
@@ -55,4 +56,8 @@ conf_data.set('SH_PATH', sh.full_path())
 conf_data.set('UNCRUSTIFY_PATH', uncrustify.full_path())
 conf_data.set('CLANG_FORMAT_PATH', clang_format.full_path())
 
+install_symlink('latest', install_dir: join_paths(datadir, 'expidus-sdk'), pointing_to: shortver)
+install_symlink('latest', install_dir: join_paths(libdir, 'expidus-sdk'), pointing_to: shortver)
+
+subdir('profile.d')
 subdir('wrappers')
