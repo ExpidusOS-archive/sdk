@@ -59,5 +59,6 @@ conf_data.set('CLANG_FORMAT_PATH', clang_format.full_path())
 install_symlink('latest', install_dir: join_paths(datadir, 'expidus-sdk'), pointing_to: shortver)
 install_symlink('latest', install_dir: join_paths(libdir, 'expidus-sdk'), pointing_to: shortver)
 
+subdir('data')
 subdir('profile.d')
 subdir('wrappers')

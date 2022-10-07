@@ -1,0 +1,10 @@
+libdir=@SDK_LIBDIR@
+datadir=@SDK_DATADIR@
+bindir=@SDK_BINDIR@
+
+Name: expidus-sdk
+Description: The ExpidusOS SDK
+URL: https://github.com/ExpidusOS/sdk
+Version: @SMALL_VERSION@
+Libs: -L${libdir}/lib
+Cflags: -I${libdir}/include
