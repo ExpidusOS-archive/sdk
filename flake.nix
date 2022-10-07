@@ -47,6 +47,9 @@
 
           wrapped = pkgs.mkShell {
             packages = [ sdk-pkg ];
+            shellHook = ''
+              source ${sdk-pkg}/etc/profile.d/expidus-sdk.sh
+            '';
           };
         });
     };
