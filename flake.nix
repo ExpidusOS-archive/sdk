@@ -30,6 +30,8 @@
             name = "expidus-sdk";
             src = self;
 
+            setupHooks = [ ./setup-hook.sh ];
+
             enableParallelBuilding = true;
             inherit (systemPackages) nativeBuildInputs buildInputs;
           };
@@ -47,9 +49,6 @@
 
           wrapped = pkgs.mkShell {
             packages = [ sdk-pkg ];
-            shellHook = ''
-              source ${sdk-pkg}/etc/profile.d/expidus-sdk.sh
-            '';
           };
         });
     };
