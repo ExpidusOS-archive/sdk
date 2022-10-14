@@ -35,8 +35,10 @@ sh = find_program('sh', native: false, required: true)
 uncrustify = find_program('uncrustify', native: false, required: true)
 clang_format = find_program('clang-format', native: false, required: true)
 
-sdk_datadir = join_paths(datadir, 'expidus-sdk', shortver)
-sdk_libdir = join_paths(libdir, 'expidus-sdk', shortver)
+target_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
+
+sdk_datadir = join_paths(datadir, 'expidus-sdk', shortver, target_system)
+sdk_libdir = join_paths(libdir, 'expidus-sdk', shortver, target_system)
 sdk_bindir = join_paths(sdk_libdir, 'bin')
 
 conf_data.set('PREFIX', prefix)
