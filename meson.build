@@ -49,6 +49,7 @@ conf_data.set('LIBEXECDIR', libexecdir)
 conf_data.set('VERSION', longver)
 conf_data.set('BUILDDIR', meson.current_build_dir())
 conf_data.set('SOURCEDIR', meson.current_source_dir())
+conf_data.set('TARGET_SYSTEM', target_system)
 
 conf_data.set('SDK_DATADIR', sdk_datadir)
 conf_data.set('SDK_LIBDIR', sdk_libdir)
