@@ -22,7 +22,7 @@
           buildInputs = [ uncrustify clang_14 ];
         });
     in rec {
-      inherit lib;
+      lib = lib.expidus;
 
       packages = forAllSystems (system:
         let

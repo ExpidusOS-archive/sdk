@@ -1,5 +1,5 @@
-{ system ? builtins.currentSystem or "unknown-system" }:
+args:
 let
-  base = import ./pkgs-base.nix { inherit system; };
-  extend = import ./pkgs-extend.nix { inherit system; };
+  base = import ./pkgs-base.nix args;
+  extend = import ./pkgs-extend.nix args;
 in base // extend

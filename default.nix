@@ -1,5 +1,5 @@
-{ system ? builtins.currentSystem or "unknown-system" }:
+args:
 let
   lib = import ./lib/default.nix;
-  pkgs = import ./lib/pkgs.nix { inherit system; };
-in pkgs // { lib.expidus = lib; }
+  pkgs = import ./lib/pkgs.nix args;
+in pkgs // { inherit lib; }
