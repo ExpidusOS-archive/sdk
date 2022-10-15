@@ -1,0 +1,3 @@
+{
+  maintainers = import ./maintainers.nix;
+}

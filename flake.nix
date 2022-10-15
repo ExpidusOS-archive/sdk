@@ -12,6 +12,7 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
+      lib = import ./lib/default.nix;
 
       packagesFor = forAllSystems (system:
         let
@@ -21,6 +22,8 @@
           buildInputs = [ uncrustify clang_14 ];
         });
     in rec {
+      inherit lib;
+
       packages = forAllSystems (system:
         let
           pkgs = nixpkgsFor.${system};
@@ -34,6 +37,12 @@
 
             enableParallelBuilding = true;
             inherit (systemPackages) nativeBuildInputs buildInputs;
+
+            meta = with pkgs.lib; {
+              homepage = "https://github.com/ExpidusOS/sdk";
+              license = with licenses; [ gpl3Only ];
+              maintainers = with lib.maintainers; [ TheComputerGuy ];
+            };
           };
         });
 
