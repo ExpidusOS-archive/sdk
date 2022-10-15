@@ -558,7 +558,7 @@ let
     (nixpkgs + "/services/misc/gammu-smsd.nix")
     (nixpkgs + "/services/misc/geoipupdate.nix")
     (nixpkgs + "/services/misc/gitea.nix")
-    (nixpkgs + "/services/misc/gitit.nix")
+    ./services/misc/gitit.nix
     (nixpkgs + "/services/misc/gitlab.nix")
     (nixpkgs + "/services/misc/gitolite.nix")
     (nixpkgs + "/services/misc/gitweb.nix")

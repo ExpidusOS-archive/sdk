@@ -106,7 +106,7 @@ let
   # `switch-to-configuration' that activates the configuration and
   # makes it bootable.
   baseSystem = pkgs.stdenvNoCC.mkDerivation {
-    name = "nixos-system-${config.system.name}-${config.system.nixos.label}";
+    name = "expidusos-system-${config.system.name}-${config.system.nixos.label}";
     preferLocalBuild = true;
     allowSubstitutes = false;
     buildCommand = systemBuilder;
@@ -340,7 +340,7 @@ in
         The name of the system used in the <option>system.build.toplevel</option> derivation.
         </para><para>
         That derivation has the following name:
-        <literal>"nixos-system-''${config.system.name}-''${config.system.nixos.label}"</literal>
+        <literal>"expidusos-system-''${config.system.name}-''${config.system.nixos.label}"</literal>
       '';
     };
 

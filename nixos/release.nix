@@ -37,7 +37,7 @@ let
     hydraJob ((import lib/eval-config.nix {
       inherit system;
       modules = makeModules module {
-        isoImage.isoBaseName = "nixos-${type}";
+        isoImage.isoBaseName = "expidus-${type}";
       };
     }).config.system.build.isoImage);
 
@@ -115,24 +115,24 @@ in rec {
   initialRamdisk = buildFromConfig ({ ... }: { }) (config: config.system.build.initialRamdisk);
 
   netboot = forMatchingSystems supportedSystems (system: makeNetboot {
-    module = (import ../lib/nixpkgs.nix) + "/modules/installer/netboot/netboot-minimal.nix";
+    module = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/netboot/netboot-minimal.nix";
     inherit system;
   });
 
   iso_minimal = forAllSystems (system: makeIso {
-    module = (import ../lib/nixpkgs.nix) + "/modules/installer/cd-dvd/installation-cd-minimal.nix";
+    module = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix";
     type = "minimal";
     inherit system;
   });
 
   iso_plasma5 = forMatchingSystems [ "x86_64-linux" ] (system: makeIso {
-    module = (import ../lib/nixpkgs.nix) + "/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix";
+    module = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix";
     type = "plasma5";
     inherit system;
   });
 
   iso_gnome = forMatchingSystems [ "x86_64-linux" ] (system: makeIso {
-    module = (import ../lib/nixpkgs.nix) + "/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix";
+    module = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix";
     type = "gnome";
     inherit system;
   });
@@ -140,23 +140,23 @@ in rec {
   # A variant with a more recent (but possibly less stable) kernel
   # that might support more hardware.
   iso_minimal_new_kernel = forMatchingSystems [ "x86_64-linux" "aarch64-linux" ] (system: makeIso {
-    module = (import ../lib/nixpkgs.nix) + "/modules/installer/cd-dvd/installation-cd-minimal-new-kernel.nix";
+    module = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/cd-dvd/installation-cd-minimal-new-kernel.nix";
     type = "minimal-new-kernel";
     inherit system;
   });
 
   sd_image = forMatchingSystems [ "armv6l-linux" "armv7l-linux" "aarch64-linux" ] (system: makeSdImage {
     module = {
-        armv6l-linux = (import ../lib/nixpkgs.nix) + "/modules/installer/sd-card/sd-image-raspberrypi-installer.nix";
-        armv7l-linux = (import ../lib/nixpkgs.nix) + "/modules/installer/sd-card/sd-image-armv7l-multiplatform-installer.nix";
-        aarch64-linux = (import ../lib/nixpkgs.nix) + "/modules/installer/sd-card/sd-image-aarch64-installer.nix";
+        armv6l-linux = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/sd-card/sd-image-raspberrypi-installer.nix";
+        armv7l-linux = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/sd-card/sd-image-armv7l-multiplatform-installer.nix";
+        aarch64-linux = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix";
       }.${system};
     inherit system;
   });
 
   sd_image_new_kernel = forMatchingSystems [ "aarch64-linux" ] (system: makeSdImage {
     module = {
-        aarch64-linux = (import ../lib/nixpkgs.nix) + "/modules/installer/sd-card/sd-image-aarch64-new-kernel-installer.nix";
+        aarch64-linux = (import ../lib/nixpkgs.nix) + "/nixos/modules/installer/sd-card/sd-image-aarch64-new-kernel-installer.nix";
       }.${system};
     type = "minimal-new-kernel";
     inherit system;
@@ -169,7 +169,7 @@ in rec {
       inherit system;
       modules =
         [ versionModule
-          ((import ../lib/nixpkgs.nix) + "/modules/installer/virtualbox-demo.nix")
+          ((import ../lib/nixpkgs.nix) + "/nixos/modules/installer/virtualbox-demo.nix")
         ];
     }).config.system.build.virtualBoxOVA)
 
@@ -181,7 +181,7 @@ in rec {
     hydraJob ((import lib/eval-config.nix {
       inherit system;
       modules = [
-        ((import ../lib/nixpkgs.nix) + "/modules/virtualisation/proxmox-image.nix")
+        ((import ../lib/nixpkgs.nix) + "/nixos/modules/virtualisation/proxmox-image.nix")
       ];
     }).config.system.build.VMA)
   );
@@ -192,7 +192,7 @@ in rec {
     hydraJob ((import lib/eval-config.nix {
       inherit system;
       modules = [
-        ((import ../lib/nixpkgs.nix) + "/modules/virtualisation/proxmox-lxc.nix")
+        ((import ../lib/nixpkgs.nix) + "/nixos/modules/virtualisation/proxmox-lxc.nix")
       ];
     }).config.system.build.tarball)
   );
@@ -292,7 +292,7 @@ in rec {
 
   # Provide container tarball for lxc, libvirt-lxc, docker-lxc, ...
   containerTarball = forAllSystems (system: makeSystemTarball {
-    module = (import ../lib/nixpkgs.nix) + "/modules/virtualisation/lxc-container.nix";
+    module = (import ../lib/nixpkgs.nix) + "/nixos/modules/virtualisation/lxc-container.nix";
     inherit system;
   });
 
@@ -324,11 +324,11 @@ in rec {
 
     tinyContainer = makeClosure ({ ... }:
       { boot.isContainer = true;
-        imports = [ ((import ../lib/nixpkgs.nix) + "/modules/profiles/minimal.nix") ];
+        imports = [ ((import ../lib/nixpkgs.nix) + "/nixos/modules/profiles/minimal.nix") ];
       });
 
     ec2 = makeClosure ({ ... }:
-      { imports = [ ((import ../lib/nixpkgs.nix) + "/modules/virtualisation/amazon-image.nix") ];
+      { imports = [ ((import ../lib/nixpkgs.nix) + "/nixos/modules/virtualisation/amazon-image.nix") ];
       });
 
     kde = makeClosure ({ ... }:
