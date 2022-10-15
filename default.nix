@@ -1,5 +1,5 @@
 args:
 let
-  lib = import ./lib/default.nix;
-  pkgs = import ./lib/pkgs.nix args;
+  lib = import ./lib;
+  pkgs = import ./pkgs args;
 in pkgs // { inherit lib; }

@@ -36,6 +36,15 @@ let
   };
   initrdRelease = pkgs.writeText "initrd-release" (attrsToText initrdReleaseContents);
 in base // {
+  options.system = base.options.system // {
+    defaultChannel = mkOption {
+      internal = true;
+      type = types.str;
+      default = "https://github.com/ExpidusOS/sdk/archive/refs/heads/master.tar.gz";
+      description = "Default NixOS channel to which the root user is subscribed.";
+    };
+  };
+
   config = base.config // {
     environment.etc = {
       "lsb-release".text = mkForce (attrsToText {
