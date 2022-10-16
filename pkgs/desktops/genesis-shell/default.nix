@@ -8,8 +8,8 @@ stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "genesis";
     fetchSubmodules = true;
-    rev = "f82e9b69fe8f5631409d937cd04e934995638c66";
-    sha256 = "uD9NRfP9dtgIzP1eVaqSbX2VlbLWhK8UAT91OeaYdcM=";
+    rev = "8457224bc0bf226665362b89ce408aa48e777c1e";
+    sha256 = "895UiVuubn7amoKuzu3URmOF3WFnHn85QnW7JByprMk=";
   };
 
   outputs = [ "out" "dev" "devdoc" ];
