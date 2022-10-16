@@ -292,7 +292,7 @@ in rec {
 
   # Provide container tarball for lxc, libvirt-lxc, docker-lxc, ...
   containerTarball = forAllSystems (system: makeSystemTarball {
-    module = (import ../lib/nixpkgs.nix) + "/nixos/modules/virtualisation/lxc-container.nix";
+    module = ./modules/virtualisation/lxc-container.nix;
     inherit system;
   });
 
