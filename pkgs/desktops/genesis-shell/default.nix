@@ -8,15 +8,15 @@ stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "genesis";
     fetchSubmodules = true;
-    rev = "f0a5036f977c11628d566c30869ff3bb7d7ca22f";
-    sha256 = "SGJgd7Eh99BNG2IgQP7ozvefNROdwhUyBZQt4/aWN5g=";
+    rev = "f82e9b69fe8f5631409d937cd04e934995638c66";
+    sha256 = "uD9NRfP9dtgIzP1eVaqSbX2VlbLWhK8UAT91OeaYdcM=";
   };
 
   outputs = [ "out" "dev" "devdoc" ];
 
   nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection ];
-  buildInputs = [ vadi libdevident libtokyo libpeas dbus ]
-    ++ lib.optional stdenv.isLinux gtk-layer-shell;
+  buildInputs = [ vadi libdevident libtokyo libpeas dbus ];
+    # FIXME: add vapi (++ lib.optional stdenv.isLinux gtk-layer-shell;)
   propagatedBuildInputs = buildInputs;
 
   meta = with lib; {
