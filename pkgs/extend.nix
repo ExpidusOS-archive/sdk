@@ -23,7 +23,7 @@ with pkgs;
     sha256 = "055b41a3pvyfm2cd09mfxj2hf52svhyzhinjcsq9lh0d050w0irr";
   })).packages.${system}.default;
 
-  expidus-terminal = (defaultNix (fetchFromGithub {
+  expidus-terminal = (defaultNix (fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "terminal";
     rev = "0048196021947a70c12fac6ab8f03810dce97ed8";
@@ -31,15 +31,15 @@ with pkgs;
     sha256 = "1qfhh00zi977z7f4pfznv84ifksdwj4w4sd9y8amaqgr507l2y5h";
   })).packages.${system}.default;
 
-  genesis-shell = (defaultNix (fetchFromGithub {
+  genesis-shell = (defaultNix (fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "genesis";
     fetchSubmodules = true;
     rev = "f0a5036f977c11628d566c30869ff3bb7d7ca22f";
-    sha256 = "10h9ygc3a1z66zbfdswcqmskf120cc7q5zlyknbj55w24x7hcgkk";
+    sha256 = "SGJgd7Eh99BNG2IgQP7ozvefNROdwhUyBZQt4/aWN5g=";
   })).packages.${system}.default;
 
-  libdevident = (defaultNix (fetchFromGithub {
+  libdevident = (defaultNix (fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "libdevident";
     fetchSubmodules = true;
@@ -47,7 +47,7 @@ with pkgs;
     sha256 = "05prm5acwxmmmwwighsd38zj3vkmpbhdyxnwp6dkqvd2icava00m";
   })).packages.${system}.default;
 
-  ntk = (defaultNix (fetchFromGithub {
+  ntk = (defaultNix (fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "ntk";
     fetchSubmodules = true;
