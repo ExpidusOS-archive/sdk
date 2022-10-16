@@ -15,48 +15,15 @@ let
   }).defaultNix;
 in
 with pkgs;
-{
+rec {
   expidus-sdk = (defaultNix ../.).packages.${system}.default;
 
-  cssparser = (defaultNix (fetchTarball {
-    url = "https://github.com/ExpidusOS/cssparser/archive/04aeffe47b1c6b4343e739f5774bcba2fc3632b9.tar.gz";
-    sha256 = "055b41a3pvyfm2cd09mfxj2hf52svhyzhinjcsq9lh0d050w0irr";
-  })).packages.${system}.default;
-
-  expidus-terminal = (defaultNix (fetchFromGitHub {
-    owner = "ExpidusOS";
-    repo = "terminal";
-    rev = "0048196021947a70c12fac6ab8f03810dce97ed8";
-    fetchSubmodules = true;
-    sha256 = "1qfhh00zi977z7f4pfznv84ifksdwj4w4sd9y8amaqgr507l2y5h";
-  })).packages.${system}.default;
-
-  genesis-shell = (defaultNix (fetchFromGitHub {
-    owner = "ExpidusOS";
-    repo = "genesis";
-    fetchSubmodules = true;
-    rev = "f0a5036f977c11628d566c30869ff3bb7d7ca22f";
-    sha256 = "SGJgd7Eh99BNG2IgQP7ozvefNROdwhUyBZQt4/aWN5g=";
-  })).packages.${system}.default;
-
-  libdevident = (defaultNix (fetchFromGitHub {
-    owner = "ExpidusOS";
-    repo = "libdevident";
-    fetchSubmodules = true;
-    rev = "e9f51c20e8465404f7939946ba0d64e9328fd243";
-    sha256 = "05prm5acwxmmmwwighsd38zj3vkmpbhdyxnwp6dkqvd2icava00m";
-  })).packages.${system}.default;
-
-  ntk = (defaultNix (fetchFromGitHub {
-    owner = "ExpidusOS";
-    repo = "ntk";
-    fetchSubmodules = true;
-    rev = "000151547a7b1ddd465c4740feeb7d5fff2de84c";
-    sha256 = "09bp4cqiy16wg254g0ij6lypxigzyifw4sigifh4zaz7ycmnha4q";
-  })).packages.${system}.default;
-
-  vadi = (defaultNix (fetchTarball {
-    url = "https://github.com/ExpidusOS/Vadi/archive/fbe39ef910dfdca2fddcccee115738885cd595e8.tar.gz";
-    sha256 = "0fkaz24p2ilr492xykj944vcvfczm8jy67zmsfj92cgpg7dq1zqp";
-  })).packages.${system}.default;
+  cssparser = pkgs.callPackage ./development/libraries/cssparser/default.nix {};
+  gxml = pkgs.callPackage ./development/libraries/gxml/default.nix {};
+  vadi = pkgs.callPackage ./development/libraries/vadi/default.nix {};
+  ntk = pkgs.callPackage ./development/libraries/ntk/default.nix { inherit cssparser; };
+  libdevident = pkgs.callPackage ./development/libraries/libdevident/default.nix { inherit gxml vadi; };
+  libtokyo = pkgs.callPackage ./development/libraries/libtokyo/default.nix { inherit vadi ntk; };
+  genesis-shell = pkgs.callPackage ./desktops/genesis-shell/default.nix { inherit vadi libtokyo libdevident; };
+  expidus-terminal = pkgs.callPackage ./applications/terminal-emulators/expidus-terminal/default.nix { inherit libtokyo; };
 }
