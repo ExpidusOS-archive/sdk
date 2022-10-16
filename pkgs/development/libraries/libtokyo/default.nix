@@ -8,7 +8,7 @@ stdenv.mkDerivation rec {
     repo = "libtokyo";
     rev = "5f210efb75496ebdf4bd29bcfcd5ddb4e59e204e";
     fetchSubmodules = true;
-    sha256 = "1uvuUP1yW2eun8Qe4h0xhFHvK05bvxEYdVX/nBHb7ZU=";
+    sha256 = "f8F62agFguiFu1/4dFH6Kg0MyjYUvoAUnVfe4IDrIys=";
   };
 
   outputs = [ "out" "dev" "devdoc" ];
