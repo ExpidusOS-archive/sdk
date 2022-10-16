@@ -46,8 +46,6 @@
           };
         });
 
-      legacyPackages = forAllSystems (system: import ./pkgs { inherit system; });
-
       devShells = forAllSystems (system:
         let
           pkgs = nixpkgsFor.${system};
