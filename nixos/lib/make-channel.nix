@@ -4,7 +4,7 @@ pkgs.releaseTools.makeSourceTarball {
   src = nixpkgs;
   officialRelease = false; # FIXME: fix this in makeSourceTarball
   inherit version versionSuffix;
-  buildInputs = [ pkgs.nix (import ../../default2.nix) ];
+  buildInputs = [ pkgs.nix ];
   distPhase = ''
     echo -n $VERSION_SUFFIX > .version-suffix
     echo -n ${nixpkgs.rev or nixpkgs.shortRev} > .git-revision
