@@ -8,7 +8,7 @@ with import ((import ../lib/nixpkgs.nix) + "/pkgs/top-level/release-lib.nix") { 
 let
   version = fileContents ../.version;
   versionSuffix =
-    (if stableBranch then "." else "beta") + "${toString (nixpkgs.revCount - 379959)}.${nixpkgs.shortRev}";
+    (if stableBranch then "." else "-alpha") + "${toString (nixpkgs.revCount - 379959)}.${nixpkgs.shortRev}";
   allTestsForSystem = system:
     import ((import ../lib/nixpkgs.nix) + "/nixos/tests/all-tests.nix") {
       inherit system;
