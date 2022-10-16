@@ -6,9 +6,9 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "libtokyo";
-    rev = "b07b2a4248c725ac49692172c23e6214f3f4e9d9";
+    rev = "c116b2796947affbab6969f5ee61bbe1684e8ae2";
     fetchSubmodules = true;
-    sha256 = "hqHHklVBk33fj38Bafydk8k/1SSwXGyV5b68j/naBKo=";
+    sha256 = "1uvuUP1yW2eun8Qe4h0xhFHvK05bvxEYdVX/nBHb7ZU=";
   };
 
   outputs = [ "out" "dev" "devdoc" ];
