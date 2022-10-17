@@ -16,6 +16,35 @@
       nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
       lib = import ./lib/extend.nix // {
         inherit forAllSystems nixpkgsFor supportedSystems;
+
+        mkFlake = { self, name }: {
+          overlays.default = final: prev: {
+            ${name} = (prev.${name}.overrideAttrs (old: {
+              version = self.rev or "dirty";
+              src = builtins.path {
+                inherit name;
+                path = prev.lib.cleanSource (builtins.toString self);
+              };
+            }));
+          };
+
+          packages = forAllSystems (system:
+            let
+              pkgs = nixpkgsFor.${system};
+            in {
+              default = (self.overlays.default pkgs pkgs).${name};
+            });
+
+          devShells = forAllSystems (system:
+            let
+              pkgs = nixpkgsFor.${system};
+              pkg = self.packages.${system}.default;
+            in {
+              default = pkgs.mkShell {
+                packages = pkg.nativeBuildInputs ++ pkg.buildInputs;
+              };
+            });
+        };
       };
 
       packagesFor = forAllSystems (system:
