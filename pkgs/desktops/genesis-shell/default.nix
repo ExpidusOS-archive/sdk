@@ -7,9 +7,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "genesis";
-    fetchSubmodules = true;
-    rev = "8457224bc0bf226665362b89ce408aa48e777c1e";
-    sha256 = "895UiVuubn7amoKuzu3URmOF3WFnHn85QnW7JByprMk=";
+    rev = "9db39f9cb2017db03ca4c94409aeee19073940f2";
+    sha256 = "0EwB2o9e+vZi0CSsmzyzepFN8lCd4w5VzO7ovcCm34Y=";
   };
 
   outputs = [ "out" "dev" "devdoc" ];
@@ -18,6 +17,8 @@ stdenv.mkDerivation rec {
   buildInputs = [ vadi libdevident libtokyo libpeas dbus ];
     # FIXME: add vapi (++ lib.optional stdenv.isLinux gtk-layer-shell;)
   propagatedBuildInputs = buildInputs;
+
+  mesonFlags = optional stdenv.isDarwin "-Ddbus=disabled";
 
   meta = with lib; {
     description = "The next generation desktop and mobile shell";

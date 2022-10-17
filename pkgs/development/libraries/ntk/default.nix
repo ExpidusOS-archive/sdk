@@ -9,9 +9,9 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "ntk";
+    rev = "161391771bdb4d167dbd0f884fa36b164d8a1bc1";
+    sha256 = "j6KWYlio5lHymH9rgPmTmb6NBIuYUHfRsGVzUOa/Pb4=";
     fetchSubmodules = true;
-    rev = "2b3e30b181a4ab872e837f705fe3a88ef45be73d";
-    sha256 = "aQxu5a3/p2uwbAhSQOMqMa2WJuT8PwHIQEYS/gb0LR8=";
   };
 
   nativeBuildInputs = [ meson ninja vala pkg-config gobject-introspection ];
