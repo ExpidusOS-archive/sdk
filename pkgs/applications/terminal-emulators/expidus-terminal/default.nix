@@ -8,7 +8,7 @@ stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "terminal";
     rev = "ee91c8e2aef12575f41cbbe4b6dab9c8ee1b3bc1";
-    sha256 = "TZj66FuE/OuwWgv7RaditrZpCTmbW/fjRASajPtPlIk=";
+    sha256 = "DemU7V8iy0qH1JFyJw1UOqbYX8NfV3+Ydpq50jR6a+w=";
   };
 
   nativeBuildInputs = [ meson ninja vala pkg-config ];

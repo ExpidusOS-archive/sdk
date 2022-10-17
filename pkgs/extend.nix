@@ -16,6 +16,19 @@ let
 in
 with pkgs;
 rec {
+  libadwaita = pkgs.libadwaita.overrideAttrs (old: {
+    doCheck = pkgs.stdenv.isLinux;
+    buildInputs = old.buildInputs ++ pkgs.lib.optionals pkgs.stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
+      AppKit Foundation
+    ]);
+    meta.platforms = pkgs.lib.platforms.unix;
+  });
+
+  vte = pkgs.vte.overrideAttrs (old: {
+    mesonFlags = old.mesonFlags ++ [ "-D_b_symbolic_functions=false" ];
+    meta.broken = false;
+  });
+
   expidus-sdk = (defaultNix ../.).packages.${system}.default;
 
   cssparser = pkgs.callPackage ./development/libraries/cssparser/default.nix {};
@@ -23,7 +36,7 @@ rec {
   vadi = pkgs.callPackage ./development/libraries/vadi/default.nix {};
   ntk = pkgs.callPackage ./development/libraries/ntk/default.nix { inherit cssparser; };
   libdevident = pkgs.callPackage ./development/libraries/libdevident/default.nix { inherit gxml vadi; };
-  libtokyo = pkgs.callPackage ./development/libraries/libtokyo/default.nix { inherit vadi ntk; };
+  libtokyo = pkgs.callPackage ./development/libraries/libtokyo/default.nix { inherit vadi ntk libadwaita; };
   genesis-shell = pkgs.callPackage ./desktops/genesis-shell/default.nix { inherit vadi libtokyo libdevident; };
-  expidus-terminal = pkgs.callPackage ./applications/terminal-emulators/expidus-terminal/default.nix { inherit libtokyo; };
+  expidus-terminal = pkgs.callPackage ./applications/terminal-emulators/expidus-terminal/default.nix { inherit libtokyo vte; };
 }

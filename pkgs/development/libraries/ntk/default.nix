@@ -15,8 +15,10 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ meson ninja vala pkg-config gobject-introspection ];
-  buildInputs = [ cairo gtk4 libglvnd cssparser ] ++ optional stdenv.isLinux mesa;
+  buildInputs = [ cairo gtk4 libglvnd cssparser ] ++ optionals stdenv.isLinux [ mesa libdrm ];
   propagatedBuildInputs = buildInputs;
+
+  mesonFlags = optionals stdenv.isDarwin [ "-Ddrm=disabled" ];
 
   doChecks = true;
 
