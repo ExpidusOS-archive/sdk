@@ -12,7 +12,7 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
-      lib = import ./lib/default.nix;
+      lib = import ./lib/extend.nix // { inherit forAllSystems nixpkgsFor; };
 
       packagesFor = forAllSystems (system:
         let
@@ -22,9 +22,7 @@
           buildInputs = [ uncrustify clang_14 ];
         });
     in rec {
-      lib = lib.expidus // {
-        inherit forAllSystems nixpkgsFor;
-      };
+      inherit lib;
 
       packages = forAllSystems (system:
         let
