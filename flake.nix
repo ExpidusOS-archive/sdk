@@ -1,8 +1,10 @@
 {
   description = "SDK for ExpidusOS";
 
-  outputs = { self, nixpkgs }:
+  outputs = { self }:
     let
+      nixpkgs-lib = import ((import ./lib/nixpkgs.nix) + "/lib/");
+
       supportedSystems = [
         "aarch64-linux"
         "i686-linux"
@@ -10,9 +12,11 @@
         "x86_64-linux"
         "x86_64-darwin"
       ];
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+      forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
-      lib = import ./lib/extend.nix // { inherit forAllSystems nixpkgsFor; };
+      lib = import ./lib/extend.nix // {
+        inherit forAllSystems nixpkgsFor supportedSystems;
+      };
 
       packagesFor = forAllSystems (system:
         let
