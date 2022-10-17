@@ -1,4 +1,4 @@
 fetchTarball {
   url = "https://github.com/NixOS/nixpkgs/archive/refs/heads/nixos-22.05.tar.gz";
-  sha256 = "1rq4m1g7apvcgjp21xjhm94acpw6wyiddd48vhcwgwvsiiircwff";
+  sha256 = "17fyr4ry58fwj6jybdwy3vb7bz41dnkrbflbb93f0aaqzrpasfsm";
 }
