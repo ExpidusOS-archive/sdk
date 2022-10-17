@@ -11,7 +11,7 @@
         "x86_64-darwin"
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-      nixpkgsFor = forAllSystems (system: import nixpkgs { inherit system; });
+      nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
       lib = import ./lib/default.nix;
 
       packagesFor = forAllSystems (system:
@@ -22,7 +22,9 @@
           buildInputs = [ uncrustify clang_14 ];
         });
     in rec {
-      lib = lib.expidus;
+      lib = lib.expidus // {
+        inherit forAllSystems nixpkgsFor;
+      };
 
       packages = forAllSystems (system:
         let
