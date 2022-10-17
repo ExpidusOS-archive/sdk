@@ -7,7 +7,7 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "terminal";
-    rev = "0048196021947a70c12fac6ab8f03810dce97ed8";
+    rev = "ee91c8e2aef12575f41cbbe4b6dab9c8ee1b3bc1";
     sha256 = "TZj66FuE/OuwWgv7RaditrZpCTmbW/fjRASajPtPlIk=";
   };
 
