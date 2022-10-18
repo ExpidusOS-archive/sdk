@@ -16,6 +16,8 @@ let
 in
 with pkgs;
 rec {
+  gtk-layer-shell = pkgs.callPackage ./development/libraries/gtk-layer-shell/default.nix {};
+
   libadwaita = pkgs.libadwaita.overrideAttrs (old: {
     doCheck = pkgs.stdenv.isLinux;
     buildInputs = old.buildInputs ++ pkgs.lib.optionals pkgs.stdenv.isDarwin (with pkgs.darwin.apple_sdk.frameworks; [
@@ -37,6 +39,6 @@ rec {
   ntk = pkgs.callPackage ./development/libraries/ntk/default.nix { inherit cssparser; };
   libdevident = pkgs.callPackage ./development/libraries/libdevident/default.nix { inherit gxml vadi; };
   libtokyo = pkgs.callPackage ./development/libraries/libtokyo/default.nix { inherit vadi ntk libadwaita; };
-  genesis-shell = pkgs.callPackage ./desktops/genesis-shell/default.nix { inherit vadi libtokyo libdevident; };
+  genesis-shell = pkgs.callPackage ./desktops/genesis-shell/default.nix { inherit vadi libtokyo libdevident gtk-layer-shell; };
   expidus-terminal = pkgs.callPackage ./applications/terminal-emulators/expidus-terminal/default.nix { inherit libtokyo vte; };
 }
