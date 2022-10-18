@@ -14,8 +14,8 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "devdoc" ];
 
   nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection ];
-  buildInputs = [ vadi libdevident libtokyo libpeas dbus ];
-    # FIXME: add vapi (++ lib.optional stdenv.isLinux gtk-layer-shell;)
+  buildInputs = [ vadi libdevident libtokyo libpeas dbus ]
+    ++ optional stdenv.isLinux gtk-layer-shell;
   propagatedBuildInputs = buildInputs;
 
   mesonFlags = optional stdenv.isDarwin "-Ddbus=disabled";
