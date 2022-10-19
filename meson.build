@@ -77,8 +77,15 @@ if nix.found()
   install_data('data/flake-registry.json', install_dir: join_paths(sdk_libdir, 'nix'))
 
   conf_data.set('NIX_CHANNELDIR', nix_channeldir)
+
+  nix_profiledir = join_paths(sdk_datadir, 'nix', 'profile')
+
+  # TODO: make our custom nix profile
+
+  conf_data.set('NIX_PROFILEDIR', nix_profiledir)
 else
   conf_data.set('NIX_CHANNELDIR', '')
+  conf_data.set('NIX_PROFILEDIR', '')
 endif
 
 subdir('data')

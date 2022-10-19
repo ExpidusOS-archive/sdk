@@ -17,3 +17,7 @@ if [[ ! -z "@NIX_CHANNELDIR@" ]]; then
   # FIXME: check if path is not already added
   export NIX_PATH="nixpkgs=$EXPIDUS_SDK_LIBDIR/nix/channel:$NIX_PATH"
 fi
+
+if [[ ! -z "@NIX_PROFILEDIR@" ]]; then
+  # TODO: load our custom nix profile
+fi
