@@ -12,3 +12,8 @@ export GI_TYPELIB_PATH="${EXPIDUS_SDK_LIBDIR}/girepository-1.0${GI_TYPELIB_PATH/
 
 export PKG_CONFIG_PATH=:$PKG_CONFIG_PATH
 export PKG_CONFIG_PATH="${EXPIDUS_SDK_LIBDIR}/pkgconfig${PKG_CONFIG_PATH//:${EXPIDUS_SDK_LIBDIR}\/pkgconfig/}"
+
+if [[ ! -z "@NIX_CHANNELDIR@" ]]; then
+  # FIXME: check if path is not already added
+  export NIX_PATH="nixpkgs=$EXPIDUS_SDK_LIBDIR/nix/channel:$NIX_PATH"
+fi

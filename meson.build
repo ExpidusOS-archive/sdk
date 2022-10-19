@@ -68,10 +68,16 @@ install_symlink('latest', install_dir: join_paths(libdir, 'expidus-sdk'), pointi
 
 if nix.found()
   nix_channeldir = join_paths(sdk_libdir, 'nix', 'channel')
+
   install_subdir('lib', install_dir: nix_channeldir, strip_directory: false)
   install_subdir('nixos', install_dir: nix_channeldir, strip_directory: false)
-  install_data('default.nix', install_dir: nix_channeldir, strip_directory: false)
-  install_data('flake.nix', install_dir: nix_channeldir, strip_directory: false)
+  install_subdir('pkgs', install_dir: nix_channeldir, strip_directory: false)
+  install_data('default.nix', install_dir: nix_channeldir)
+  install_data('flake.nix', install_dir: nix_channeldir)
+
+  conf_data.set('NIX_CHANNELDIR', nix_channeldir)
+else
+  conf_data.set('NIX_CHANNELDIR', '')
 endif
 
 subdir('data')
