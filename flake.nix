@@ -1,7 +1,7 @@
 {
   description = "SDK for ExpidusOS";
 
-  outputs = { self }:
+  outputs = { self }@inputs:
     let
       nixpkgs-lib = import ((import ./lib/nixpkgs.nix) + "/lib/");
 
@@ -14,16 +14,30 @@
       ];
       forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
+
+      emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; };
+
       lib = import ./lib/extend.nix // {
         inherit forAllSystems nixpkgsFor supportedSystems;
 
-        mkFlake = { self, name }: {
-          overlays.default = final: prev: {
-            ${name} = (prev.${name}.overrideAttrs (old: {
+        mkFlake = {
+          self,
+          target ? "default",
+          name,
+          packagesFor ? { final, prev, old }: emptyPackages
+        }: {
+          overlays.${target} = final: prev: {
+            ${name} = (prev.${name}.overrideAttrs (old:
+            let
+              packages = emptyPackages // (packagesFor { inherit final prev old; });
+            in {
               version = self.rev or "dirty";
               src = builtins.path {
                 inherit name;
                 path = prev.lib.cleanSource (builtins.toString self);
+                nativeBuildInputs = old.nativeBuildInputs ++ packages.nativeBuildInputs;
+                buildInputs = old.buildInputs ++ packages.buildInputs;
+                propagatedBuildInputs = old.propagatedBuildInputs ++ packages.propagatedBuildInputs;
               };
             }));
           };
@@ -32,16 +46,17 @@
             let
               pkgs = nixpkgsFor.${system};
             in {
-              default = (self.overlays.default pkgs pkgs).${name};
+              ${target} = (self.overlays.default pkgs pkgs).${name};
             });
 
           devShells = forAllSystems (system:
             let
               pkgs = nixpkgsFor.${system};
-              pkg = self.packages.${system}.default;
+              pkg = self.packages.${system}.${target};
+              packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
             in {
-              default = pkgs.mkShell {
-                packages = pkg.nativeBuildInputs ++ pkg.buildInputs;
+              ${target} = pkgs.mkShell {
+                packages = pkg.nativeBuildInputs ++ pkg.buildInputs ++ packages.devShell ++ [ inputs.self.packages.${system}.default; ];
               };
             });
         };

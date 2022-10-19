@@ -34,6 +34,7 @@ endif
 sh = find_program('sh', native: false, required: true)
 uncrustify = find_program('uncrustify', native: false, required: true)
 clang_format = find_program('clang-format', native: false, required: true)
+valac = find_program('valac', native: false, required: true)
 
 target_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
 
@@ -58,6 +59,7 @@ conf_data.set('SDK_BINDIR', sdk_bindir)
 conf_data.set('SH_PATH', sh.full_path())
 conf_data.set('UNCRUSTIFY_PATH', uncrustify.full_path())
 conf_data.set('CLANG_FORMAT_PATH', clang_format.full_path())
+conf_data.set('VALAC_PATH', valac.full_path())
 
 install_symlink('latest', install_dir: join_paths(datadir, 'expidus-sdk'), pointing_to: shortver)
 install_symlink('latest', install_dir: join_paths(libdir, 'expidus-sdk'), pointing_to: shortver)

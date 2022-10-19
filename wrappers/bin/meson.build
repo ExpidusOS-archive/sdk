@@ -1,4 +1,4 @@
-foreach binname : ['clang-format', 'uncrustify']
+foreach binname : ['clang-format', 'uncrustify', 'valac']
   configure_file(input: '@0@.in'.format(binname),
     output: binname,
     configuration: conf_data,
