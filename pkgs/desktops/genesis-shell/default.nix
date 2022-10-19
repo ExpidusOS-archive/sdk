@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo, gtk-layer-shell, libpeas, libdevident }:
+{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo, gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas }:
 with lib;
 stdenv.mkDerivation rec {
   pname = "genesis-shell";
@@ -7,18 +7,18 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "genesis";
-    rev = "9db39f9cb2017db03ca4c94409aeee19073940f2";
-    sha256 = "0EwB2o9e+vZi0CSsmzyzepFN8lCd4w5VzO7ovcCm34Y=";
+    rev = "4321f34a233473d8fc6f873b4cfbf120aab43386";
+    sha256 = "J3zv5S9neGeooIl+PZnaf3Cz6XAdgwfc0OFAsEzZw2I=";
   };
 
   outputs = [ "out" "dev" "devdoc" ];
 
-  nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection ];
-  buildInputs = [ vadi libdevident libtokyo libpeas dbus ]
+  nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection wrapGAppsHook ];
+  buildInputs = [ vadi libdevident libtokyo libpeas dbus gsettings-desktop-schemas ]
     ++ optional stdenv.isLinux gtk-layer-shell;
   propagatedBuildInputs = buildInputs;
 
-  mesonFlags = optional stdenv.isDarwin "-Ddbus=disabled";
+  mesonFlags = optionals stdenv.isDarwin [ "-Ddbus=disabled" "-Dx11=disabled" "-Dwayland=disabled" ];
 
   meta = with lib; {
     description = "The next generation desktop and mobile shell";
