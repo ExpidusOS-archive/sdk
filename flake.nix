@@ -66,11 +66,14 @@
               pkgs = nixpkgsFor.${system};
               pkg = self.packages.${system}.${target};
               packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
+              wrappedTarget = if target == "default" then "wrapped" else target + "-wrapped";
             in {
               ${target} = pkgs.mkShell {
+                name = name + (if target == "default" then "" else "-${target}");
                 packages = pkg.nativeBuildInputs ++ pkg.buildInputs ++ packages.devShell ++ [ inputs.self.packages.${system}.default ];
               };
-              ${if target == "default" then "wrapped" else target + "-wrapped"} = pkgs.mkShell {
+              ${wrappedTarget} = pkgs.mkShell {
+                name = name + (if target == "default" then "" else "-${target}") + "-wrapped";
                 packages = [ pkg inputs.self.packages.${system}.default ];
               };
             });
