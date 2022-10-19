@@ -48,9 +48,9 @@
                 path = prev.lib.cleanSource (builtins.toString self);
               };
 
-              nativeBuildInputs = old.nativeBuildInputs ++ packages.nativeBuildInputs;
-              buildInputs = old.buildInputs ++ packages.buildInputs;
-              propagatedBuildInputs = old.propagatedBuildInputs ++ packages.propagatedBuildInputs;
+              nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ packages.nativeBuildInputs else [];
+              buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ packages.buildInputs else [];
+              propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ packages.propagatedBuildInputs else [];
             }));
           };
 

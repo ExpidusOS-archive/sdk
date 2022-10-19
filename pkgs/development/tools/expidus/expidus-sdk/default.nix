@@ -2,7 +2,7 @@
 with lib;
 stdenv.mkDerivation rec {
   name = "expidus-sdk";
-  src = ../../../../../;
+  src = ../../../../../.;
 
   setupHooks = [ ./setup-hook.sh ];
   enableParallelBuilding = true;
