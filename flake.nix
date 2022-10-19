@@ -6,11 +6,13 @@
       nixpkgs-lib = import ((import ./lib/nixpkgs.nix) + "/lib/");
 
       supportedSystems = [
+        "armv6l-linux"
+        "aarch64-darwin"
         "aarch64-linux"
         "i686-linux"
         "riscv64-linux"
-        "x86_64-linux"
         "x86_64-darwin"
+        "x86_64-linux"
       ];
       forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
@@ -84,44 +86,6 @@
         });
     in rec {
       inherit lib;
-
-      packages = forAllSystems (system:
-        let
-          pkgs = nixpkgsFor.${system};
-          systemPackages = packagesFor.${system};
-        in {
-          default = pkgs.stdenv.mkDerivation rec {
-            name = "expidus-sdk";
-            src = self;
-
-            setupHooks = [ ./setup-hook.sh ];
-
-            enableParallelBuilding = true;
-            inherit (systemPackages) nativeBuildInputs buildInputs;
-
-            meta = with pkgs.lib; {
-              homepage = "https://github.com/ExpidusOS/sdk";
-              license = with licenses; [ gpl3Only ];
-              maintainers = with lib.maintainers; [ TheComputerGuy ];
-            };
-          };
-        });
-
       legacyPackages = forAllSystems (system: import ./pkgs { inherit system; });
-
-      devShells = forAllSystems (system:
-        let
-          pkgs = nixpkgsFor.${system};
-          systemPackages = packagesFor.${system};
-          sdk-pkg = packages.${system}.default;
-        in {
-          default = pkgs.mkShell {
-            packages = systemPackages.nativeBuildInputs ++ systemPackages.buildInputs;
-          };
-
-          wrapped = pkgs.mkShell {
-            packages = [ sdk-pkg ];
-          };
-        });
-    };
+    } // (lib.mkFlake { inherit self; name = "expidus-sdk"; });
 }
