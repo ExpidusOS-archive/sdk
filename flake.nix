@@ -20,6 +20,15 @@
       lib = import ./lib/extend.nix // {
         inherit forAllSystems nixpkgsFor supportedSystems;
 
+        nixos = import ./nixos/lib {};
+        nixosSystem = args:
+          import ./nixos/lib/eval-config.nix (args // {
+            modules = args.modules ++ [{
+              system.nixos.versionSuffix = self.shortRev or "dirty";
+              system.nixos.revision = self.rev;
+            }];
+          });
+
         mkFlake = {
           self,
           target ? "default",
