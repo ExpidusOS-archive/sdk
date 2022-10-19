@@ -56,7 +56,7 @@
               packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
             in {
               ${target} = pkgs.mkShell {
-                packages = pkg.nativeBuildInputs ++ pkg.buildInputs ++ packages.devShell ++ [ inputs.self.packages.${system}.default; ];
+                packages = pkg.nativeBuildInputs ++ pkg.buildInputs ++ packages.devShell ++ [ inputs.self.packages.${system}.default ];
               };
             });
         };
