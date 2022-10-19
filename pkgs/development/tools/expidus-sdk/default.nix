@@ -1,4 +1,4 @@
-{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14, vala }:
+{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14, vala, nix }:
 with lib;
 stdenv.mkDerivation rec {
   name = "expidus-sdk";
@@ -8,7 +8,7 @@ stdenv.mkDerivation rec {
   enableParallelBuilding = true;
 
   nativeBuildInputs = [ meson ninja pkg-config ];
-  buildInputs = [ uncrustify clang_14 vala ];
+  buildInputs = [ uncrustify clang_14 vala nix ];
 
   meta = with lib; {
     homepage = "https://github.com/ExpidusOS/sdk";

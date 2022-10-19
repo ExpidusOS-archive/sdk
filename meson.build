@@ -36,6 +36,8 @@ uncrustify = find_program('uncrustify', native: false, required: true)
 clang_format = find_program('clang-format', native: false, required: true)
 valac = find_program('valac', native: false, required: true)
 
+nix = find_program('nix', native: false, required: false)
+
 target_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
 
 sdk_datadir = join_paths(datadir, 'expidus-sdk', shortver, target_system)
@@ -63,6 +65,14 @@ conf_data.set('VALAC_PATH', valac.full_path())
 
 install_symlink('latest', install_dir: join_paths(datadir, 'expidus-sdk'), pointing_to: shortver)
 install_symlink('latest', install_dir: join_paths(libdir, 'expidus-sdk'), pointing_to: shortver)
+
+if nix.found()
+  nix_channeldir = join_paths(sdk_libdir, 'nix', 'channel')
+  install_subdir('lib', install_dir: nix_channeldir, strip_directory: false)
+  install_subdir('nixos', install_dir: nix_channeldir, strip_directory: false)
+  install_data('default.nix', install_dir: nix_channeldir, strip_directory: false)
+  install_data('flake.nix', install_dir: nix_channeldir, strip_directory: false)
+endif
 
 subdir('data')
 subdir('profile.d')

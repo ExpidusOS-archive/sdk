@@ -17,7 +17,7 @@ import ./base.nix ({
         meta.broken = false;
       });
 
-      expidus-sdk = self.callPackage ./development/tools/expidus/expidus-sdk/default.nix {};
+      expidus-sdk = self.callPackage ./development/tools/expidus-sdk/default.nix {};
 
       cssparser = self.callPackage ./development/libraries/cssparser/default.nix {};
       gxml = self.callPackage ./development/libraries/gxml/default.nix {};
