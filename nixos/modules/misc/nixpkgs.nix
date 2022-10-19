@@ -3,6 +3,7 @@
 with lib;
 
 let
+  nixpkgs = import ../../../lib/nixpkgs.nix;
   cfg = config.nixpkgs;
   opt = options.nixpkgs;
 
@@ -65,8 +66,8 @@ in
 
 {
   imports = [
-    ./assertions.nix
-    ./meta.nix
+    (nixpkgs + "/nixos/modules/misc/assertions.nix")
+    (nixpkgs + "/nixos/modules/misc/meta.nix")
   ];
 
   options.nixpkgs = {
