@@ -15,8 +15,6 @@
       forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
 
-      emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; };
-
       lib = import ./lib/extend.nix // {
         inherit forAllSystems nixpkgsFor supportedSystems;
 
@@ -24,12 +22,12 @@
           self,
           target ? "default",
           name,
-          packagesFor ? { final, prev, old }: emptyPackages
+          packagesFor ? ({ final, prev, old }: { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; })
         }: {
           overlays.${target} = final: prev: {
             ${name} = (prev.${name}.overrideAttrs (old:
             let
-              packages = emptyPackages // (packagesFor { inherit final prev old; });
+              packages = (packagesFor { inherit final prev old; });
             in {
               version = self.rev or "dirty";
               src = builtins.path {
@@ -53,7 +51,7 @@
             let
               pkgs = nixpkgsFor.${system};
               pkg = self.packages.${system}.${target};
-              packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
+              packages = (packagesFor { final = pkgs; prev = packages; old = pkg; });
             in {
               ${target} = pkgs.mkShell {
                 packages = pkg.nativeBuildInputs ++ pkg.buildInputs ++ packages.devShell ++ [ inputs.self.packages.${system}.default ];
