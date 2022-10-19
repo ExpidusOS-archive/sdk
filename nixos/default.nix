@@ -2,6 +2,7 @@
 let
   eval = import ./lib/eval-config.nix {
     inherit system;
+    pkgs = import ../pkgs/default.nix { inherit system; };
     modules = [ configuration ];
   };
 in
