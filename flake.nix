@@ -67,7 +67,7 @@
           pkgs = nixpkgsFor.${system};
         in with pkgs; {
           nativeBuildInputs = [ meson ninja pkg-config ];
-          buildInputs = [ uncrustify clang_14 ];
+          buildInputs = [ uncrustify clang_14 vala ];
         });
     in rec {
       inherit lib;
