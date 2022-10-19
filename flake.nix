@@ -15,6 +15,8 @@
       forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
 
+      emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; };
+
       lib = import ./lib/extend.nix // {
         inherit forAllSystems nixpkgsFor supportedSystems;
 
@@ -22,21 +24,22 @@
           self,
           target ? "default",
           name,
-          packagesFor ? ({ final, prev, old }: { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; })
+          packagesFor ? ({ final, prev, old }: emptyPackages)
         }: {
           overlays.${target} = final: prev: {
             ${name} = (prev.${name}.overrideAttrs (old:
             let
-              packages = (packagesFor { inherit final prev old; });
+              packages = emptyPackages // (packagesFor { inherit final prev old; });
             in {
               version = self.rev or "dirty";
               src = builtins.path {
                 inherit name;
                 path = prev.lib.cleanSource (builtins.toString self);
-                nativeBuildInputs = old.nativeBuildInputs ++ packages.nativeBuildInputs;
-                buildInputs = old.buildInputs ++ packages.buildInputs;
-                propagatedBuildInputs = old.propagatedBuildInputs ++ packages.propagatedBuildInputs;
               };
+
+              nativeBuildInputs = old.nativeBuildInputs ++ packages.nativeBuildInputs;
+              buildInputs = old.buildInputs ++ packages.buildInputs;
+              propagatedBuildInputs = old.propagatedBuildInputs ++ packages.propagatedBuildInputs;
             }));
           };
 
@@ -51,7 +54,7 @@
             let
               pkgs = nixpkgsFor.${system};
               pkg = self.packages.${system}.${target};
-              packages = (packagesFor { final = pkgs; prev = packages; old = pkg; });
+              packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
             in {
               ${target} = pkgs.mkShell {
                 packages = pkg.nativeBuildInputs ++ pkg.buildInputs ++ packages.devShell ++ [ inputs.self.packages.${system}.default ];
