@@ -38,7 +38,9 @@ valac = find_program('valac', native: false, required: true)
 
 nix = find_program('nix', native: false, required: false)
 
-target_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
+host_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
+target_system = host_system
+# TODO: add an option for specifing the target
 
 sdk_datadir = join_paths(datadir, 'expidus-sdk', shortver, target_system)
 sdk_libdir = join_paths(libdir, 'expidus-sdk', shortver, target_system)
@@ -52,6 +54,7 @@ conf_data.set('LIBEXECDIR', libexecdir)
 conf_data.set('VERSION', longver)
 conf_data.set('BUILDDIR', meson.current_build_dir())
 conf_data.set('SOURCEDIR', meson.current_source_dir())
+conf_data.set('HOST_SYSTEM', host_system)
 conf_data.set('TARGET_SYSTEM', target_system)
 
 conf_data.set('SDK_DATADIR', sdk_datadir)
