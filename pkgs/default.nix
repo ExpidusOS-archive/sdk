@@ -4,15 +4,15 @@ import ./base.nix ({
     (self: super: {
       gtk-layer-shell = self.callPackage ./development/libraries/gtk-layer-shell/default.nix {};
 
-      libadwaita = self.libadwaita.overrideAttrs (old: {
-        doCheck = self.stdenv.isLinux;
+      libadwaita = super.libadwaita.overrideAttrs (old: {
+        doCheck = super.stdenv.isLinux;
         buildInputs = old.buildInputs ++ self.lib.optionals self.stdenv.isDarwin (with self.darwin.apple_sdk.frameworks; [
           AppKit Foundation
         ]);
         meta.platforms = self.lib.platforms.unix;
       });
 
-      vte = self.vte.overrideAttrs (old: {
+      vte = super.vte.overrideAttrs (old: {
         mesonFlags = old.mesonFlags ++ [ "-D_b_symbolic_functions=false" ];
         meta.broken = false;
       });
