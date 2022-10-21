@@ -1,7 +1,7 @@
 evalConfigArgs@
 {
   system ? builtins.currentSystem,
-  pkgs ? null,
+  pkgs ? (import ../../. { inherit system; }),
   baseModules ? import ../modules/module-list.nix,
   extraArgs ? {},
   specialArgs ? {},

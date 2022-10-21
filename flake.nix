@@ -5,38 +5,43 @@
     let
       nixpkgs-lib = import ((import ./lib/nixpkgs.nix) + "/lib/");
 
-      supportedSystems = [
+      linuxSystems = [
         "armv6l-linux"
-        "aarch64-darwin"
         "aarch64-linux"
         "i686-linux"
         "riscv64-linux"
-        "x86_64-darwin"
         "x86_64-linux"
       ];
+
+      supportedSystems = [
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ] ++ linuxSystems;
+      
+      forAllLinuxSystems = nixpkgs-lib.genAttrs linuxSystems;
       forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
       nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
 
-      emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; };
+      emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; nixosModules = []; };
+
+      nixos = import ./nixos/lib {};
+      nixosSystem = args:
+        import ./nixos/lib/eval-config.nix (args // {
+          modules = args.modules ++ [{
+            system.nixos.versionSuffix = self.shortRev or "dirty";
+            system.nixos.revision = self.rev;
+          }];
+        });
 
       lib = import ./lib/extend.nix // {
-        inherit forAllSystems nixpkgsFor supportedSystems;
-
-        nixos = import ./nixos/lib {};
-        nixosSystem = args:
-          import ./nixos/lib/eval-config.nix (args // {
-            modules = args.modules ++ [{
-              system.nixos.versionSuffix = self.shortRev or "dirty";
-              system.nixos.revision = self.rev;
-            }];
-          });
+        inherit forAllSystems nixpkgsFor supportedSystems nixos nixosSystem;
 
         mkFlake = {
           self,
           target ? "default",
           name,
           packagesFor ? ({ final, prev, old }: emptyPackages)
-        }: {
+        }@flake: {
           overlays.${target} = final: prev: {
             ${name} = (prev.${name}.overrideAttrs (old:
             let
@@ -59,6 +64,21 @@
               pkgs = nixpkgsFor.${system};
             in {
               ${target} = (self.overlays.default pkgs pkgs).${name};
+            });
+
+          nixosConfigurations = (let
+            systems = forAllLinuxSystems (system:
+              let
+                pkgs = nixpkgsFor.${system};
+                pkg = self.packages.${system}.${target};
+                packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
+              in nixosSystem {
+                inherit system;
+                specialArgs = { inherit flake; };
+                modules = [ ./nixos/dev.nix ] ++ packages.nixosModules;
+              });
+            in systems // {
+              ${target} = if builtins.hasAttr builtins.currentSystem systems then systems.${builtins.currentSystem} else null;
             });
 
           devShells = forAllSystems (system:
