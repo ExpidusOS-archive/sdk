@@ -6,4 +6,4 @@ fi
 
 source "$EXPIDUS_SDK_LIBDIR/ensure.sh"
 
-exec @VALAC_PATH@ --hide-internal --vapdir "$EXPIDUS_SDK_DATADIR/vapi" $@
+exec @VALAC_PATH@ --hide-internal --vapidir "$EXPIDUS_SDK_DATADIR/vapi" $@
