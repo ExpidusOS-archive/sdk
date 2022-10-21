@@ -63,17 +63,19 @@
             let
               pkgs = nixpkgsFor.${system};
             in {
-              ${target} = (self.overlays.default pkgs pkgs).${name};
+              ${target} = (self.overlays.${target} pkgs pkgs).${name};
             });
 
           nixosConfigurations = (let
             systems = forAllLinuxSystems (system:
               let
-                pkgs = nixpkgsFor.${system};
+                base-pkgs = nixpkgsFor.${system};
+                pkgs = self.overlays.${target} base-pkgs base-pkgs;
+
                 pkg = self.packages.${system}.${target};
                 packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
               in nixosSystem {
-                inherit system;
+                inherit system pkgs;
                 specialArgs = { inherit flake; };
                 modules = [ ./nixos/dev.nix ] ++ packages.nixosModules;
               });
