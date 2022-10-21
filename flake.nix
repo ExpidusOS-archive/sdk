@@ -79,6 +79,13 @@
               in nixosSystem {
                 inherit system;
                 specialArgs = { inherit flake; };
+
+                pkgs = import ./pkgs {
+                  system = builtins.currentSystem;
+                  crossSystem = { inherit system; };
+                  overlays = [ self.overlays.${target} ];
+                };
+                
                 modules = [
                   ./nixos/dev.nix
                   {

@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   nixpkgs = import ../lib/nixpkgs.nix;
+  loginMessage = "ExpidusOS Development Virtual Machine (EDVM)";
 in
 {
   imports = [
@@ -12,6 +13,29 @@ in
   virtualisation = {
     memorySize = 2048;
     cores = 2;
+  };
+
+  programs.xwayland.enable = true;
+  hardware.opengl.enable = true;
+
+  services.getty = {
+    greetingLine = loginMessage;
+    autologinUser = "developer";
+  };
+
+  services.openssh = {
+    enable = true;
+    banner = loginMessage;
+    permitRootLogin = "without-password";
+  };
+
+  services.xserver = {
+    enable = true;
+    libinput.enable = true;
+    displayManager.gdm = {
+      enable = true;
+      wayland = true;
+    };
   };
 
   users.users.developer = {
