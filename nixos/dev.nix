@@ -1,4 +1,4 @@
-{ config, lib, pkgs, flake, ... }:
+{ config, lib, pkgs, ... }:
 let
   nixpkgs = import ../lib/nixpkgs.nix;
 in
@@ -14,14 +14,14 @@ in
     cores = 2;
   };
 
-  environment.systemPackages = with pkgs; [
-    flake.self.packages.${flake.target}
-  ];
-
   users.users.developer = {
     createHome = true;
+    home = "/home/expidus-devel";
     description = "Development test user";
     extraGroups = [ "wheel" ];
     password = "developer";
+    isNormalUser = true;
   };
+
+  system.stateVersion = "22.05";
 }

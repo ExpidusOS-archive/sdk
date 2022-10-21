@@ -27,10 +27,12 @@
       nixos = import ./nixos/lib {};
       nixosSystem = args:
         import ./nixos/lib/eval-config.nix (args // {
-          modules = args.modules ++ [{
-            system.nixos.versionSuffix = self.shortRev or "dirty";
-            system.nixos.revision = self.rev;
-          }];
+          modules = args.modules ++ [(({
+            system.nixos.versionSuffix = ".${builtins.substring 0 8 (self.lastModifiedDate or self.lastModified or "19700101")}.${self.shortRev or "dirty"}";
+            system.nixos.revision = nixpkgs-lib.mkIf (self ? rev) self.rev;
+          }) // (nixpkgs-lib.optionalAttrs (! args?system) {
+            system = null;
+          }))];
         });
 
       lib = import ./lib/extend.nix // {
@@ -75,9 +77,14 @@
                 pkg = self.packages.${system}.${target};
                 packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
               in nixosSystem {
-                inherit system pkgs;
+                inherit system;
                 specialArgs = { inherit flake; };
-                modules = [ ./nixos/dev.nix ] ++ packages.nixosModules;
+                modules = [
+                  ./nixos/dev.nix
+                  {
+                    environment.systemPackages = [ pkg ];
+                  }
+                ] ++ packages.nixosModules;
               });
             in systems // {
               ${target} = if builtins.hasAttr builtins.currentSystem systems then systems.${builtins.currentSystem} else null;
@@ -110,7 +117,7 @@
           buildInputs = [ uncrustify clang_14 vala ];
         });
     in rec {
-      inherit lib;
+      inherit lib self;
       legacyPackages = forAllSystems (system: import ./pkgs { inherit system; });
     } // (lib.mkFlake { inherit self; name = "expidus-sdk"; });
 }
