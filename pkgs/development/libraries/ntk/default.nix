@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, vala, pkg-config, gobject-introspection, cairo, gtk4, mesa, libglvnd, cssparser, libdrm }:
+{ lib, stdenv, fetchFromGitHub, meson, ninja, vala, pkg-config, gobject-introspection, cairo, gtk4, mesa, libglvnd, cssparser, libdrm, expidus-sdk }:
 with lib;
 stdenv.mkDerivation rec {
   pname = "ntk";
@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  nativeBuildInputs = [ meson ninja vala pkg-config gobject-introspection ];
+  nativeBuildInputs = [ meson ninja vala pkg-config gobject-introspection expidus-sdk ];
   buildInputs = [ cairo gtk4 libglvnd cssparser ] ++ optionals stdenv.isLinux [ mesa libdrm ];
   propagatedBuildInputs = buildInputs;
 

@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo, gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas }:
+{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo, gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas, expidus-sdk }:
 with lib;
 stdenv.mkDerivation rec {
   pname = "genesis-shell";
@@ -13,7 +13,7 @@ stdenv.mkDerivation rec {
 
   outputs = [ "out" "dev" "devdoc" ];
 
-  nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection wrapGAppsHook ];
+  nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection wrapGAppsHook expidus-sdk ];
   buildInputs = [ vadi libdevident libtokyo libpeas dbus gsettings-desktop-schemas ]
     ++ optional stdenv.isLinux gtk-layer-shell;
   propagatedBuildInputs = buildInputs;

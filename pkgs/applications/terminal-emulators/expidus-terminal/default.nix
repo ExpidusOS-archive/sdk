@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, vala, pkg-config, libtokyo, vte }:
+{ lib, stdenv, fetchFromGitHub, meson, ninja, vala, pkg-config, libtokyo, vte, expidus-sdk }:
 with lib;
 stdenv.mkDerivation rec {
   pname = "expidus-terminal";
@@ -11,7 +11,7 @@ stdenv.mkDerivation rec {
     sha256 = "DemU7V8iy0qH1JFyJw1UOqbYX8NfV3+Ydpq50jR6a+w=";
   };
 
-  nativeBuildInputs = [ meson ninja vala pkg-config ];
+  nativeBuildInputs = [ meson ninja vala pkg-config expidus-sdk ];
   buildInputs = [ libtokyo vte ];
 
   meta = with lib; {

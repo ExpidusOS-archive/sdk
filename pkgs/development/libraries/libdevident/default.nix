@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, vala, gxml, vadi, glib, libpeas }:
+{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, vala, gxml, vadi, glib, libpeas, expidus-sdk }:
 stdenv.mkDerivation rec {
   pname = "libdevident";
   version = "0.2.0";
@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
 
   doChecks = true;
 
-  nativeBuildInputs = [ meson ninja pkg-config gobject-introspection vala ];
+  nativeBuildInputs = [ meson ninja pkg-config gobject-introspection vala expidus-sdk ];
   buildInputs = [ vadi glib gxml libpeas ];
   propagatedBuildInputs = buildInputs;
 
