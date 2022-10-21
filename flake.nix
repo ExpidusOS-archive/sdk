@@ -4,6 +4,7 @@
   outputs = { self }@inputs:
     let
       nixpkgs-lib = import ((import ./lib/nixpkgs.nix) + "/lib/");
+      currentSystem = builtins.toString builtins.currentSystem;
 
       linuxSystems = [
         "armv6l-linux"
@@ -20,7 +21,7 @@
       
       forAllLinuxSystems = nixpkgs-lib.genAttrs linuxSystems;
       forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
-      nixpkgsFor = forAllSystems (system: import ./pkgs { system = builtins.currentSystem; crossSystem = { inherit system; }; });
+      nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
 
       emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; nixosModules = []; };
 
@@ -81,7 +82,7 @@
                 specialArgs = { inherit flake; };
 
                 pkgs = import ./pkgs {
-                  system = builtins.currentSystem;
+                  system = currentSystem;
                   crossSystem = { inherit system; };
                   overlays = [ self.overlays.${target} ];
                 };
@@ -94,7 +95,7 @@
                 ] ++ packages.nixosModules;
               });
             in systems // {
-              ${target} = if builtins.hasAttr builtins.currentSystem systems then systems.${builtins.currentSystem} else null;
+              ${target} = if builtins.hasAttr currentSystem systems then systems.${currentSystem} else null;
             });
 
           devShells = forAllSystems (system:

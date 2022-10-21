@@ -7,8 +7,7 @@ stdenv.mkDerivation rec {
   setupHooks = [ ./setup-hook.sh ];
   enableParallelBuilding = true;
 
-  nativeBuildInputs = [ meson ninja pkg-config ];
-  buildInputs = [ uncrustify clang_14 vala nix ];
+  nativeBuildInputs = [ meson ninja pkg-config uncrustify clang_14 vala nix ];
 
   meta = with lib; {
     homepage = "https://github.com/ExpidusOS/sdk";

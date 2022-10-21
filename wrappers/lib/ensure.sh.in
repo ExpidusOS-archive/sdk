@@ -20,5 +20,5 @@ if [[ ! -z "@NIX_CHANNELDIR@" ]]; then
 fi
 
 #if [[ ! -z "@NIX_PROFILEDIR@" ]]; then
-  # TODO: load our custom nix profile
+# TODO: load our custom nix profile
 #fi

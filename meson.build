@@ -31,19 +31,18 @@ if git.found()
   endif
 endif
 
-sh = find_program('sh', native: false, required: true)
-uncrustify = find_program('uncrustify', native: false, required: true)
-clang_format = find_program('clang-format', native: false, required: true)
-valac = find_program('valac', native: false, required: true)
+sh = find_program('sh', native: true, required: true)
+uncrustify = find_program('uncrustify', native: true, required: true)
+clang_format = find_program('clang-format', native: true, required: true)
+valac = find_program('valac', native: true, required: true)
 
-nix = find_program('nix', native: false, required: false)
+nix = find_program('nix', native: true, required: false)
 
-host_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
-target_system = host_system
-# TODO: add an option for specifing the target
+host_system = host_machine.cpu() + '-' + host_machine.endian() + '-' + host_machine.system()
+target_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
 
-sdk_datadir = join_paths(datadir, 'expidus-sdk', shortver, target_system)
-sdk_libdir = join_paths(libdir, 'expidus-sdk', shortver, target_system)
+sdk_datadir = join_paths(datadir, 'expidus-sdk', shortver, host_system, target_system)
+sdk_libdir = join_paths(libdir, 'expidus-sdk', shortver, host_system, target_system)
 sdk_bindir = join_paths(sdk_libdir, 'bin')
 
 conf_data.set('PREFIX', prefix)
