@@ -20,7 +20,7 @@
       
       forAllLinuxSystems = nixpkgs-lib.genAttrs linuxSystems;
       forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
-      nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
+      nixpkgsFor = forAllSystems (system: import ./pkgs { system = builtins.currentSystem; crossSystem = { inherit system; }; });
 
       emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; nixosModules = []; };
 
