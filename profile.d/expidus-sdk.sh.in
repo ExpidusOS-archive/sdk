@@ -2,7 +2,7 @@ if [[ ! -z "$EXPIDUS_SDK_VERSION" ]]; then
   source "@LIBDIR@/expidus-sdk/$EXPIDUS_SDK_VERSION/@HOST_SYSTEM@/@TARGET_SYSTEM@/ensure.sh"
 else
   if [[ -e @LIBDIR@/expidus-sdk/latest ]]; then
-    source @LIBDIR@/expidus-sdk/latest/$HOST_SYSTEM@/@TARGET_SYSTEM@/ensure.sh
+    source @LIBDIR@/expidus-sdk/latest/@HOST_SYSTEM@/@TARGET_SYSTEM@/ensure.sh
   else
     source @SDK_LIBDIR@/ensure.sh
   fi
