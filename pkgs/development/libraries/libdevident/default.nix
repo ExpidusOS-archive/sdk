@@ -8,8 +8,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "libdevident";
-    rev = "cd8a6d777b8f608a31841ed1b710ded805e2f992";
-    sha256 = "gyI32F86cK5neMEM8Yo5/X/PA54hwe/C3dY7YXBhFcs=";
+    rev = "146d3c55ad53fddecce0e81cd7bea52cae4c759c";
+    sha256 = "jZlZOmKgvM6Y1e7GZPxDU2lX9kyUEYKs5RX/s2F+QRM=";
   };
 
   doChecks = true;
