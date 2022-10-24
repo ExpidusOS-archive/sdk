@@ -82,8 +82,7 @@
                 specialArgs = { inherit flake; };
 
                 pkgs = import ./pkgs {
-                  system = currentSystem;
-                  crossSystem = { inherit system; };
+                  inherit system;
                   overlays = [ self.overlays.${target} ];
                 };
                 
