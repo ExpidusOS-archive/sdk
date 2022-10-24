@@ -1,4 +1,4 @@
 fetchTarball {
   url = "https://github.com/NixOS/nixpkgs/archive/refs/heads/nixpkgs-22.05-darwin.tar.gz";
-  sha256 = "1pf3b2m6ifx335w0ngyd90wl0szrznk45gs2knccbdq5wci0msf8";
+  sha256 = "1k2fnlb144523445q3fnazvjnginsy1pl9w92wnl56aqh8hj7ikr";
 }
