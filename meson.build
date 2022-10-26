@@ -1,6 +1,7 @@
-project('expidus-sdk', license: 'GPL-3.0-only', version: '0.2.0-alpha')
+project('expidus-sdk', 'vala', 'c', license: 'GPL-3.0-only', version: '0.2.0-alpha')
 
 fs = import('fs')
+i18n = import('i18n')
 
 prefix = get_option('prefix')
 bindir = prefix / get_option('bindir')
@@ -31,6 +32,8 @@ if git.found()
   endif
 endif
 
+i18n_args = ['--package-version=@0@'.format(longver), '--copyright-holder=Midstall Software']
+
 sh = find_program('sh', native: true, required: true)
 uncrustify = find_program('uncrustify', native: true, required: true)
 clang_format = find_program('clang-format', native: true, required: true)
@@ -38,11 +41,13 @@ valac = find_program('valac', native: true, required: true)
 
 nix = find_program('nix', native: true, required: false)
 
+glib = dependency('glib-2.0')
+
 host_system = host_machine.cpu() + '-' + host_machine.endian() + '-' + host_machine.system()
 target_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
 
-sdk_datadir = join_paths(datadir, 'expidus-sdk', shortver, host_system, target_system)
 sdk_libdir = join_paths(libdir, 'expidus-sdk', shortver, host_system, target_system)
+sdk_datadir = join_paths(sdk_libdir, 'data')
 sdk_bindir = join_paths(sdk_libdir, 'bin')
 
 conf_data.set('PREFIX', prefix)
@@ -65,7 +70,6 @@ conf_data.set('UNCRUSTIFY_PATH', uncrustify.full_path())
 conf_data.set('CLANG_FORMAT_PATH', clang_format.full_path())
 conf_data.set('VALAC_PATH', valac.full_path())
 
-install_symlink('latest', install_dir: join_paths(datadir, 'expidus-sdk'), pointing_to: shortver)
 install_symlink('latest', install_dir: join_paths(libdir, 'expidus-sdk'), pointing_to: shortver)
 
 if nix.found()
@@ -92,4 +96,5 @@ endif
 
 subdir('data')
 subdir('profile.d')
+subdir('system')
 subdir('wrappers')

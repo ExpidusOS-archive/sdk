@@ -106,7 +106,7 @@
             in {
               ${target} = pkgs.mkShell {
                 name = name + (if target == "default" then "" else "-${target}");
-                packages = pkg.nativeBuildInputs ++ pkg.buildInputs ++ packages.devShell ++ [ inputs.self.packages.${system}.default ];
+                packages = pkg.nativeBuildInputs ++ pkg.buildInputs ++ packages.devShell ++ [ inputs.self.packages.${system}.${target} ];
               };
               ${wrappedTarget} = pkgs.mkShell {
                 name = name + (if target == "default" then "" else "-${target}") + "-wrapped";
