@@ -4,7 +4,7 @@ with import ../lib;
   stableBranch ? false,
   supportedSystems ? [ "x86_64-linux" "aarch64-linux" ],
   configuration ? {} }:
-with import (lib.expidus.nixpkgsPath + "/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
+with import (expidus.nixpkgsPath + "/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
 let
   version = fileContents ../.version;
   versionSuffix =

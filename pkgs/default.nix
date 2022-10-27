@@ -1,4 +1,9 @@
-args:
+{
+  localSystem ? { system = args.system or builtins.currentSystem; },
+  system ? localSystem.system,
+  crossSystem ? localSystem,
+  ...
+}@args:
 let
   pkgs = import ./base.nix ({
     overlays = [
