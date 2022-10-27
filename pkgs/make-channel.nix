@@ -2,9 +2,7 @@
   localSystem ? { system = args.system or builtins.currentSystem; },
   system ? localSystem.system,
   crossSystem ? localSystem,
+  nixpkgsPath ? import ../lib/nixpkgs.nix,
   ...
 }@args:
-let
-  lib = import ./lib;
-  pkgs = import ./pkgs args;
-in pkgs // { inherit lib; }
+(import ./overlay.nix (nixpkgsPath)) (builtins.removeAttrs args [ "nixpkgsPath" ])
