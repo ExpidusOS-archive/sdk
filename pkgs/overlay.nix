@@ -9,6 +9,8 @@ let
   pkgs = import (nixpkgsPath + "/default.nix") ({
     overlays = [
       (self: super: {
+        lib = import (sdkPath + "/lib/overlay.nix") nixpkgsPath;
+
         gtk-layer-shell = self.callPackage ./development/libraries/gtk-layer-shell/default.nix {};
 
         libadwaita = super.libadwaita.overrideAttrs (old: {
