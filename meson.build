@@ -44,8 +44,8 @@ sdk_dep = meson.get_compiler('vala').find_library('expidus-sdk', dirs: [join_pat
 posix = meson.get_compiler('vala').find_library('posix')
 glib = dependency('glib-2.0')
 
-host_system = host_machine.cpu() + '-' + host_machine.endian() + '-' + host_machine.system()
-target_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + target_machine.system()
+host_system = host_machine.cpu() + '-' + host_machine.system() + '-' + host_machine.endian()
+target_system = target_machine.cpu() + '-' + target_machine.system() + '-' + target_machine.endian()
 
 sdk_libdir = join_paths(libdir, 'expidus-sdk', shortver, host_system, target_system)
 sdk_datadir = join_paths(sdk_libdir, 'data')

@@ -8,6 +8,7 @@ let
     inherit prefix modules;
     specialArgs = {
       modulesPath = builtins.toString ../modules;
+      inherit lib;
     } // specialArgs;
   };
 in { inherit evalModules; }

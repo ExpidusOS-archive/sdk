@@ -4,13 +4,13 @@ with import ../lib;
   stableBranch ? false,
   supportedSystems ? [ "x86_64-linux" "aarch64-linux" ],
   configuration ? {} }:
-with import ((import ../lib/nixpkgs.nix) + "/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
+with import (lib.expidus.nixpkgsPath + "/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
 let
   version = fileContents ../.version;
   versionSuffix =
     (if stableBranch then "." else "-alpha") + "${toString (nixpkgs.revCount - 379959)}.${nixpkgs.shortRev}";
   allTestsForSystem = system:
-    import ((import ../lib/nixpkgs.nix) + "/nixos/tests/all-tests.nix") {
+    import (lib.expidus.nixpkgsPath + "/nixos/tests/all-tests.nix") {
       inherit system;
       pkgs = import ./.. { inherit system; };
       callTest = t: {

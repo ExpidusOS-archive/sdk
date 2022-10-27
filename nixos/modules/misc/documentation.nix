@@ -14,7 +14,7 @@ let
   canCacheDocs = m:
     let
       f = import m;
-      instance = f (mapAttrs (n: _: abort "evaluating ${n} for `meta` failed") (functionArgs f));
+      instance = f (mapAttrs (n: _: abort "evaluating ${n} for `meta` failed in ${m}") (functionArgs f));
     in
       cfg.nixos.options.splitBuild
         && builtins.isPath m

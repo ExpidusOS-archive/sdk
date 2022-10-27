@@ -3,7 +3,7 @@
 
   outputs = { self }@inputs:
     let
-      nixpkgs-lib = import ((import ./lib/nixpkgs.nix) + "/lib/");
+      nixpkgs-lib = import ./lib;
       currentSystem = builtins.toString builtins.currentSystem;
 
       linuxSystems = [
@@ -21,7 +21,7 @@
       
       forAllLinuxSystems = nixpkgs-lib.genAttrs linuxSystems;
       forAllSystems = nixpkgs-lib.genAttrs supportedSystems;
-      nixpkgsFor = forAllSystems (system: import ./pkgs { inherit system; });
+      nixpkgsFor = forAllSystems (system: import ./. { inherit system; });
 
       emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; nixosModules = []; };
 
@@ -36,7 +36,7 @@
           }))];
         });
 
-      lib = import ./lib/extend.nix // {
+      lib = nixpkgs-lib.expidus // {
         inherit forAllSystems nixpkgsFor supportedSystems nixos nixosSystem;
 
         mkFlake = {
@@ -81,7 +81,7 @@
                 inherit system;
                 specialArgs = { inherit flake; };
 
-                pkgs = import ./pkgs {
+                pkgs = import ./. {
                   inherit system;
                   overlays = [ self.overlays.${target} ];
                 };

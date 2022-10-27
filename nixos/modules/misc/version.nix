@@ -18,5 +18,10 @@ in base // {
       "lsb-release".source = "${pkgs.expidus-sdk.system}/etc/lsb-release";
       "os-release".source = "${pkgs.expidus-sdk.system}/etc/os-release";
     };
+
+    boot.initrd.systemd.contents = {
+      "/etc/os-release".source = "${pkgs.expidus-sdk.system}/etc/os-release";
+      "/etc/initrd-release".source = "${pkgs.expidus-sdk.system}/etc/os-release";
+    };
   };
 }
