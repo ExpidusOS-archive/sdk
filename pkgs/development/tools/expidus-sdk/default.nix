@@ -1,10 +1,11 @@
-{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14, vala, nix, glib }:
+{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14, vala, nix, glib, git }:
 with lib;
 stdenv.mkDerivation rec {
   name = "expidus-sdk";
   src = ../../../../.;
   
   configurePlatforms = [ "host" "build" "target" ];
+  configureFlags = [ "--bindir=$system/bin" "--datadir=$system/share" ];
 
   outputs = [ "out" "system" ];
 
@@ -15,8 +16,11 @@ stdenv.mkDerivation rec {
   buildInputs = [ glib ];
 
   postInstall = ''
-    mkdir -p $system/bin
-    cp /build/expidus-sdk/build/system/expidus-version $system/bin/expidus-version
+    mkdir -p $system/bin $system/etc $system/share
+    cp system/expidus-version $system/bin/expidus-version
+    cp system/lsb-release $system/etc/lsb-release
+    cp system/os-release $system/etc/os-release
+    cp -r system/po $system/share/locale
   '';
 
   meta = with lib; {

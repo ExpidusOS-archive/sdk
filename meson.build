@@ -38,9 +38,10 @@ sh = find_program('sh', native: true, required: true)
 uncrustify = find_program('uncrustify', native: true, required: true)
 clang_format = find_program('clang-format', native: true, required: true)
 valac = find_program('valac', native: true, required: true)
-
 nix = find_program('nix', native: true, required: false)
 
+sdk_dep = meson.get_compiler('vala').find_library('expidus-sdk', dirs: [join_paths(meson.project_source_root(), 'system', 'vapi')])
+posix = meson.get_compiler('vala').find_library('posix')
 glib = dependency('glib-2.0')
 
 host_system = host_machine.cpu() + '-' + host_machine.endian() + '-' + host_machine.system()
@@ -48,8 +49,10 @@ target_system = target_machine.cpu() + '-' + target_machine.endian() + '-' + tar
 
 sdk_libdir = join_paths(libdir, 'expidus-sdk', shortver, host_system, target_system)
 sdk_datadir = join_paths(sdk_libdir, 'data')
+sdk_sysconfdir = join_paths(sdk_libdir, 'etc')
 sdk_bindir = join_paths(sdk_libdir, 'bin')
 
+conf_data.set('CODENAME', 'willamette')
 conf_data.set('PREFIX', prefix)
 conf_data.set('BINDIR', bindir)
 conf_data.set('DATADIR', datadir)

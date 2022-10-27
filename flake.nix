@@ -46,7 +46,7 @@
           packagesFor ? ({ final, prev, old }: emptyPackages)
         }@flake: {
           overlays.${target} = final: prev: {
-            ${name} = (prev.${name}.overrideAttrs (old:
+            ${name} = if name == "expidus-sdk" then (prev.callPackage ./pkgs/development/tools/expidus-sdk {}) else (prev.${name}.overrideAttrs (old:
             let
               packages = emptyPackages // (packagesFor { inherit final prev old; });
             in {
