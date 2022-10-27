@@ -12,22 +12,24 @@ public static int main(string[] args) {
   var is_sdk = arg0 == ExpidusSDK.LIBDIR + "/bin/expidus-version";
   var is_system = arg0 == Config.BINDIR + "/expidus-version"; 
 
+  GLib.Intl.setlocale(GLib.LocaleCategory.ALL, "");
   GLib.Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
   if (is_system) GLib.Intl.bindtextdomain(GETTEXT_PACKAGE, Config.DATADIR + "/locale");
   else if (is_sdk) GLib.Intl.bindtextdomain(GETTEXT_PACKAGE, ExpidusSDK.DATADIR + "/locale");
   else GLib.Intl.bindtextdomain(GETTEXT_PACKAGE, Config.BUILDDIR + "/system/po");
+  GLib.Intl.textdomain(GETTEXT_PACKAGE);
 
   try {
-    var optctx = new GLib.OptionContext(N_("- \"nixos-version\"-like command but for ExpidusOS"));
+    var optctx = new GLib.OptionContext(_("- \"nixos-version\"-like command but for ExpidusOS"));
     optctx.set_help_enabled(true);
     optctx.add_main_entries(options, null);
     optctx.parse(ref args);
   } catch (GLib.Error e) {
-    stderr.printf(N_("Failed to handle arguments: %s:%d: %s\n"), e.domain.to_string(), e.code, e.message);
+    stderr.printf(_("Failed to handle arguments: %s:%d: %s\n"), e.domain.to_string(), e.code, e.message);
     return 1;
   }
 
-  var codename = N_("Willamette");
+  var codename = _("Willamette");
 
   if (args.length == 2) {
     switch (args[1]) {
@@ -56,19 +58,19 @@ public static int main(string[] args) {
           }
         } else {
           if (!is_system) {
-            stdout.printf(N_("Target: %s\n"), ExpidusSDK.TARGET_SYSTEM);
-            stdout.printf(N_("Host: %s\n"), ExpidusSDK.HOST_SYSTEM);
+            stdout.printf(_("Target: %s\n"), ExpidusSDK.TARGET_SYSTEM);
+            stdout.printf(_("Host: %s\n"), ExpidusSDK.HOST_SYSTEM);
           } else {
             stdout.printf("%s\n", ExpidusSDK.TARGET_SYSTEM);
           }
         }
         return 0;
       default:
-        stderr.printf(N_("Unrecognized field: %s\n"), args[1]);
+        stderr.printf(_("Unrecognized field: %s\n"), args[1]);
         return 1;
     }
   } else if (args.length > 2) {
-    stderr.printf(N_("Too many arguments, limit is 2"));
+    stderr.printf(_("Too many arguments, limit is 2"));
     return 1;
   }
 
@@ -89,6 +91,6 @@ public static int main(string[] args) {
     return 0;
   }
 
-  stdout.printf(N_("ExpidusOS %s (%s)\n"), ExpidusSDK.VERSION, codename);
+  stdout.printf(_("ExpidusOS %s (%s)\n"), ExpidusSDK.VERSION, codename);
   return 0;
 }
