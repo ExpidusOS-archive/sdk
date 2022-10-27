@@ -1,8 +1,8 @@
 args@{ config, lib, pkgs, ... }:
 with lib;
 let
-  trivial = import ../../../../lib/trivial.nix { inherit lib; };
-  base = import ((import ../../../../lib/nixpkgs.nix) + "/nixos/modules/installer/tools/tools.nix") args;
+  inherit (lib) trivial nixpkgsPath;
+  base = import (nixpkgsPath + "/nixos/modules/installer/tools/tools.nix") args;
 
   makeProg = args: pkgs.substituteAll (args // {
     dir = "bin";
@@ -11,13 +11,13 @@ let
 
   nixos-build-vms = makeProg {
     name = "nixos-build-vms";
-    src = (import ../../../../lib/nixpkgs.nix) + "/nixos/modules/installer/tools/nixos-build-vms/nixos-build-vms.sh";
+    src = nixpkgsPath + "/nixos/modules/installer/tools/nixos-build-vms/nixos-build-vms.sh";
     inherit (pkgs) runtimeShell;
   };
 
   nixos-install = makeProg {
     name = "nixos-install";
-    src = (import ../../../../lib/nixpkgs.nix) + "/nixos/modules/installer/tools/nixos-install.sh";
+    src = nixpkgsPath + "/nixos/modules/installer/tools/nixos-install.sh";
     inherit (pkgs) runtimeShell;
     nix = config.nix.package.out;
     path = makeBinPath [
@@ -30,7 +30,7 @@ let
 
   nixos-generate-config = makeProg {
     name = "nixos-generate-config";
-    src = (import ../../../../lib/nixpkgs.nix) + "/nixos/modules/installer/tools/nixos-generate-config.pl";
+    src = nixpkgsPath + "/nixos/modules/installer/tools/nixos-generate-config.pl";
     perl = "${pkgs.perl.withPackages (p: [ p.FileSlurp ])}/bin/perl";
     detectvirt = "${config.systemd.package}/bin/systemd-detect-virt";
     btrfs = "${pkgs.btrfs-progs}/bin/btrfs";
@@ -45,7 +45,7 @@ let
 
   nixos-version = makeProg {
     name = "nixos-version";
-    src = (import ../../../../lib/nixpkgs.nix) + "/nixos/modules/installer/tools/nixos-version.sh";
+    src = nixpkgsPath + "/nixos/modules/installer/tools/nixos-version.sh";
     inherit (pkgs) runtimeShell;
     inherit (config.system.nixos) version codeName revision;
     inherit (config.system) configurationRevision;
@@ -60,7 +60,7 @@ let
 
   nixos-enter = makeProg {
     name = "nixos-enter";
-    src = (import ../../../../lib/nixpkgs.nix) + "/nixos/modules/installer/tools/nixos-enter.sh";
+    src = nixpkgsPath + "/nixos/modules/installer/tools/nixos-enter.sh";
     inherit (pkgs) runtimeShell;
   };
 

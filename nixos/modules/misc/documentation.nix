@@ -3,8 +3,8 @@
 with lib;
 
 let
-  nixpkgs = import ../../../lib/nixpkgs.nix;
 
+  nixpkgs = import ../../../lib/nixpkgs.nix;
   cfg = config.documentation;
   allOpts = options;
 
@@ -74,6 +74,7 @@ let
           libPath = filter "${toString pkgs.path}/lib";
           pkgsLibPath = filter "${toString pkgs.path}/pkgs/pkgs-lib";
           nixosPath = filter "${toString pkgs.path}/nixos";
+          nixpkgsPath = filter "${toString nixpkgs}";
           modules = map (p: ''"${removePrefix "${modulesPath}/" (toString p)}"'') docModules.lazy;
         } ''
           export NIX_STORE_DIR=$TMPDIR/store
@@ -84,6 +85,7 @@ let
             --argstr libPath "$libPath" \
             --argstr pkgsLibPath "$pkgsLibPath" \
             --argstr nixosPath "$nixosPath" \
+            --argstr nixpkgsPath "$nixpkgsPath" \
             --arg modules "[ $modules ]" \
             --argstr stateVersion "${options.system.stateVersion.default}" \
             --argstr release "${config.system.nixos.release}" \
