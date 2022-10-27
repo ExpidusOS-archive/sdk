@@ -1,4 +1,4 @@
-nixpkgsPath:
+{ nixpkgsPath, sdkPath }:
 {
   localSystem ? { system = args.system or builtins.currentSystem; },
   system ? localSystem.system,
@@ -24,7 +24,9 @@ let
           meta.broken = false;
         });
 
-        expidus-sdk = self.callPackage ./development/tools/expidus-sdk/default.nix {};
+        expidus-sdk = self.callPackage ./development/tools/expidus-sdk/default.nix {
+          path = sdkPath;
+        };
 
         cssparser = self.callPackage ./development/libraries/cssparser/default.nix {};
         gxml = self.callPackage ./development/libraries/gxml/default.nix {};
@@ -38,5 +40,5 @@ let
     ];
   } // args);
 in pkgs // {
-  path = ../.;
+  path = sdkPath;
 }

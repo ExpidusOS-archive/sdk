@@ -3,6 +3,7 @@
   system ? localSystem.system,
   crossSystem ? localSystem,
   nixpkgsPath ? import ../lib/nixpkgs.nix,
+  sdkPath ? ../.,
   ...
 }@args:
-(import ./overlay.nix (nixpkgsPath)) (builtins.removeAttrs args [ "nixpkgsPath" ])
+(import ./overlay.nix { inherit nixpkgsPath sdkPath; }) (builtins.removeAttrs args [ "nixpkgsPath" "sdkPath" ])

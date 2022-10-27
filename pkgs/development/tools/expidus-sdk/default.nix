@@ -1,8 +1,8 @@
-{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14, vala, nix, glib, git }:
+{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14, vala, nix, glib, git, path }:
 with lib;
 stdenv.mkDerivation rec {
   name = "expidus-sdk";
-  src = ../../../../.;
+  src = path;
   
   configurePlatforms = [ "host" "build" "target" ];
   configureFlags = [ "--bindir=$system/bin" "--datadir=$system/share" ];

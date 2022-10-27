@@ -13,7 +13,7 @@ pkgs.releaseTools.makeSourceTarball {
     cp -prd . ../$releaseName
     chmod -R u+w ../$releaseName
     ln -s . ../$releaseName/nixpkgs # hack to make ‘<nixpkgs>’ work
-    NIX_STATE_DIR=$TMPDIR nix-env -f ../$releaseName/pkgs/make-channel.nix --argstr nixpkgsPath ${pkgs.lib.expidus.nixpkgsPath} --show-trace -qaP --meta --xml \* > /dev/null
+    NIX_STATE_DIR=$TMPDIR nix-env -f ../$releaseName/pkgs/make-channel.nix --argstr nixpkgsPath ${pkgs.lib.expidus.nixpkgsPath} --argstr sdkPath ${pkgs.path} --show-trace -qaP --meta --xml \* > /dev/null
     cd ..
     chmod -R u+w $releaseName
     tar cfJ $out/tarballs/$releaseName.tar.xz $releaseName
