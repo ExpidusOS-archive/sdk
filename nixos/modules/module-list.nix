@@ -152,6 +152,7 @@ let
     (nixpkgs + "/programs/droidcam.nix")
     (nixpkgs + "/programs/environment.nix")
     (nixpkgs + "/programs/evince.nix")
+    ./programs/expidus-terminal.nix
     (nixpkgs + "/programs/extra-container.nix")
     (nixpkgs + "/programs/feedbackd.nix")
     (nixpkgs + "/programs/file-roller.nix")
