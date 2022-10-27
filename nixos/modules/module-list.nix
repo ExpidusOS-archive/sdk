@@ -109,7 +109,7 @@ let
     ./installer/tools/tools.nix
     (nixpkgs + "/misc/assertions.nix")
     (nixpkgs + "/misc/crashdump.nix")
-    (nixpkgs + "/misc/documentation.nix")
+    ./misc/documentation.nix
     (nixpkgs + "/misc/extra-arguments.nix")
     (nixpkgs + "/misc/ids.nix")
     (nixpkgs + "/misc/lib.nix")
