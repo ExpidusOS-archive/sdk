@@ -2,8 +2,7 @@
 with lib;
 stdenv.mkDerivation rec {
   name = "expidus-sdk";
-  src = path;
-  inherit (lib.expidus.trivial) version;
+  src = ../../../../.;
   
   configurePlatforms = [ "host" "build" "target" ];
   configureFlags = [ "--bindir=$system/bin" "--datadir=$system/share" ];
