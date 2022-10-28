@@ -17,11 +17,11 @@ stdenv.mkDerivation rec {
   buildInputs = [ glib ];
 
   postInstall = ''
-    mkdir -p $system/bin $system/etc $system/share
-    cp system/expidus-version $system/bin/expidus-version
-    cp system/lsb-release $system/etc/lsb-release
-    cp system/os-release $system/etc/os-release
-    cp -r system/po $system/share/locale
+    mkdir -p $sys/bin $sys/etc $sys/share
+    cp system/expidus-version $sys/bin/expidus-version
+    cp system/lsb-release $sys/etc/lsb-release
+    cp system/os-release $sys/etc/os-release
+    cp -r system/po $sys/share/locale
   '';
 
   meta = with lib; {
