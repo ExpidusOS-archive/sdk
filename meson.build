@@ -78,6 +78,12 @@ install_symlink('latest', install_dir: join_paths(libdir, 'expidus-sdk'), pointi
 if nix.found()
   nix_channeldir = join_paths(sdk_libdir, 'nix', 'channel')
 
+  install_subdir('data', install_dir: nix_channeldir, strip_directory: false)
+  install_subdir('profile.d', install_dir: nix_channeldir, strip_directory: false)
+  install_subdir('system', install_dir: nix_channeldir, strip_directory: false)
+  install_subdir('wrappers', install_dir: nix_channeldir, strip_directory: false)
+  install_data('meson.build', install_dir: nix_channeldir)
+
   install_subdir('doc', install_dir: nix_channeldir, strip_directory: false)
   install_subdir('lib', install_dir: nix_channeldir, strip_directory: false)
   install_subdir('nixos', install_dir: nix_channeldir, strip_directory: false)

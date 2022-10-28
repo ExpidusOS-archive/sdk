@@ -41,12 +41,12 @@ in
 
     # Subscribe the root user to the NixOS channel by default.
     if [ ! -e "/root/.nix-channels" ]; then
-      echo "${channelPath} nixos" > "/root/.nix-channels"
+      echo "file://${channelPath} nixos" > "/root/.nix-channels"
     fi
 
     # Add the channel to
     if [ ! -e "/home/expidus-devel/.nix-channels" ]; then
-      echo "${channelPath} nixos" > "/root/.nix-channels"
+      echo "file://${channelPath} nixos" > "/root/.nix-channels"
     fi
   '';
 
