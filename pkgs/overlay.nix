@@ -15,7 +15,7 @@ let
 
   pkgs-overlay = (self: super:
     let
-      callPackage = path: attrs: (super.lib.callPackageWith self) path attrs;
+      callPackage = path: attrs: (self.lib.callPackageWith (self // attrs-overlay (self super))) path attrs;
     in {
       gtk-layer-shell = self.callPackage ./development/libraries/gtk-layer-shell/default.nix {};
 
