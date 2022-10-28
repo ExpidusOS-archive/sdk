@@ -15,7 +15,7 @@ let
 
   pkgs-overlay = (self: super:
     let
-      callPackage = path: attrs: (self.lib.callPackageWith (self // attrs-overlay (self super))) path attrs;
+      callPackage = path: attrs: (self.lib.callPackageWith self) path attrs;
     in {
       gtk-layer-shell = self.callPackage ./development/libraries/gtk-layer-shell/default.nix {};
 
@@ -45,13 +45,5 @@ let
       expidus-terminal = callPackage ./applications/terminal-emulators/expidus-terminal/default.nix {};
   });
 
-  pkgs = import (nixpkgsPath + "/default.nix") ({
-    overlays = [
-      attrs-overlay
-      pkgs-overlay
-    ];
-  } // args);
-
-  overlaied-attrs = attrs-overlay pkgs pkgs;
-  overlaied-pkgs = pkgs-overlay overlaied-attrs overlaied-attrs;
-in pkgs // overlaied-attrs // overlaied-pkgs
+  pkgs = import (nixpkgsPath + "/default.nix") args;
+in (pkgs.extend attrs-overlay).extend pkgs-overlay
