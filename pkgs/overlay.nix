@@ -11,10 +11,10 @@ let
       (self: super:
         let
           lib = import (sdkPath + "/lib/overlay.nix") nixpkgsPath;
-          callPackage = path: attrs: self.callPackage path ({
+          callPackage = path: attrs: (self.lib.callPackageWith (self // {
             inherit lib;
             path = sdkPath;
-          } // attrs);
+          })) path attrs;
         in {
           inherit lib;
 
