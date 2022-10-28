@@ -110,7 +110,7 @@ let
 
 
   nixos-help = let
-    helpScript = pkgs.writeShellScriptBin "nixos-help" ''
+    helpScript = pkgs.writeShellScriptBin "expidus-help" ''
       # Finds first executable browser in a colon-separated list.
       # (see how xdg-open defines BROWSER)
       browser="$(
@@ -128,16 +128,16 @@ let
     '';
 
     desktopItem = pkgs.makeDesktopItem {
-      name = "nixos-manual";
-      desktopName = "NixOS Manual";
-      genericName = "View NixOS documentation in a web browser";
+      name = "expidus-manual";
+      desktopName = "ExpidusOS Manual";
+      genericName = "View ExpidusOS documentation in a web browser";
       icon = "nix-snowflake";
-      exec = "nixos-help";
+      exec = "expidus-help";
       categories = ["System"];
     };
 
     in pkgs.symlinkJoin {
-      name = "nixos-help";
+      name = "expidus-help";
       paths = [
         helpScript
         desktopItem
@@ -341,7 +341,7 @@ in
         ++ optionals cfg.doc.enable [ manual.manualHTML nixos-help ];
 
       services.getty.helpLine = mkIf cfg.doc.enable (
-          "\nRun 'nixos-help' for the NixOS manual."
+          "\nRun 'expidus-help' for the NixOS manual."
       );
     })
 
