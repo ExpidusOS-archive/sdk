@@ -85,6 +85,7 @@ let
 
   nixosWithUserModules = noUserModules.extendModules { modules = allUserModules; };
 in withWarnings nixosWithUserModules // {
+  inherit evalConfigArgs;
   inherit extraArgs;
   inherit (nixosWithUserModules._module.args) pkgs;
 }

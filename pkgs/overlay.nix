@@ -6,18 +6,19 @@
   ...
 }@args:
 let
+  lib = import (sdkPath + "/lib/overlay.nix") nixpkgsPath;
+
+  extend-attrs = {
+    inherit lib;
+    path = sdkPath;
+  };
+
   pkgs = import (nixpkgsPath + "/default.nix") ({
     overlays = [
       (self: super:
         let
-          lib = import (sdkPath + "/lib/overlay.nix") nixpkgsPath;
-          callPackage = path: attrs: (self.lib.callPackageWith (self // {
-            inherit lib;
-            path = sdkPath;
-          })) path attrs;
-        in {
-          inherit lib;
-
+          callPackage = path: attrs: (self.lib.callPackageWith (self // extend-attrs)) path attrs;
+        in (extend-attrs // {
           gtk-layer-shell = self.callPackage ./development/libraries/gtk-layer-shell/default.nix {};
 
           libadwaita = super.libadwaita.overrideAttrs (old: {
@@ -44,9 +45,7 @@ let
           libtokyo = callPackage ./development/libraries/libtokyo/default.nix {};
           genesis-shell = callPackage ./desktops/genesis-shell/default.nix {};
           expidus-terminal = callPackage ./applications/terminal-emulators/expidus-terminal/default.nix {};
-      })
+        }))
     ];
   } // args);
-in pkgs // {
-  path = sdkPath;
-}
+in (pkgs // extend-attrs)
