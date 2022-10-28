@@ -3,11 +3,12 @@ with lib;
 stdenv.mkDerivation rec {
   name = "expidus-sdk";
   src = path;
+  inherit (lib.expidus.trivial) version;
   
   configurePlatforms = [ "host" "build" "target" ];
   configureFlags = [ "--bindir=$system/bin" "--datadir=$system/share" ];
 
-  outputs = [ "out" "system" ];
+  outputs = [ "out" "sys" ];
 
   setupHooks = [ ./setup-hook.sh ];
   enableParallelBuilding = true;
@@ -24,8 +25,9 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
+    description = "A next-gen desktop shell designed for mobile and desktop devices.";
     homepage = "https://github.com/ExpidusOS/sdk";
-    license = with licenses; [ gpl3Only ];
+    license = licenses.gpl3Only;
     maintainers = with expidus.maintainers; [ TheComputerGuy ];
   };
 }

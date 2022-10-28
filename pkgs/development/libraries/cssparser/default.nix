@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
 
   meta = with lib; {
     homepage = "https://github.com/pepstack/cssparser";
-    license = with licenses; [ mit ];
+    license = licenses.mit;
     maintainers = [ "Tristan Ross" "pepstack" ];
   };
 }

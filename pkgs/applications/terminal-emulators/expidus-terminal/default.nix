@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "The terminal for ExpidusOS";
     homepage = "https://github.com/ExpidusOS/terminal";
-    license = with licenses; [ gpl3Only ];
+    license = licenses.gpl3Only;
     maintainers = with lib.expidus.maintainers; [ TheComputerGuy ];
   };
 }

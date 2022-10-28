@@ -23,7 +23,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "A libadwaita wrapper for ExpidusOS with Tokyo Night's styling";
     homepage = "https://github.com/ExpidusOS/libtokyo";
-    license = with licenses; [ gpl3Only ];
+    license = licenses.gpl3Only;
     maintainers = with expidus.maintainers; [ TheComputerGuy ];
   };
 }

@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "An IoC Container for Vala";
     homepage = "https://github.com/nahuelwexd/Vadi";
-    license = with licenses; [ lgpl3Only ];
+    license = licenses.lgpl3Only;
     maintainers = [ "Tristan Ross" "Nahu" ];
   };
 }

@@ -21,7 +21,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "Device identification library";
     homepage = "https://github.com/ExpidusOS/libdevident";
-    license = with licenses; [ gpl3Only ];
+    license = licenses.gpl3Only;
     maintainers = with expidus.maintainers; [ TheComputerGuy ];
   };
 }

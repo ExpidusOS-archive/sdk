@@ -23,7 +23,7 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     description = "The next generation desktop and mobile shell";
     homepage = "https://github.com/ExpidusOS/genesis";
-    license = with licenses; [ gpl3Only ];
+    license = licenses.gpl3Only;
     maintainers = with expidus.maintainers; [ TheComputerGuy ];
   };
 }

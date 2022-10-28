@@ -231,12 +231,12 @@ in
         nixos-generate-config
         nixos-version
         nixos-enter
-        pkgs.expidus-sdk.system
+        pkgs.expidus-sdk.sys
       ] ++ lib.optional (nixos-option != null) nixos-option;
 
     system.build = {
       inherit nixos-install nixos-generate-config nixos-option nixos-rebuild nixos-enter;
-      expidus-system = pkgs.expidus-sdk.system;
+      expidus-system = pkgs.expidus-sdk.sys;
     };
 
   };

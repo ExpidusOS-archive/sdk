@@ -15,13 +15,13 @@ in base // {
 
   config = base.config // {
     environment.etc = {
-      "lsb-release".source = "${pkgs.expidus-sdk.system}/etc/lsb-release";
-      "os-release".source = "${pkgs.expidus-sdk.system}/etc/os-release";
+      "lsb-release".source = "${pkgs.expidus-sdk.sys}/etc/lsb-release";
+      "os-release".source = "${pkgs.expidus-sdk.sys}/etc/os-release";
     };
 
     boot.initrd.systemd.contents = {
-      "/etc/os-release".source = "${pkgs.expidus-sdk.system}/etc/os-release";
-      "/etc/initrd-release".source = "${pkgs.expidus-sdk.system}/etc/os-release";
+      "/etc/os-release".source = "${pkgs.expidus-sdk.sys}/etc/os-release";
+      "/etc/initrd-release".source = "${pkgs.expidus-sdk.sys}/etc/os-release";
     };
   };
 }
