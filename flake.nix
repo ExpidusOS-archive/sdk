@@ -81,10 +81,9 @@
                 inherit system;
                 specialArgs = { inherit flake; };
 
-                pkgs = import ./. {
+                pkgs = (import ./. {
                   inherit system;
-                  overlays = [ self.overlays.${target} ];
-                };
+                }).extend self.overlays.${target};
                 
                 modules = [
                   ./nixos/dev.nix
