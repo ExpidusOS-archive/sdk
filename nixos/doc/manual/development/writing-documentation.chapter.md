@@ -7,14 +7,14 @@ worthy contribution to the project.
 
 ## Building the Manual {#sec-writing-docs-building-the-manual}
 
-The DocBook sources of the [](#book-nixos-manual) are in the
-[`nixos/doc/manual`](https://github.com/NixOS/nixpkgs/tree/master/nixos/doc/manual)
-subdirectory of the Nixpkgs repository.
+The DocBook sources of the [](#book-expidus-manual) are in the
+[`nixos/doc/manual`](https://github.com/ExpidusOS/sdk/tree/master/nixos/doc/manual)
+subdirectory of the SDK repository.
 
 You can quickly validate your edits with `make`:
 
 ```ShellSession
-$ cd /path/to/nixpkgs/nixos/doc/manual
+$ cd /path/to/expidus-sdk/nixos/doc/manual
 $ nix-shell
 nix-shell$ make
 ```

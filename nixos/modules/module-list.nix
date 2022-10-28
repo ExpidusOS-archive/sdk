@@ -413,7 +413,7 @@ let
     (nixpkgs + "/services/development/lorri.nix")
     (nixpkgs + "/services/development/zammad.nix")
     (nixpkgs + "/services/display-managers/greetd.nix")
-    (nixpkgs + "/services/editors/emacs.nix")
+    ./services/editors/emacs.nix
     (nixpkgs + "/services/editors/infinoted.nix")
     (nixpkgs + "/services/editors/haste.nix")
     (nixpkgs + "/services/finance/odoo.nix")

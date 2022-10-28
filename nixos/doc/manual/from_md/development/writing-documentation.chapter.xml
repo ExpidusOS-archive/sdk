@@ -1,5 +1,5 @@
 <chapter xmlns="http://docbook.org/ns/docbook"  xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" xml:id="sec-writing-documentation">
-  <title>Writing NixOS Documentation</title>
+  <title>Writing ExpidusOS Documentation</title>
   <para>
     As NixOS grows, so too does the need for a catalogue and explanation
     of its extensive functionality. Collecting pertinent information
@@ -9,7 +9,7 @@
   <section xml:id="sec-writing-docs-building-the-manual">
     <title>Building the Manual</title>
     <para>
-      The DocBook sources of the <xref linkend="book-nixos-manual" />
+      The DocBook sources of the <xref linkend="book-expidus-manual" />
       are in the
       <link xlink:href="https://github.com/NixOS/nixpkgs/tree/master/nixos/doc/manual"><literal>nixos/doc/manual</literal></link>
       subdirectory of the Nixpkgs repository.
