@@ -3,6 +3,7 @@
   localSystem ? { system = args.system or builtins.currentSystem; },
   system ? localSystem.system,
   crossSystem ? localSystem,
+  overlays ? [],
   ...
 }@args:
 let
@@ -45,5 +46,8 @@ let
       expidus-terminal = callPackage ./applications/terminal-emulators/expidus-terminal/default.nix {};
   });
 
-  pkgs = import (nixpkgsPath + "/default.nix") args;
-in (pkgs.extend attrs-overlay).extend pkgs-overlay
+  pkgs = import (nixpkgsPath + "/default.nix") (builtins.removeAttrs args [ "overlays" ]);
+in pkgs.appendOverlays ([
+    attrs-overlay
+    pkgs-overlay
+  ] ++ overlays)
