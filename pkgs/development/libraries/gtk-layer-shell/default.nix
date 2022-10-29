@@ -14,15 +14,15 @@
 
 stdenv.mkDerivation rec {
   pname = "gtk-layer-shell";
-  version = "0.7.1";
+  version = "0.8.0";
 
   outputs = [ "out" "dev" "devdoc" ];
 
   src = fetchFromGitHub {
     owner = "wmww";
     repo = "gtk-layer-shell";
-    rev = "3ac6dbcbd8d53d5f1dadd055680555d08c56368a";
-    sha256 = "Ht1qqzVVl0jfpzHPuLgaVVyFIMEiYHjzjh7UqmrkXbU=";
+    rev = "a2c481c5eef5014475a2705f92b633d16fa5a99c";
+    sha256 = "Z7jPYLKgkwMNXu80aaZ2vNj57LbN+X2XqlTTq6l0wTE=";
   };
 
   nativeBuildInputs = [
