@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo, gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas, expidus-sdk, networkmanager }:
+{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo, gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas, expidus-sdk, networkmanager, upower }:
 with lib;
 stdenv.mkDerivation rec {
   pname = "genesis-shell";
@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection wrapGAppsHook expidus-sdk ];
   buildInputs = [ vadi libdevident libtokyo libpeas dbus gsettings-desktop-schemas ]
-    ++ optionals stdenv.isLinux [ gtk-layer-shell networkmanager ];
+    ++ optionals stdenv.isLinux [ gtk-layer-shell networkmanager upower ];
   propagatedBuildInputs = buildInputs;
 
   mesonFlags = optionals stdenv.isDarwin [ "-Ddbus=disabled" "-Dx11=disabled" "-Dwayland=disabled" ];
