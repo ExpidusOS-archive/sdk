@@ -9,6 +9,7 @@ stdenv.mkDerivation rec {
     repo = "genesis";
     rev = "d83bf6e3481b225347bc49122befaf3a4ae2edcd";
     sha256 = "33U1z0lqn5ie4LpM8UNgH0+HIme/fxvw3flQlkvQBjA=";
+    fetchSubmodules = true;
   };
 
   outputs = [ "out" "dev" "devdoc" ];
