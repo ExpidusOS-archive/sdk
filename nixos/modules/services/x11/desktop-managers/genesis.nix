@@ -148,7 +148,7 @@ in
       environment.systemPackages =
         let
           mandatoryPackages = with pkgs; [ genesis-shell ];
-          optionalPackages = with pkgs; [ adwaita-icon-theme ];
+          optionalPackages = with pkgs; [ gnome.adwaita-icon-theme ];
         in mandatoryPackages
           ++ utils.removePackagesByName optionalPackages config.environment.genesis.excludePackages;
 
