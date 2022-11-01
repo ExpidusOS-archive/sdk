@@ -39,7 +39,7 @@ in
       services.genesis.shell.enable = true;
     })
     (mkIf (cfg.enable && cfg.sessions.sway.enable)
-      let
+      (let
         genesis-sway-dbus-environment = pkgs.writeShellScriptBin "genesis-sway-dbus-environment" ''
           dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
           systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
@@ -83,7 +83,7 @@ in
           enable = true;
           wrapperFeatures.gtk = true;
         };
-      })
+      }))
     (mkIf service-cfg.shell.enable {
       hardware.pulseaudio.enable = mkDefault true;
       security.polkit.enable = true;

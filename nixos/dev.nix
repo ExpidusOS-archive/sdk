@@ -27,15 +27,6 @@ in
   programs.xwayland.enable = true;
   hardware.opengl.enable = true;
 
-  services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.genesis = {
-      enable = true;
-      sessions.sway.enable = true;
-    };
-  };
-
   environment.systemPackages = with pkgs; [ expidus-sdk ];
 
   nix.nixPath = [
@@ -81,6 +72,10 @@ in
     displayManager.gdm = {
       enable = true;
       wayland = true;
+    };
+    desktopManager.genesis = {
+      enable = true;
+      sessions.sway.enable = true;
     };
   };
 
