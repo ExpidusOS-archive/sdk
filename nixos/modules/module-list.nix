@@ -1131,6 +1131,7 @@ let
     (nixpkgs + "/services/x11/desktop-managers/default.nix")
     (nixpkgs + "/services/x11/display-managers/default.nix")
     (nixpkgs + "/services/x11/display-managers/gdm.nix")
+    ./services/x11/desktop-managers/genesis.nix
     (nixpkgs + "/services/x11/display-managers/lightdm.nix")
     (nixpkgs + "/services/x11/display-managers/sddm.nix")
     (nixpkgs + "/services/x11/display-managers/slim.nix")

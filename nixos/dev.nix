@@ -27,6 +27,12 @@ in
   programs.xwayland.enable = true;
   hardware.opengl.enable = true;
 
+  services.xserver = {
+    enable = true;
+    displayManager.gdm.enable = true;
+    desktopManager.genesis.enable = true;
+  };
+
   environment.systemPackages = with pkgs; [ expidus-sdk ];
 
   nix.nixPath = [
