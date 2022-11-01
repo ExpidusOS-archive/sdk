@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, utils, ... }:
 with lib;
 let
   cfg = config.services.xserver.desktopManager.genesis;
@@ -6,6 +6,13 @@ let
 in
 {
   options = {
+     environment.genesis.excludePackages = mkOption {
+      default = [];
+      example = literalExpression "[ pkgs.gnome.totem ]";
+      type = types.listOf types.package;
+      description = "Which packages Genesis should exclude from the default environment";
+    };
+
     services.genesis = {
       shell.enable = mkEnableOption "Enable Genesis Shell";
     };
@@ -138,7 +145,13 @@ in
       networking.networkmanager.enable = mkDefault true;
       services.xserver.updateDbusEnvironment = true;
 
-      environment.systemPackages = with pkgs; [ genesis-shell ];
+      environment.systemPackages =
+        let
+          mandatoryPackages = with pkgs; [ genesis-shell ];
+          optionalPackages = with pkgs; [ adwaita-icon-theme ];
+        in mandatoryPackages
+          ++ utils.removePackagesByName optionalPackages config.environment.genesis.excludePackages;
+
 
       i18n.inputMethod = mkDefault {
         enabled = "ibus";
