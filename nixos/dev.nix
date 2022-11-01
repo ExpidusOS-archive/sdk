@@ -69,13 +69,23 @@ in
   services.xserver = {
     enable = true;
     libinput.enable = true;
-    displayManager.gdm = {
-      enable = true;
-      wayland = true;
+    displayManager = {
+      defaultSession = "genesis-i3";
+      autoLogin = {
+        enable = true;
+        user = "developer";
+      };
+      gdm = {
+        enable = true;
+        wayland = true;
+      };
     };
     desktopManager.genesis = {
       enable = true;
-      sessions.sway.enable = true;
+      sessions = {
+        i3.enable = true;
+        sway.enable = true;
+      };
     };
   };
 
@@ -86,6 +96,12 @@ in
     group = "wheel";
     password = "developer";
     isNormalUser = true;
+  };
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    gtkUsePortal = true;
   };
 
   system.stateVersion = "22.05";
