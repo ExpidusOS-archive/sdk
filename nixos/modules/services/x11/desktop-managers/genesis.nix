@@ -50,6 +50,7 @@ in
         genesis-i3-cfg = pkgs.writeTextFile {
           name = "genesis-i3.cfg";
           text = ''
+            include ~/.config/i3/config.d/*.conf
             exec genesis-shell -m gadgets
           '';
         };
