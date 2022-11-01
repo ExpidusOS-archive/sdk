@@ -30,7 +30,10 @@ in
   services.xserver = {
     enable = true;
     displayManager.gdm.enable = true;
-    desktopManager.genesis.enable = true;
+    desktopManager.genesis = {
+      enable = true;
+      sessions.sway.enable = true;
+    };
   };
 
   environment.systemPackages = with pkgs; [ expidus-sdk ];
