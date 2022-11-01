@@ -105,8 +105,8 @@ in
       environment.systemPackages = with pkgs; [ genesis-shell ];
 
       i18n.inputMethod = mkDefault {
-        enabled = mkDefault "ibus";
-        ibus.engines = mkDefault (with pkgs.ibus-engines; [ mozc ]);
+        enabled = "ibus";
+        ibus.engines = with pkgs.ibus-engines; [ mozc ];
       };
     })
   ];
