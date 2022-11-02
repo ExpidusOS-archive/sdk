@@ -92,6 +92,10 @@
                   ./nixos/dev.nix
                   {
                     environment.systemPackages = [ pkg ];
+                    virtualisation.sharedDirectories.source-code = {
+                      source = builtins.toString self;
+                      target = "/home/expidus-devel/source";
+                    };
                   }
                 ] ++ packages.nixosModules;
               });
