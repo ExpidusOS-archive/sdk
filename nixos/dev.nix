@@ -71,11 +71,6 @@ in
     enable = true;
     libinput.enable = true;
     displayManager = {
-      defaultSession = "genesis-sway";
-      autoLogin = {
-        enable = true;
-        user = "developer";
-      };
       gdm = {
         enable = true;
         wayland = true;
