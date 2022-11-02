@@ -27,7 +27,7 @@ in
   programs.xwayland.enable = true;
   hardware.opengl.enable = true;
 
-  environment.systemPackages = with pkgs; [ expidus-sdk ];
+  environment.systemPackages = with pkgs; [ expidus-sdk xorg.xinit ];
 
   nix.nixPath = [
     "nixpkgs=${channelPath}"
