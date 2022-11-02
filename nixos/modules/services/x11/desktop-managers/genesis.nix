@@ -135,6 +135,7 @@ in
       services.colord.enable = mkDefault true;
       services.accounts-daemon.enable = true;
       services.upower.enable = config.powerManagement.enable;
+      services.xserver.libinput.enable = mkDefault true;
 
       xdg.mime.enable = true;
       xdg.icons.enable = true;
@@ -151,7 +152,6 @@ in
           optionalPackages = with pkgs; [ gnome.adwaita-icon-theme ];
         in mandatoryPackages
           ++ utils.removePackagesByName optionalPackages config.environment.genesis.excludePackages;
-
 
       i18n.inputMethod = mkDefault {
         enabled = "ibus";
