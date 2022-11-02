@@ -56,6 +56,7 @@
                 path = prev.lib.cleanSource (builtins.toString self);
               };
 
+              separateDebugInfo = true;
               nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ packages.nativeBuildInputs else [];
               buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ packages.buildInputs else [];
               propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ packages.propagatedBuildInputs else [];
@@ -90,14 +91,14 @@
                 
                 modules = [
                   ./nixos/dev.nix
-                  ({ config, lib, ... }: {
+                  {
                     environment.systemPackages = [ pkg ];
                     virtualisation.sharedDirectories.source-code = {
                       source = builtins.toString self;
                       target = "/home/expidus-devel/source";
                       options = [ "uname=developer" ];
                     };
-                  })
+                  }
                 ] ++ packages.nixosModules;
               });
             in systems // {
