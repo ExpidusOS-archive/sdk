@@ -13,7 +13,7 @@ let
 in
 {
   imports = [
-    (nixpkgs + "/nixos/modules/virtualisation/qemu-vm.nix")
+    ./modules/virtualisation/qemu-vm.nix
     (nixpkgs + "/nixos/modules/installer/scan/not-detected.nix")
     (nixpkgs + "/nixos/modules/profiles/qemu-guest.nix")
   ];

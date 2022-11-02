@@ -90,13 +90,14 @@
                 
                 modules = [
                   ./nixos/dev.nix
-                  {
+                  ({ config, lib, ... }: {
                     environment.systemPackages = [ pkg ];
                     virtualisation.sharedDirectories.source-code = {
                       source = builtins.toString self;
                       target = "/home/expidus-devel/source";
+                      options = [ "uname=developer" ];
                     };
-                  }
+                  })
                 ] ++ packages.nixosModules;
               });
             in systems // {
