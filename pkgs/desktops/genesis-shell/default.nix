@@ -1,6 +1,6 @@
 { lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo,
   gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas, expidus-sdk, networkmanager,
-  upower, libpulseaudio, ibus, libgweather }:
+  upower, libpulseaudio, ibus }:
 with lib;
 stdenv.mkDerivation rec {
   pname = "genesis-shell";
@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
   outputs = [ "out" "dev" "devdoc" ];
 
   nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection wrapGAppsHook expidus-sdk ];
-  buildInputs = [ vadi libdevident libtokyo libpeas dbus gsettings-desktop-schemas libgweather ]
+  buildInputs = [ vadi libdevident libtokyo libpeas dbus gsettings-desktop-schemas ]
     ++ optionals stdenv.isLinux [ gtk-layer-shell networkmanager upower libpulseaudio ibus ];
   propagatedBuildInputs = buildInputs;
 
