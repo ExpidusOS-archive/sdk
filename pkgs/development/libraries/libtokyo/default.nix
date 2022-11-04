@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, vala, gobject-introspection, glib, sass, nodejs, vadi, gtk3, gtk4, libhandy, libadwaita, ntk, expidus-sdk }:
+{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, vala, gobject-introspection, glib, sass, nodejs, vadi, gtk3, gtk4, libhandy, libadwaita, ntk, expidus-sdk, libical }:
 stdenv.mkDerivation rec {
   pname = "libtokyo";
   version = "0.1.0";
@@ -15,7 +15,7 @@ stdenv.mkDerivation rec {
   doChecks = true;
 
   nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection sass nodejs expidus-sdk ];
-  buildInputs = [ vadi gtk3 gtk4 libhandy libadwaita ntk ];
+  buildInputs = [ vadi gtk3 gtk4 libhandy libadwaita ntk libical ];
   propagatedBuildInputs = buildInputs;
 
   mesonFlags = ["-Dntk=enabled" "-Dgtk4=enabled" "-Dgtk3=enabled" "-Dnodejs=disabled"];
