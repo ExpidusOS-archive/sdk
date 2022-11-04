@@ -58,6 +58,7 @@ in
           name = "genesis-i3.cfg";
           text = ''
             include ~/.config/i3/config.d/*.conf
+            exec --no-startup-id ibus-daemon --xim -d -r
             exec genesis-shell -m gadgets
           '';
         };
@@ -97,6 +98,7 @@ in
             include ~/.config/sway/config.d/*
 
             exec genesis-sway-dbus-environment
+            exec --no-startup-id ibus-daemon --xim -d -r
             exec genesis-shell -m gadgets
           '';
         };
