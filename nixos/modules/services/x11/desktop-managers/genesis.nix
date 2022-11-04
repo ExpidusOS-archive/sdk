@@ -131,6 +131,7 @@ in
     (mkIf service-cfg.shell.enable {
       hardware.pulseaudio.enable = mkDefault true;
       security.polkit.enable = true;
+      services.gnome.evolution-data-server.enable = true;
       services.dbus.enable = true;
       services.colord.enable = mkDefault true;
       services.accounts-daemon.enable = true;
@@ -157,6 +158,10 @@ in
         enabled = "ibus";
         ibus.engines = with pkgs.ibus-engines; [ mozc ];
       };
+
+      environment.pathsToLink = [
+        "/share" # TODO: https://github.com/NixOS/nixpkgs/issues/47173
+      ];
     })
   ];
 }
