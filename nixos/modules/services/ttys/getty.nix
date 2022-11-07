@@ -61,8 +61,10 @@ in base // {
 
     environment.etc.issue = { # Friendly greeting on the virtual consoles.
       source = pkgs.writeText "issue" ''
+
         [1;32m${config.services.getty.greetingLine}[0m
         ${config.services.getty.helpLine}
+
       '';
     };
   };
