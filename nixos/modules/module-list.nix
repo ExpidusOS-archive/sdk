@@ -1021,7 +1021,7 @@ let
     (nixpkgs + "/services/torrent/peerflix.nix")
     (nixpkgs + "/services/torrent/rtorrent.nix")
     (nixpkgs + "/services/torrent/transmission.nix")
-    (nixpkgs + "/services/ttys/getty.nix")
+    ./services/ttys/getty.nix
     (nixpkgs + "/services/ttys/gpm.nix")
     (nixpkgs + "/services/ttys/kmscon.nix")
     (nixpkgs + "/services/wayland/cage.nix")
