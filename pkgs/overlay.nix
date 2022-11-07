@@ -28,6 +28,10 @@ let
         meta.platforms = self.lib.platforms.unix;
       });
 
+      libical = super.libical.overrideAttrs (old: {
+        meta.broken = false;
+      });
+
       vte = super.vte.overrideAttrs (old: {
         mesonFlags = old.mesonFlags ++ [ "-D_b_symbolic_functions=false" ];
         meta.broken = false;
