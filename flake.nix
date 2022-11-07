@@ -37,7 +37,7 @@
         });
 
       lib = nixpkgs-lib.expidus // {
-        inherit forAllSystems nixpkgsFor supportedSystems nixos nixosSystem;
+        inherit forAllSystems forAllLinuxSystems nixpkgsFor supportedSystems nixos nixosSystem;
 
         mkFlake = {
           self,
