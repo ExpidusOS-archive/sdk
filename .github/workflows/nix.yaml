@@ -8,50 +8,6 @@ on:
     branches: ["master"]
 
 jobs:
-  packages:
-    strategy:
-      matrix:
-        package: [gtk-layer-shell, vte, libical, libadwaita, cssparser, gxml, vadi, ntk, libdevident, libtokyo, genesis-shell, expidus-terminal]
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Install Nix
-        uses: cachix/install-nix-action@v18
-        with:
-          extra_nix_config: |
-            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-            experimental-features = nix-command flakes
-      - uses: cachix/cachix-action@v12
-        with:
-          name: expidus
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-          extraPullNames: nix-community
-      - name: Build
-        run: nix-build ./default.nix -A ${{ matrix.package }}
-  legacy:
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Install Nix
-        uses: cachix/install-nix-action@v18
-        with:
-          extra_nix_config: |
-            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-            experimental-features = nix-command flakes
-      - uses: cachix/cachix-action@v12
-        with:
-          name: expidus
-          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
-          extraPullNames: nix-community
-          skipPush: true
-      - name: Build
-        run: nix-build ./default.nix -A expidus-sdk
   flake:
     strategy:
       matrix:
@@ -78,3 +34,47 @@ jobs:
       - name: Bundle Flake
         if: github.event_name != 'pull_request'
         run: nix bundle
+  legacy:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            experimental-features = nix-command flakes
+      - uses: cachix/cachix-action@v12
+        with:
+          name: expidus
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: nix-community
+          skipPush: true
+      - name: Build
+        run: nix-build ./default.nix -A expidus-sdk
+  packages:
+    strategy:
+      matrix:
+        package: [gtk-layer-shell, vte, libical, libadwaita, cssparser, gxml, vadi, ntk, libdevident, libtokyo, genesis-shell, expidus-terminal]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            experimental-features = nix-command flakes
+      - uses: cachix/cachix-action@v12
+        with:
+          name: expidus
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: nix-community
+      - name: Build
+        run: nix-build ./default.nix -A ${{ matrix.package }}
