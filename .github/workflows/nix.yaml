@@ -27,6 +27,7 @@ jobs:
           name: expidus
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
+          skipPush: "${{ github.event_name == 'pull_request' }}"
       - name: Build Flake
         run: nix build -L
       - name: Check Flake
@@ -77,5 +78,6 @@ jobs:
           name: expidus
           authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
           extraPullNames: nix-community
+          skipPush: "${{ github.event_name == 'pull_request' }}"
       - name: Build
         run: nix-build ./default.nix -A ${{ matrix.package }}
