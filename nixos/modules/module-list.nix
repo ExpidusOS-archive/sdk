@@ -593,7 +593,7 @@ let
     (nixpkgs + "/services/misc/mx-puppet-discord.nix")
     (nixpkgs + "/services/misc/n8n.nix")
     (nixpkgs + "/services/misc/nitter.nix")
-    (nixpkgs + "/services/misc/nix-daemon.nix")
+    ./services/misc/nix-daemon.nix
     (nixpkgs + "/services/misc/nix-gc.nix")
     (nixpkgs + "/services/misc/nix-optimise.nix")
     (nixpkgs + "/services/misc/nix-ssh-serve.nix")

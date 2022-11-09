@@ -94,7 +94,6 @@
                   packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
                 in nixosSystem {
                   inherit system;
-                  specialArgs = { inherit flake; };
 
                   pkgs = import ./. {
                     inherit system;
