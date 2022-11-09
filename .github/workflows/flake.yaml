@@ -1,0 +1,37 @@
+name: Flake
+
+on:
+  push:
+    branches: ["master"]
+    tags: ['v*.*.*']
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  flake:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            experimental-features = nix-command flakes
+      - uses: cachix/cachix-action@v18
+        with:
+          name: expidus
+          signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+          extraPullNames: nix-community
+      - name: Build Flake
+        run: nix build -L
+      - name: Check Flake
+        run: nix flake check
+      - name: Bundle Flake
+        if: github.event_name != 'pull_request'
+        run: nix bundle
