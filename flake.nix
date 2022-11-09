@@ -4,7 +4,7 @@
   outputs = { self }@inputs:
     let
       nixpkgs-lib = import ./lib;
-      currentSystem = builtins.toString builtins.currentSystem;
+      currentSystem = if builtins.hasAttr "currentSystem" builtins then builtins.toString builtins.currentSystem else "x86_64-linux";
 
       linuxSystems = [
         "armv6l-linux"
