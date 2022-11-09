@@ -71,9 +71,7 @@
           legacyPackages = forAllSystems (system:
             let
               pkgs = nixpkgsFor.${system};
-            in {
-              ${target} = (self.overlays.${target} pkgs pkgs).${name};
-            });
+            in (self.overlays.${target} pkgs pkgs));
 
           packages = forAllSystems (system:
             let
