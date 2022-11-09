@@ -1,7 +1,7 @@
-{ config, lib, pkgs, options, ... }@args:
-with lib;
+{ config, pkgs, options, ... }@args:
 let
-  base = (import (expidus.nixpkgsPath + "/nixos/modules/services/ttys/getty.nix")) args;
+  lib = import (pkgs.path + "/lib");
+  base = (import (expidus.nixpkgsPath + "/nixos/modules/services/ttys/getty.nix")) args // { inherit lib; };
   cfg = config.services.getty;
 
   baseArgs = [
