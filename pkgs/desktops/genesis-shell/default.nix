@@ -9,8 +9,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "genesis";
-    rev = "1393cbfa6dc05b1e3019d892687112178d029bad";
-    sha256 = "HR9gE5lQPdZfAc6uZFEeG72TFaMbFAtMAab/sswScUk=";
+    rev = "731341faa82ef7d7009698d4e64bbe204d58c043";
+    sha256 = "s63hM4Qe9gdTjF2uft6xGAdK+g09/pnj9cAS/8EHQms=";
     fetchSubmodules = true;
   };
 
