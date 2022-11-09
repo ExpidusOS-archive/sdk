@@ -1,7 +1,7 @@
 { config, pkgs, options, ... }@args:
 let
   lib = import (pkgs.path + "/lib");
-  base = (import (expidus.nixpkgsPath + "/nixos/modules/services/ttys/getty.nix")) args // { inherit lib; };
+  base = (import (lib.expidus.nixpkgsPath + "/nixos/modules/services/ttys/getty.nix")) args // { inherit lib; };
   cfg = config.services.getty;
 
   baseArgs = [
@@ -12,10 +12,10 @@ let
     "--login-options" cfg.loginOptions
   ] ++ cfg.extraArgs;
 
-  gettyCmd = args: "@${pkgs.util-linux}/sbin/agetty agetty ${escapeShellArgs baseArgs} ${args}";
+  gettyCmd = args: "@${pkgs.util-linux}/sbin/agetty agetty ${lib.escapeShellArgs baseArgs} ${args}";
 in base // {
   config = {
-    services.getty.greetingLine = mkDefault ''<<< Welcome to ExpidusOS ${expidus.trivial.version} (\m) - \l >>>'';
+    services.getty.greetingLine = mkDefault ''<<< Welcome to ExpidusOS ${lib.expidus.trivial.version} (\m) - \l >>>'';
 
     systemd.services."getty@" = {
       serviceConfig.ExecStart = [
@@ -56,7 +56,7 @@ in base // {
       ];
       serviceConfig.Restart = "always";
       restartIfChanged = false;
-      enable = mkDefault config.boot.isContainer;
+      enable = lib.mkDefault config.boot.isContainer;
     };
 
     environment.etc.issue = { # Friendly greeting on the virtual consoles.
