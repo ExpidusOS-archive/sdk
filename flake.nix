@@ -68,6 +68,13 @@
             }));
           };
 
+          legacyPackages = forAllSystems (system:
+            let
+              pkgs = nixpkgsFor.${system};
+            in {
+              ${target} = (self.overlays.${target} pkgs pkgs).${name};
+            });
+
           packages = forAllSystems (system:
             let
               pkgs = nixpkgsFor.${system};
@@ -132,8 +139,10 @@
       lib = nixpkgs-lib.extend (final: prev: {
         expidus = libExpidus;
       });
-    in rec {
+
+      sdk-flake = libExpidus.mkFlake { inherit self; name = "expidus-sdk"; };
+    in sdk-flake // ({
       inherit libExpidus lib self;
       legacyPackages = forAllSystems (system: import ./pkgs { inherit system; });
-    } // (libExpidus.mkFlake { inherit self; name = "expidus-sdk"; });
+    });
 }
