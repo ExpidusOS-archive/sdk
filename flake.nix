@@ -36,7 +36,7 @@
           }))];
         });
 
-      lib = nixpkgs-lib.expidus // {
+      libExpidus = nixpkgs-lib.expidus // {
         inherit forAllSystems forAllLinuxSystems nixpkgsFor supportedSystems nixos nixosSystem;
 
         mkFlake = {
@@ -128,8 +128,12 @@
             });
         };
       };
+
+      lib = nixpkgs-lib.extend (final: prev: {
+        expidus = libExpidus;
+      });
     in rec {
-      inherit lib self;
+      inherit libExpidus lib self;
       legacyPackages = forAllSystems (system: import ./pkgs { inherit system; });
-    } // (lib.mkFlake { inherit self; name = "expidus-sdk"; });
+    } // (libExpidus.mkFlake { inherit self; name = "expidus-sdk"; });
 }
