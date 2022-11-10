@@ -84,7 +84,7 @@ jobs:
   nix-release:
     strategy:
       matrix:
-        attr: [channel, manual, iso_gnome, containerTarball]
+        attr: [channel, manual, iso_gnome, iso_genesis]
     runs-on: ubuntu-latest
     needs: [package]
     steps:
