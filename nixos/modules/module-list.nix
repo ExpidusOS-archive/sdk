@@ -1,4 +1,4 @@
-{ nixpkgsPath ? (import ../../lib/nixpkgs.nix) }:
+{ nixpkgsPath ? (import ../../lib/channels/nixpkgs.nix) }:
 let
   nixpkgs = "${nixpkgsPath}/nixos/modules";
   # Generated with the following command:

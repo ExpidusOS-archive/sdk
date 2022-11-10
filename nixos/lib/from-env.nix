@@ -1,3 +1,3 @@
 let
-  nixos = import ../../lib/nixpkgs.nix;
+  nixos = import ../../lib/channels/nixpkgs.nix;
 in import (nixos + "/nixos/lib/from-env.nix")

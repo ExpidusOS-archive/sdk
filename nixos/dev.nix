@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-  nixpkgs = import ../lib/nixpkgs.nix;
+  nixpkgs = import ../lib/channels/nixpkgs.nix;
   loginMessage = "ExpidusOS Development Virtual Machine (EDVM)";
 
   platformString = platform:
