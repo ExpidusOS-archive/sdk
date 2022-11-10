@@ -105,8 +105,10 @@ jobs:
       - name: Build
         run: nix-build ./nixos/release.nix -A ${{ matrix.attr }} --show-trace
       - name: Compress Artifact
-        run: tar -cf result.tar.gz -C $(readlink -e result) .
+        run: find . -maxdepth 1 -mindepth 1 -name 'result*' -exec tar -cf {}.tar.gz -C {} --dereference . \;
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.attr }}-result
-          path: result.tar.gz
+          path: |
+            result-*.tar.gz
+            result.tar.gz
