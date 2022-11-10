@@ -1,21 +1,20 @@
-{ config, pkgs, options, ... }@args:
+{ config, lib, pkgs, options, ... }@args:
 let
-  lib = import (pkgs.path + "/lib");
-  base = (import (lib.expidus.nixpkgsPath + "/nixos/modules/services/ttys/getty.nix")) args // { inherit lib; };
+  base = (import (lib.expidus.nixpkgsPath + "/nixos/modules/services/ttys/getty.nix")) args;
   cfg = config.services.getty;
 
   baseArgs = [
     "--login-program" "${cfg.loginProgram}"
-  ] ++ optionals (cfg.autologinUser != null) [
+  ] ++ lib.optionals (cfg.autologinUser != null) [
     "--autologin" cfg.autologinUser
-  ] ++ optionals (cfg.loginOptions != null) [
+  ] ++ lib.optionals (cfg.loginOptions != null) [
     "--login-options" cfg.loginOptions
   ] ++ cfg.extraArgs;
 
   gettyCmd = args: "@${pkgs.util-linux}/sbin/agetty agetty ${lib.escapeShellArgs baseArgs} ${args}";
 in base // {
   config = {
-    services.getty.greetingLine = mkDefault ''<<< Welcome to ExpidusOS ${lib.expidus.trivial.version} (\m) - \l >>>'';
+    services.getty.greetingLine = lib.mkDefault ''<<< Welcome to ExpidusOS ${lib.expidus.trivial.version} (\m) - \l >>>'';
 
     systemd.services."getty@" = {
       serviceConfig.ExecStart = [
