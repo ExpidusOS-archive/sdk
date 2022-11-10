@@ -1,4 +1,4 @@
-{ nixpkgsPath, sdkPath }:
+{ nixpkgsPath, sdkPath }@bargs:
 {
   localSystem ? { system = args.system or builtins.currentSystem; },
   system ? localSystem.system,
@@ -18,6 +18,21 @@ let
     let
       callPackage = path: attrs: (self.lib.callPackageWith self) path attrs;
     in {
+      nixos = configuration:
+        let
+          c = import (sdkPath + "/nixos/lib/eval-config.nix") {
+            inherit (self.stdenv.hostPlatform) system;
+            pkgs = self;
+            inherit lib;
+            modules = [({ lib, ... }: {
+              config.nixpkgs.pkgs = lib.mkDefault self;
+            })] ++ (if builtins.isList configuration then
+              configuration
+            else [configuration]);
+          };
+        in c.config.system.build // c;
+
+      nixos-install-tools = callPackage ./tools/nix/nixos-install-tools/default.nix { inherit args bargs; };
       gtk-layer-shell = self.callPackage ./development/libraries/gtk-layer-shell/default.nix {};
 
       libadwaita = super.libadwaita.overrideAttrs (old: {

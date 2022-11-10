@@ -4,7 +4,7 @@ with lib;
 
 let
 
-  nixpkgs = import ../../../lib/nixpkgs.nix;
+  nixpkgs = lib.expidus.nixpkgsPath;
   cfg = config.documentation;
   allOpts = options;
 

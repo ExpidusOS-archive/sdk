@@ -2,7 +2,7 @@ evalConfigArgs@
 {
   system ? builtins.currentSystem,
   pkgs ? (import ../../. { system = builtins.currentSystem; crossSystem = { inherit system; }; }),
-  baseModules ? import ../modules/module-list.nix,
+  baseModules ? import ../modules/module-list.nix { inherit (pkgs.lib.expidus) nixpkgsPath; },
   extraArgs ? {},
   specialArgs ? {},
   modules,

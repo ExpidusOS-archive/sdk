@@ -4,7 +4,7 @@
 with lib;
 
 let
-  nixpkgs = import ../../../../lib/nixpkgs.nix;
+  nixpkgs = lib.expidus.nixpkgsPath;
 
   # This attribute is responsible for creating boot entries for
   # child configuration. They are only (directly) accessible

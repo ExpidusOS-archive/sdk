@@ -1,5 +1,6 @@
+{ nixpkgsPath ? (import ../../lib/nixpkgs.nix) }:
 let
-  nixpkgs = (import ../../lib/nixpkgs.nix) + "/nixos/modules";
+  nixpkgs = "${nixpkgsPath}/nixos/modules";
   # Generated with the following command:
   # cat module-list.nix | tail -n +2 | head -n -2 | xargs -I % printf '%\n' | cut -f2 -d '.' | xargs -I % printf '    (nixpkgs + "%.nix")\n'
   modules = [
@@ -559,7 +560,7 @@ let
     (nixpkgs + "/services/misc/gammu-smsd.nix")
     (nixpkgs + "/services/misc/geoipupdate.nix")
     (nixpkgs + "/services/misc/gitea.nix")
-    # ./services/misc/gitit.nix
+    ./services/misc/gitit.nix
     (nixpkgs + "/services/misc/gitlab.nix")
     (nixpkgs + "/services/misc/gitolite.nix")
     (nixpkgs + "/services/misc/gitweb.nix")

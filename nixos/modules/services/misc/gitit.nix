@@ -12,4 +12,4 @@ in {
     };
   };
   inherit (base) config;
-  }
+}

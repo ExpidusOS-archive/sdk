@@ -95,6 +95,10 @@
                 in nixosSystem {
                   inherit system;
 
+                  lib = nixpkgs-lib.extend (final: prev: {
+                    expidus = libExpidus;
+                  });
+
                   pkgs = import ./. {
                     inherit system;
                     overlays = [ self.overlays.${target} ];

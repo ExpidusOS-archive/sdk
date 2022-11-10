@@ -1,7 +1,7 @@
 args@{ lib, config, pkgs, ... }:
 with lib;
 let
-  base = import ((import ../../../lib/nixpkgs.nix) + "/nixos/modules/virtualisation/lxc-container.nix") args;
+  base = import (lib.expidus.nixpkgsPath + "/nixos/modules/virtualisation/lxc-container.nix") args;
   templateSubmodule = { ... }: {
     options = {
       enable = mkEnableOption "this template";
