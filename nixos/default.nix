@@ -1,4 +1,4 @@
-{ system ? builtins.currentSystem, configuration ? import ./lib/from-env.nix "NIXOS_CONFIG" <nixos-config> }:
+{ system ? builtins.currentSystem, configuration ? (import ./lib/from-env.nix {}) "NIXOS_CONFIG" <nixos-config> }:
 let
   eval = import ./lib/eval-config.nix {
     inherit system;

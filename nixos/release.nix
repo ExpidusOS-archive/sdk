@@ -1,17 +1,18 @@
-with import ../lib;
-
+let
+  lib = import ../lib;
+in with lib;
 { nixpkgs ? { outPath = cleanSource ./..; revCount = 130979; shortRev = "gfedcba"; },
   stableBranch ? false,
   supportedSystems ? [ "x86_64-linux" "aarch64-linux" ],
   configuration ? {} }:
-with import (expidus.nixpkgsPath + "/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
+with import (expidus.channels.nixpkgsPath + "/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
 let
   version = fileContents ../.version;
   versionSuffix =
     (if stableBranch then "." else "-alpha") + "${toString (nixpkgs.revCount - 379959)}.${nixpkgs.shortRev}";
   allTestsForSystem = system:
-    import (lib.expidus.nixpkgsPath + "/nixos/tests/all-tests.nix") {
-      inherit system;
+    import (expidus.channels.nixpkgsPath + "/nixos/tests/all-tests.nix") {
+      inherit system lib;
       pkgs = import ./.. { inherit system; };
       callTest = t: {
         ${system} = hydraJob t.test;
@@ -35,7 +36,8 @@ let
     with import ./.. { inherit system; };
 
     hydraJob ((import lib/eval-config.nix {
-      inherit system;
+      inherit system lib;
+      pkgs = import ./.. { inherit system; };
       modules = makeModules module {
         isoImage.isoBaseName = "expidus-${type}";
       };
@@ -46,7 +48,8 @@ let
     { module, system, ... }:
     with import ./.. { inherit system; };
     hydraJob ((import lib/eval-config.nix {
-      inherit system;
+      inherit system lib;
+      pkgs = import ./.. { inherit system; };
       modules = makeModules module {};
     }).config.system.build.sdImage);
 
@@ -56,7 +59,8 @@ let
     with import ./.. { inherit system; };
     let
       config = (import lib/eval-config.nix {
-        inherit system;
+        inherit system lib;
+        pkgs = import ./.. { inherit system; };
         modules = makeModules module {};
       }).config;
       tarball = config.system.build.tarball;
@@ -71,7 +75,8 @@ let
   makeClosure = module: buildFromConfig module (config: config.system.build.toplevel);
 
   buildFromConfig = module: sel: forAllSystems (system: hydraJob (sel (import ./lib/eval-config.nix {
-    inherit system;
+    inherit system lib;
+    pkgs = import ./.. { inherit system; };
     modules = makeModules module
       ({ ... }:
       { fileSystems."/".device  = mkDefault "/dev/sda1";
@@ -82,7 +87,8 @@ let
   makeNetboot = { module, system, ... }:
     let
       configEvaled = import lib/eval-config.nix {
-        inherit system;
+        inherit system lib;
+      pkgs = import ./.. { inherit system; };
         modules = makeModules module {};
       };
       build = configEvaled.config.system.build;
@@ -115,24 +121,24 @@ in rec {
   initialRamdisk = buildFromConfig ({ ... }: { }) (config: config.system.build.initialRamdisk);
 
   netboot = forMatchingSystems supportedSystems (system: makeNetboot {
-    module = expidus.nixpkgsPath + "/nixos/modules/installer/netboot/netboot-minimal.nix";
+    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/netboot/netboot-minimal.nix";
     inherit system;
   });
 
   iso_minimal = forAllSystems (system: makeIso {
-    module = expidus.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix";
+    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix";
     type = "minimal";
     inherit system;
   });
 
   iso_plasma5 = forMatchingSystems [ "x86_64-linux" ] (system: makeIso {
-    module = expidus.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix";
+    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix";
     type = "plasma5";
     inherit system;
   });
 
   iso_gnome = forMatchingSystems [ "x86_64-linux" ] (system: makeIso {
-    module = expidus.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix";
+    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix";
     type = "gnome";
     inherit system;
   });
@@ -140,23 +146,23 @@ in rec {
   # A variant with a more recent (but possibly less stable) kernel
   # that might support more hardware.
   iso_minimal_new_kernel = forMatchingSystems [ "x86_64-linux" "aarch64-linux" ] (system: makeIso {
-    module = expidus.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-minimal-new-kernel.nix";
+    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-minimal-new-kernel.nix";
     type = "minimal-new-kernel";
     inherit system;
   });
 
   sd_image = forMatchingSystems [ "armv6l-linux" "armv7l-linux" "aarch64-linux" ] (system: makeSdImage {
     module = {
-        armv6l-linux = expidus.nixpkgsPath + "/nixos/modules/installer/sd-card/sd-image-raspberrypi-installer.nix";
-        armv7l-linux = expidus.nixpkgsPath + "/nixos/modules/installer/sd-card/sd-image-armv7l-multiplatform-installer.nix";
-        aarch64-linux = expidus.nixpkgsPath + "/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix";
+        armv6l-linux = expidus.channels.nixpkgsPath + "/nixos/modules/installer/sd-card/sd-image-raspberrypi-installer.nix";
+        armv7l-linux = expidus.channels.nixpkgsPath + "/nixos/modules/installer/sd-card/sd-image-armv7l-multiplatform-installer.nix";
+        aarch64-linux = expidus.channels.nixpkgsPath + "/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix";
       }.${system};
     inherit system;
   });
 
   sd_image_new_kernel = forMatchingSystems [ "aarch64-linux" ] (system: makeSdImage {
     module = {
-        aarch64-linux = expidus.nixpkgsPath + "/nixos/modules/installer/sd-card/sd-image-aarch64-new-kernel-installer.nix";
+        aarch64-linux = expidus.channels.nixpkgsPath + "/nixos/modules/installer/sd-card/sd-image-aarch64-new-kernel-installer.nix";
       }.${system};
     type = "minimal-new-kernel";
     inherit system;
@@ -169,7 +175,7 @@ in rec {
       inherit system;
       modules =
         [ versionModule
-          (expidus.nixpkgsPath + "/nixos/modules/installer/virtualbox-demo.nix")
+          (expidus.channels.nixpkgsPath + "/nixos/modules/installer/virtualbox-demo.nix")
         ];
     }).config.system.build.virtualBoxOVA)
 
@@ -181,7 +187,7 @@ in rec {
     hydraJob ((import lib/eval-config.nix {
       inherit system;
       modules = [
-        (expidus.nixpkgsPath + "/nixos/modules/virtualisation/proxmox-image.nix")
+        (expidus.channels.nixpkgsPath + "/nixos/modules/virtualisation/proxmox-image.nix")
       ];
     }).config.system.build.VMA)
   );
@@ -192,7 +198,7 @@ in rec {
     hydraJob ((import lib/eval-config.nix {
       inherit system;
       modules = [
-        (expidus.nixpkgsPath + "/nixos/modules/virtualisation/proxmox-lxc.nix")
+        (expidus.channels.nixpkgsPath + "/nixos/modules/virtualisation/proxmox-lxc.nix")
       ];
     }).config.system.build.tarball)
   );
@@ -205,7 +211,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image.nix")
+          (expidus.channels.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image.nix")
         ];
     }).config.system.build.amazonImage)
 
@@ -217,7 +223,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image-zfs.nix")
+          (expidus.channels.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image-zfs.nix")
         ];
     }).config.system.build.amazonImage)
   );
@@ -231,7 +237,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image.nix")
+          (expidus.channels.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image.nix")
           ({ ... }: { amazonImage.sizeMB = "auto"; })
         ];
     }).config.system.build.amazonImage)
@@ -246,7 +252,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.nixpkgsPath + "/maintainers/scripts/lxd/lxd-image.nix")
+          (expidus.channels.nixpkgsPath + "/maintainers/scripts/lxd/lxd-image.nix")
         ];
     }).config.system.build.tarball)
 
@@ -260,7 +266,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.nixpkgsPath + "/maintainers/scripts/lxd/lxd-image.nix")
+          (expidus.channels.nixpkgsPath + "/maintainers/scripts/lxd/lxd-image.nix")
         ];
     }).config.system.build.metadata)
   );
@@ -324,11 +330,11 @@ in rec {
 
     tinyContainer = makeClosure ({ ... }:
       { boot.isContainer = true;
-        imports = [ (expidus.nixpkgsPath + "/nixos/modules/profiles/minimal.nix") ];
+        imports = [ (expidus.channels.nixpkgsPath + "/nixos/modules/profiles/minimal.nix") ];
       });
 
     ec2 = makeClosure ({ ... }:
-      { imports = [ (expidus.nixpkgsPath + "/nixos/modules/virtualisation/amazon-image.nix") ];
+      { imports = [ (expidus.channels.nixpkgsPath + "/nixos/modules/virtualisation/amazon-image.nix") ];
       });
 
     kde = makeClosure ({ ... }:

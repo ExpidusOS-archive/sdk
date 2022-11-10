@@ -9,7 +9,7 @@
   runCommand,
   nixosTests,
   system,
-  bargs,
+  channels,
   args
 }:
 let

@@ -1,1 +1,1 @@
-import ./overlay.nix (import ./channels/nixpkgs.nix)
+import ./overlay.nix (import ./channels)

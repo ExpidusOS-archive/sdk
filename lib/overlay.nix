@@ -1,3 +1,3 @@
-nixpkgs: (import (nixpkgs + "/lib/")).extend (final: prev: {
-  expidus = import ./extend.nix nixpkgs;
+{ nixpkgsPath, ... }@channels: (import (nixpkgsPath + "/lib/")).extend (final: prev: {
+  expidus = import ./extend.nix channels;
 })

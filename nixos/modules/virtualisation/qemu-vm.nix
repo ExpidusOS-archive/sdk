@@ -10,7 +10,7 @@
 { config, lib, pkgs, options, ... }:
 with lib;
 let
-  nixpkgs = lib.expidus.nixpkgsPath;
+  nixpkgs = lib.expidus.channels.nixpkgsPath;
   qemu-common = import (nixpkgs + "/nixos/lib/qemu-common.nix") { inherit lib pkgs; };
 
   addCheckDesc = desc: elemType: check: types.addCheck elemType check

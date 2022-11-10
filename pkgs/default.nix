@@ -1,4 +1,1 @@
-import ./overlay.nix {
-  nixpkgsPath = (import ../lib/channels/nixpkgs.nix);
-  sdkPath = ../.;
-}
+import ./overlay.nix (import ../lib/channels)

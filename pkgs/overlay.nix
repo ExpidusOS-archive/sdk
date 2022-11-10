@@ -1,4 +1,4 @@
-{ nixpkgsPath, sdkPath }@bargs:
+{ nixpkgsPath, sdkPath, ... }@channels:
 {
   localSystem ? { system = args.system or builtins.currentSystem; },
   system ? localSystem.system,
@@ -7,7 +7,7 @@
   ...
 }@args:
 let
-  lib = import (sdkPath + "/lib/overlay.nix") nixpkgsPath;
+  lib = import (sdkPath + "/lib/overlay.nix") channels;
 
   attrs-overlay = self: super: {
     inherit lib;
@@ -32,7 +32,7 @@ let
           };
         in c.config.system.build // c;
 
-      nixos-install-tools = callPackage ./tools/nix/nixos-install-tools/default.nix { inherit args bargs; };
+      nixos-install-tools = callPackage ./tools/nix/nixos-install-tools/default.nix { inherit args channels; };
       gtk-layer-shell = self.callPackage ./development/libraries/gtk-layer-shell/default.nix {};
 
       libadwaita = super.libadwaita.overrideAttrs (old: {

@@ -1,7 +1,7 @@
 { config, lib, pkgs, options, ... }@args:
 with lib;
 let
-  base = import (lib.expidus.nixpkgsPath + "/nixos/modules/services/misc/gitit.nix") args;
+  base = import (lib.expidus.channels.nixpkgsPath + "/nixos/modules/services/misc/gitit.nix") args;
 in {
   options.services.gitit = base.options.services.gitit // {
     haskellPackages = mkOption {

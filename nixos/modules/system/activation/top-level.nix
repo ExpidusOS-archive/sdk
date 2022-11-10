@@ -4,7 +4,7 @@
 with lib;
 
 let
-  nixpkgs = lib.expidus.nixpkgsPath;
+  nixpkgs = lib.expidus.channels.nixpkgsPath;
 
   # This attribute is responsible for creating boot entries for
   # child configuration. They are only (directly) accessible
@@ -352,7 +352,7 @@ in
     system.extraSystemBuilderCmds =
       optionalString
         config.system.copySystemConfiguration
-        ''ln -s '${import ../../../lib/from-env.nix "NIXOS_CONFIG" <nixos-config>}' \
+        ''ln -s '${(import ../../../lib/from-env.nix { inherit (lib.expidus) nixpkgsPath; }) "NIXOS_CONFIG" <nixos-config>}' \
             "$out/configuration.nix"
         '';
 

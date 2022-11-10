@@ -4,12 +4,12 @@ with lib;
 
 let
 
-  nixpkgs = lib.expidus.nixpkgsPath;
+  nixpkgs = lib.expidus.channels.nixpkgsPath;
   cfg = config.documentation;
   allOpts = options;
 
   /* Modules for which to show options even when not imported. */
-  extraDocModules = [ (nixpkgs + "/nixos/modules/virtualisation/qemu-vm.nix") ];
+  extraDocModules = [ ../virtualisation/qemu-vm.nix ];
 
   canCacheDocs = m:
     let
@@ -44,6 +44,7 @@ let
           } ] ++ docModules.eager;
           specialArgs = {
             pkgs = scrubDerivations "pkgs" pkgs;
+            lib = scrubDerivations "lib" lib;
             # allow access to arbitrary options for eager modules, eg for getting
             # option types from lazy modules
             options = allOpts;
@@ -79,6 +80,7 @@ let
         } ''
           export NIX_STORE_DIR=$TMPDIR/store
           export NIX_STATE_DIR=$TMPDIR/state
+          export
           ${pkgs.buildPackages.nix}/bin/nix-instantiate \
             --show-trace \
             --eval --json --strict \

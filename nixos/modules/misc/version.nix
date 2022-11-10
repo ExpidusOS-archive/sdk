@@ -1,7 +1,7 @@
 args@{ config, lib, options, pkgs, ... }:
 with lib;
 let
-  base = import (lib.expidus.nixpkgsPath + "/nixos/modules/misc/version.nix") args;
+  base = import (lib.expidus.channels.nixpkgsPath + "/nixos/modules/misc/version.nix") args;
   cfg = config.expidus;
 in base // {
   options.system = base.options.system // {
