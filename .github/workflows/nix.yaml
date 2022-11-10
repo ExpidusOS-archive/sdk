@@ -103,7 +103,7 @@ jobs:
           extraPullNames: nix-community
           skipPush: "${{ github.event_name == 'pull_request' }}"
       - name: Build
-        run: nix-build ./nixos/release.nix -A ${{ matrix.attr }}
+        run: nix-build ./nixos/release.nix -A ${{ matrix.attr }} --show-trace
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.attr }}-result
