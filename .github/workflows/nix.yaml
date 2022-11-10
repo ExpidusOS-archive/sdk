@@ -104,7 +104,9 @@ jobs:
           skipPush: "${{ github.event_name == 'pull_request' }}"
       - name: Build
         run: nix-build ./nixos/release.nix -A ${{ matrix.attr }} --show-trace
+      - name: Compress Artifact
+        run: tar -cf result.tar.gz -C $(readlink -e result) .
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.attr }}-result
-          path: result
+          path: result.tar.gz
