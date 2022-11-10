@@ -6,9 +6,12 @@
 , stateVersion
 , release
 }@args:
-
 let
-  lib = import (libPath + "/overlay.nix") nixpkgsPath;
+  channels = {
+    inherit nixpkgsPath;
+  };
+
+  lib = import (libPath + "/overlay.nix") channels;
   modulesPath = "${nixosPath}/modules";
   # dummy pkgs set that contains no packages, only `pkgs.lib` from the full set.
   # not having `pkgs.lib` causes all users of `pkgs.formats` to fail.
