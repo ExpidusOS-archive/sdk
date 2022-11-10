@@ -12,7 +12,7 @@ let
     (if stableBranch then "." else "-alpha") + "${toString (nixpkgs.revCount - 379959)}.${nixpkgs.shortRev}";
   allTestsForSystem = system:
     import (expidus.channels.nixpkgsPath + "/nixos/tests/all-tests.nix") {
-      inherit system lib;
+      inherit system;
       pkgs = import ./.. { inherit system; };
       callTest = t: {
         ${system} = hydraJob t.test;
@@ -36,8 +36,7 @@ let
     with import ./.. { inherit system; };
 
     hydraJob ((import lib/eval-config.nix {
-      inherit system lib;
-      pkgs = import ./.. { inherit system; };
+      inherit system;
       modules = makeModules module {
         isoImage.isoBaseName = "expidus-${type}";
       };
@@ -48,8 +47,7 @@ let
     { module, system, ... }:
     with import ./.. { inherit system; };
     hydraJob ((import lib/eval-config.nix {
-      inherit system lib;
-      pkgs = import ./.. { inherit system; };
+      inherit system;
       modules = makeModules module {};
     }).config.system.build.sdImage);
 
@@ -59,8 +57,7 @@ let
     with import ./.. { inherit system; };
     let
       config = (import lib/eval-config.nix {
-        inherit system lib;
-        pkgs = import ./.. { inherit system; };
+        inherit system;
         modules = makeModules module {};
       }).config;
       tarball = config.system.build.tarball;
@@ -75,8 +72,7 @@ let
   makeClosure = module: buildFromConfig module (config: config.system.build.toplevel);
 
   buildFromConfig = module: sel: forAllSystems (system: hydraJob (sel (import ./lib/eval-config.nix {
-    inherit system lib;
-    pkgs = import ./.. { inherit system; };
+    inherit system;
     modules = makeModules module
       ({ ... }:
       { fileSystems."/".device  = mkDefault "/dev/sda1";
@@ -87,8 +83,7 @@ let
   makeNetboot = { module, system, ... }:
     let
       configEvaled = import lib/eval-config.nix {
-        inherit system lib;
-      pkgs = import ./.. { inherit system; };
+        inherit system;
         modules = makeModules module {};
       };
       build = configEvaled.config.system.build;
