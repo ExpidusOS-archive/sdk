@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 {
-  imports = [ "${lib.expidus.channels.nixpkgsPath}/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares.nix" ];
+  imports = [ ./installation-cd-graphical-calamares.nix ];
 
   isoImage.edition = "genesis";
 
