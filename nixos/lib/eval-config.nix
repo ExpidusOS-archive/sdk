@@ -3,7 +3,7 @@ evalConfigArgs@
   system ? builtins.currentSystem,
   pkgs ? (import ../../. { system = builtins.currentSystem; crossSystem = { inherit system; }; }),
   baseModules ? import ../modules/module-list.nix {
-      inherit (pkgs.lib.expidus) nixpkgsPath;
+      inherit (pkgs.lib.expidus.channels) nixpkgsPath home-managerPath;
     },
   extraArgs ? {},
   specialArgs ? {},

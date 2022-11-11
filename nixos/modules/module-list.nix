@@ -1,4 +1,7 @@
-{ nixpkgsPath ? (import ../../lib/channels/nixpkgs.nix) }:
+{
+  nixpkgsPath ? (import ../../lib/channels/nixpkgs.nix),
+  home-managerPath ? (import ../../lib/channels/home-manager.nix)
+}:
 let
   nixpkgs = "${nixpkgsPath}/nixos/modules";
   # Generated with the following command:
@@ -1272,5 +1275,6 @@ let
     (nixpkgs + "/virtualisation/waydroid.nix")
     (nixpkgs + "/virtualisation/xen-dom0.nix")
     (nixpkgs + "/virtualisation/xe-guest-utilities.nix")
+    ("${home-managerPath}/nixos")
   ];
 in modules
