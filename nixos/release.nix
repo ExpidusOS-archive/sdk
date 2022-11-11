@@ -212,7 +212,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.channels.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image.nix")
+          (expidus.channels.nixpkgsPath + "/nixos/maintainers/scripts/ec2/amazon-image.nix")
         ];
     }).config.system.build.amazonImage)
 
@@ -224,7 +224,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.channels.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image-zfs.nix")
+          (expidus.channels.nixpkgsPath + "/nixos/maintainers/scripts/ec2/amazon-image-zfs.nix")
         ];
     }).config.system.build.amazonImage)
   );
@@ -238,7 +238,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.channels.nixpkgsPath + "/maintainers/scripts/ec2/amazon-image.nix")
+          (expidus.channels.nixpkgsPath + "/nixos/maintainers/scripts/ec2/amazon-image.nix")
           ({ ... }: { amazonImage.sizeMB = "auto"; })
         ];
     }).config.system.build.amazonImage)
@@ -253,7 +253,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.channels.nixpkgsPath + "/maintainers/scripts/lxd/lxd-image.nix")
+          (expidus.channels.nixpkgsPath + "/nixos/maintainers/scripts/lxd/lxd-image.nix")
         ];
     }).config.system.build.tarball)
 
@@ -267,7 +267,7 @@ in rec {
       modules =
         [ configuration
           versionModule
-          (expidus.channels.nixpkgsPath + "/maintainers/scripts/lxd/lxd-image.nix")
+          (expidus.channels.nixpkgsPath + "/nixos/maintainers/scripts/lxd/lxd-image.nix")
         ];
     }).config.system.build.metadata)
   );
