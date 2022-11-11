@@ -31,10 +31,9 @@ jobs:
       - name: Build Flake
         run: nix build -L
       - name: Check Flake
-        if: matrix.os == 'ubuntu-latest'
         run: nix flake check
       - name: Bundle Flake
-        if: github.event_name != 'pull_request'
+        if: (github.event_name != 'pull_request') && (matrix.os == 'ubuntu-latest')
         run: nix bundle
   legacy:
     strategy:
