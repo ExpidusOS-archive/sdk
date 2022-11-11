@@ -138,7 +138,7 @@ in rec {
     inherit system;
   });
 
-  iso_genesis = forAllSystems (system: makeIso {
+  iso_genesis = forMatchingSystems [ "x86_64-linux" ] (system: makeIso {
     module = ./modules/installer/cd-dvd/installation-cd-graphical-calamares-genesis.nix;
     type = "genesis";
     inherit system;
