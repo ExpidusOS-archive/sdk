@@ -29,5 +29,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/ExpidusOS/genesis";
     license = licenses.gpl3Only;
     maintainers = with expidus.maintainers; [ TheComputerGuy ];
+    platforms = platforms.unix;
   };
 }
