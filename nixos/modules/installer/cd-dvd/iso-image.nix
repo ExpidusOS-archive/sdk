@@ -491,7 +491,7 @@ in
 
     isoImage.volumeID = mkOption {
       # expidus-$EDITION-$RELEASE-$ARCH
-      default = "expidus${optionalString (config.isoImage.edition != "") "-${config.isoImage.edition}"}-${lib.expidus.trivial.version}-${pkgs.stdenv.hostPlatform.uname.processor}";
+      default = "expidus${optionalString (config.isoImage.edition != "") "-${config.isoImage.edition}"}-${lib.expidus.trivial.release}-${pkgs.stdenv.hostPlatform.uname.processor}";
       description = ''
         Specifies the label or volume ID of the generated ISO image.
         Note that the label is used by stage 1 of the boot process to
@@ -719,7 +719,7 @@ in
         config.system.build.toplevel.drvPath;
 
     # Create the squashfs image that contains the Nix store.
-    system.build.squashfsStore = pkgs.callPackage ../../../lib/make-squashfs.nix {
+    system.build.squashfsStore = pkgs.callPackage "${lib.expidus.channels.nixpkgsPath}/nixos/lib/make-squashfs.nix" {
       storeContents = config.isoImage.storeContents;
       comp = config.isoImage.squashfsCompression;
     };
@@ -780,7 +780,7 @@ in
     boot.loader.timeout = 10;
 
     # Create the ISO image.
-    system.build.isoImage = pkgs.callPackage ../../../lib/make-iso9660-image.nix ({
+    system.build.isoImage = pkgs.callPackage "${lib.expidus.channels.nixpkgsPath}/nixos/lib/make-iso9660-image.nix" ({
       inherit (config.isoImage) isoName compressImage volumeID contents;
       bootable = canx86BiosBoot;
       bootImage = "/isolinux/isolinux.bin";

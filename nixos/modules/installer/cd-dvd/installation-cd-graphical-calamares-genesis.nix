@@ -14,7 +14,7 @@
       };
       autoLogin = {
         enable = true;
-        user = "nixos";
+        user = "expidus";
       };
     };
     desktopManager.genesis = {

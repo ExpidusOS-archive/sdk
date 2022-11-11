@@ -121,19 +121,19 @@ in rec {
   });
 
   iso_minimal = forAllSystems (system: makeIso {
-    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix";
+    module = ./modules/installer/cd-dvd/installation-cd-minimal.nix;
     type = "minimal";
     inherit system;
   });
 
   iso_plasma5 = forMatchingSystems [ "x86_64-linux" ] (system: makeIso {
-    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix";
+    module = ./modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix;
     type = "plasma5";
     inherit system;
   });
 
   iso_gnome = forMatchingSystems [ "x86_64-linux" ] (system: makeIso {
-    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix";
+    module = ./modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix;
     type = "gnome";
     inherit system;
   });
@@ -147,7 +147,7 @@ in rec {
   # A variant with a more recent (but possibly less stable) kernel
   # that might support more hardware.
   iso_minimal_new_kernel = forMatchingSystems [ "x86_64-linux" "aarch64-linux" ] (system: makeIso {
-    module = expidus.channels.nixpkgsPath + "/nixos/modules/installer/cd-dvd/installation-cd-minimal-new-kernel.nix";
+    module = ./modules/installer/cd-dvd/installation-cd-minimal-new-kernel.nix;
     type = "minimal-new-kernel";
     inherit system;
   });
