@@ -8,9 +8,13 @@ let
           call = file: import file { ${name} = self; };
         in base { inherit call self; ${name} = self; });
     in self;
-in makeExtendible "expidus" ({ call, self, expidus }: {
+in makeExtendible "expidus" ({ call, self, expidus }: rec {
   inherit makeExtendible channels;
 
   maintainers = import ./maintainers.nix;
   trivial = import ./trivial.nix { inherit lib; };
+  system = import ./system.nix { inherit lib; };
+  flake = import ./flake.nix { inherit lib expidus; };
+
+  mkFlake = flake.make;
 })
