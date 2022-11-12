@@ -8,14 +8,14 @@
 }@args:
 let
   channels = {
-    inherit nixpkgsPath;
+    nixpkgs = nixpkgsPath;
   };
 
-  lib = import (libPath + "/overlay.nix") channels;
+  lib = import "${libPath}/overlay.nix" channels;
   modulesPath = "${nixosPath}/modules";
   # dummy pkgs set that contains no packages, only `pkgs.lib` from the full set.
   # not having `pkgs.lib` causes all users of `pkgs.formats` to fail.
-  pkgs = import (nixpkgsPath + "/pkgs/pkgs-lib/default.nix") {
+  pkgs = import "${nixpkgsPath}/pkgs/pkgs-lib/default.nix" {
     inherit lib;
     pkgs = null;
   };
@@ -39,12 +39,12 @@ let
       inherit config pkgs utils;
     };
   };
-  docs = import "${nixpkgsPath}/nixos/doc/manual" {
+  docs = import "${nixpkgs}/nixos/doc/manual" {
     pkgs = pkgs // {
       inherit lib;
       # duplicate of the declaration in all-packages.nix
       buildPackages.nixosOptionsDoc = attrs:
-        (import "${nixpkgsPath}/nixos/lib/make-options-doc")
+        (import "${nixpkgs}/nixos/lib/make-options-doc")
           ({ inherit pkgs lib; } // attrs);
     };
     config = config.config;

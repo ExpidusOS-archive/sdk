@@ -2,8 +2,10 @@
   localSystem ? { system = args.system or builtins.currentSystem; },
   system ? localSystem.system,
   crossSystem ? localSystem,
-  nixpkgsPath ? import ../lib/channels/nixpkgs.nix,
-  sdkPath ? ../.,
+  channels ? {
+    nixpkgs = import ../lib/channels/nixpkgs.nix;
+    sdk = ../.;
+  },
   ...
 }@args:
-(import ./overlay.nix { inherit nixpkgsPath sdkPath; }) (builtins.removeAttrs args [ "nixpkgsPath" "sdkPath" ])
+(import ./overlay.nix channels) (builtins.removeAttrs args [ "channels" ])

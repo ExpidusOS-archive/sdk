@@ -2,7 +2,7 @@ args@{ config, lib, pkgs, ... }:
 with lib;
 let inherit (pkgs) writeScript; in
 let
-  base = import (lib.expidus.channels.nixpkgsPath + "/nixos/modules/profiles/docker-container.nix") args;
+  base = import ("${lib.expidus.channels.nixpkgs}/nixos/modules/profiles/docker-container.nix") args;
   pkgs2storeContents = l : map (x: { object = x; symlink = "none"; }) l;
 in {
   inherit (base) imports boot system;

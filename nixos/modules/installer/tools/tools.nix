@@ -4,8 +4,6 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-  inherit (expidus) nixpkgsPath;
-
   makeProg = args: pkgs.substituteAll (args // {
     dir = "bin";
     isExecutable = true;
@@ -13,13 +11,13 @@ let
 
   nixos-build-vms = makeProg {
     name = "nixos-build-vms";
-    src = (nixpkgsPath + "/nixos/modules/installer/tools/nixos-build-vms/nixos-build-vms.sh");
+    src = ("${lib.expidus.channels.nixpkgs}/nixos/modules/installer/tools/nixos-build-vms/nixos-build-vms.sh");
     inherit (pkgs) runtimeShell;
   };
 
   nixos-install = makeProg {
     name = "nixos-install";
-    src = (nixpkgsPath + "/nixos/modules/installer/tools/nixos-install.sh");
+    src = ("${lib.expidus.channels.nixpkgs}/nixos/modules/installer/tools/nixos-install.sh");
     inherit (pkgs) runtimeShell;
     nix = config.nix.package.out;
     path = makeBinPath [
@@ -32,7 +30,7 @@ let
 
   nixos-generate-config = makeProg {
     name = "nixos-generate-config";
-    src = (nixpkgsPath + "/nixos/modules/installer/tools/nixos-generate-config.pl");
+    src = ("${lib.expidus.channels.nixpkgs}/nixos/modules/installer/tools/nixos-generate-config.pl");
     perl = "${pkgs.perl.withPackages (p: [ p.FileSlurp ])}/bin/perl";
     detectvirt = "${config.systemd.package}/bin/systemd-detect-virt";
     btrfs = "${pkgs.btrfs-progs}/bin/btrfs";
@@ -47,7 +45,7 @@ let
 
   nixos-version = makeProg {
     name = "nixos-version";
-    src = (nixpkgsPath + "/nixos/modules/installer/tools/nixos-version.sh");
+    src = ("${lib.expidus.channels.nixpkgs}/nixos/modules/installer/tools/nixos-version.sh");
     inherit (pkgs) runtimeShell;
     inherit (config.system.nixos) version codeName revision;
     inherit (config.system) configurationRevision;
@@ -62,7 +60,7 @@ let
 
   nixos-enter = makeProg {
     name = "nixos-enter";
-    src = (nixpkgsPath + "/nixos/modules/installer/tools/nixos-enter.sh");
+    src = ("${lib.expidus.channels.nixpkgs}/nixos/modules/installer/tools/nixos-enter.sh");
     inherit (pkgs) runtimeShell;
   };
 in

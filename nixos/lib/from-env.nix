@@ -1,2 +1,2 @@
-{ nixpkgsPath ? import ../../lib/channels/nixpkgs.nix }:
-import (nixpkgsPath + "/nixos/lib/from-env.nix")
+{ nixpkgs ? import ../../lib/channels/nixpkgs.nix }:
+import (nixpkgs + "/nixos/lib/from-env.nix")

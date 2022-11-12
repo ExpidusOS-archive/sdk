@@ -1,4 +1,4 @@
-{ nixpkgsPath, sdkPath, ... }@channels:
+{ nixpkgs, sdk, ... }@channels:
 {
   localSystem ? { system = args.system or builtins.currentSystem; },
   system ? localSystem.system,
@@ -7,11 +7,11 @@
   ...
 }@args:
 let
-  lib = import (sdkPath + "/lib/overlay.nix") channels;
+  lib = import ("${sdk}/lib/overlay.nix") channels;
 
   attrs-overlay = self: super: {
     inherit lib;
-    path = sdkPath;
+    path = sdk;
   };
 
   pkgs-overlay = (self: super:
@@ -20,7 +20,7 @@ let
     in {
       nixos = configuration:
         let
-          c = import (sdkPath + "/nixos/lib/eval-config.nix") {
+          c = import ("${sdk}/nixos/lib/eval-config.nix") {
             inherit (self.stdenv.hostPlatform) system;
             pkgs = self;
             inherit lib;
@@ -65,7 +65,7 @@ let
       expidus-terminal = callPackage ./applications/terminal-emulators/expidus-terminal/default.nix {};
   });
 
-  pkgs = import (nixpkgsPath + "/default.nix") (builtins.removeAttrs args [ "overlays" ]);
+  pkgs = import ("${nixpkgs}/default.nix") (builtins.removeAttrs args [ "overlays" ]);
 in pkgs.appendOverlays ([
     attrs-overlay
     pkgs-overlay

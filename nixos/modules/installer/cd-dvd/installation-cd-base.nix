@@ -10,8 +10,8 @@ with lib;
     [ ./iso-image.nix
 
       # Profiles of this basic installation CD.
-      "${lib.expidus.channels.nixpkgsPath}/nixos/modules/profiles/all-hardware.nix"
-      "${lib.expidus.channels.nixpkgsPath}/nixos/modules/profiles/base.nix"
+      "${lib.expidus.channels.nixpkgs}/nixos/modules/profiles/all-hardware.nix"
+      "${lib.expidus.channels.nixpkgs}/nixos/modules/profiles/base.nix"
       ../../profiles/installation-device.nix
     ];
 

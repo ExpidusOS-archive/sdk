@@ -1,2 +1,2 @@
 { lib, ... }@args:
-import (lib.expidus.channels.nixpkgsPath + "/nixos/modules/misc/assertions.nix") args
+import ("${lib.expidus.channels.nixpkgs}/nixos/modules/misc/assertions.nix") args

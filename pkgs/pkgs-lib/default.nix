@@ -1,2 +1,2 @@
-{ nixpkgsPath, ... }:
-args: import (nixpkgsPath + "/pkgs/pkgs-lib/default.nix") args
+{ nixpkgs, ... }:
+args: import ("${nixpkgs}/pkgs/pkgs-lib/default.nix") args

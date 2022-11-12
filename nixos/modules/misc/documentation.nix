@@ -4,7 +4,7 @@ with lib;
 
 let
 
-  nixpkgs = lib.expidus.channels.nixpkgsPath;
+  nixpkgs = lib.expidus.channels.nixpkgs;
   cfg = config.documentation;
   allOpts = options;
 

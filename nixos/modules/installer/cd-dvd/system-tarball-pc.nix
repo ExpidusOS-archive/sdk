@@ -60,7 +60,7 @@ let
     }
   '';
 
-  readme = "${lib.expidus.channels.nixpkgsPath}/nixos/modules/installer/cd-dvd/system-tarball-pc-readme.txt";
+  readme = "${lib.expidus.channels.nixpkgs}/nixos/modules/installer/cd-dvd/system-tarball-pc-readme.txt";
 
 in
 
@@ -69,8 +69,8 @@ in
     [ ./system-tarball.nix
 
       # Profiles of this basic installation.
-      "${lib.expidus.channels.nixpkgsPath}/nixos/modules/profiles/all-hardware.nix"
-      "${lib.expidus.channels.nixpkgsPath}/nixos/modules/profiles/base.nix"
+      "${lib.expidus.channels.nixpkgs}/nixos/modules/profiles/all-hardware.nix"
+      "${lib.expidus.channels.nixpkgs}/nixos/modules/profiles/base.nix"
       ../../profiles/installation-device.nix
     ];
 
