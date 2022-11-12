@@ -7,7 +7,7 @@ rec {
     target ? "default",
     name,
     systems ? expidus.system.supported,
-    packagesFor ? emptyPackages
+    packagesFor ? ({ final, prev, old }: emptyPackages)
   }:
     let
       forAllSystems = lib.genAttrs systems;
@@ -68,15 +68,31 @@ rec {
               prev = packages;
               old = pkg;
             });
-          in import ../nixos {
-            inherit system lib;
+          in import ../nixos/lib/eval-config.nix {
+            inherit system;
+
+            lib = lib.extend (self: prev: {
+              inherit expidus;
+            });
 
             pkgs = base-pkgs.appendOverlays ([
               self.overlays.${target}
             ]);
+
+            modules = [
+              ../nixos/dev.nix
+              {
+                environment.systemPackages = [ pkg ];
+                virtualisation.sharedDirectories.source-code = {
+                  source = builtins.toString self;
+                  target = "/home/expidus-devel/source";
+                  options = [ "uname=developer" ];
+                };
+              }
+            ];
           });
       in systems // {
-        ${target} = if builtins.hasAttr self.system.current systems then systems.${self.system.current} else null;
+        ${target} = if builtins.hasAttr expidus.system.current systems then systems.${expidus.system.current} else null;
       });
 
       devShells = forAllSystems (system:
