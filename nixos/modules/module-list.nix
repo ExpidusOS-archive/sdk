@@ -1274,6 +1274,6 @@ let
     ("${nixpkgs}/nixos/modules/virtualisation/waydroid.nix")
     ("${nixpkgs}/nixos/modules/virtualisation/xen-dom0.nix")
     ("${nixpkgs}/nixos/modules/virtualisation/xe-guest-utilities.nix")
-    ("${home-manager}/nixos")
+    # ("${home-manager}/nixos") FIXME: duplicated option
   ];
 in modules
