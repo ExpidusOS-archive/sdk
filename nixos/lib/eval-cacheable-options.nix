@@ -44,7 +44,7 @@ let
       inherit lib;
       # duplicate of the declaration in all-packages.nix
       buildPackages.nixosOptionsDoc = attrs:
-        (import "${nixpkgs}/nixos/lib/make-options-doc")
+        (import "${nixpkgsPath}/nixos/lib/make-options-doc")
           ({ inherit pkgs lib; } // attrs);
     };
     config = config.config;
