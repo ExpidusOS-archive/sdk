@@ -8,6 +8,6 @@
     in sdk-flake // ({
       inherit lib self;
       libExpidus = lib.expidus;
-      legacyPackages = lib.expidus.system.forAll (system: import ./pkgs { inherit system; });
+      legacyPackages = lib.expidus.system.forAll (system: import ./. { inherit system; });
     });
 }
