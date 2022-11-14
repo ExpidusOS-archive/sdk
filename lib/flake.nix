@@ -16,8 +16,8 @@ rec {
         inherit (self) channels;
       });
       wrapped = name + (if target == "default" then "" else "-${target}");
-    in {
-      overlays.${target} = final: prev: {
+
+      packageOverlay = final: prev: {
         ${name} =
           if name == "expidus-sdk" then
             (prev.callPackage ../pkgs/development/tools/expidus-sdk {})
@@ -44,56 +44,66 @@ rec {
               }));
       };
 
+      nixosSystems = expidus.system.forAllLinux (system:
+        let
+          base-pkgs = nixpkgsFor.${system};
+          pkgs = packageOverlay base-pkgs base-pkgs;
+
+          pkg = pkgs.${name};
+          packages = emptyPackages // (packagesFor {
+            final = pkgs;
+            prev = packages;
+            old = pkg;
+          });
+        in import ../nixos/lib/eval-config.nix {
+          inherit system;
+
+          lib = lib.extend (self: prev: {
+            inherit expidus;
+          });
+
+          pkgs = base-pkgs.appendOverlays ([
+            self.overlays.${target}
+          ]);
+
+          modules = [
+            ../nixos/dev.nix
+            {
+              environment.systemPackages = [ pkg ];
+              virtualisation.sharedDirectories.source-code = {
+                source = builtins.toString self;
+                target = "/home/expidus-devel/source";
+                options = [ "uname=developer" ];
+              };
+            }
+          ];
+        });
+    in {
+      overlays.${target} = packageOverlay;
+
       legacyPackages = forAllSystems (system:
         let
           pkgs = nixpkgsFor.${system};
-        in (self.overlays.${target} pkgs pkgs));
+        in (packageOverlay pkgs pkgs));
 
       packages = forAllSystems (system:
         let
           pkgs = nixpkgsFor.${system};
         in {
-          ${target} = (self.overlays.${target} pkgs pkgs).${name};
+          ${target} = (packageOverlay pkgs pkgs).${name};
         });
 
-      nixosConfigurations = (let
-        systems = expidus.system.forAllLinux (system:
-          let
-            base-pkgs = nixpkgsFor.${system};
-            pkgs = self.overlays.${target} base-pkgs base-pkgs;
-
-            pkg = pkgs.${target};
-            packages = emptyPackages // (packagesFor {
-              final = pkgs;
-              prev = packages;
-              old = pkg;
-            });
-          in import ../nixos/lib/eval-config.nix {
-            inherit system;
-
-            lib = lib.extend (self: prev: {
-              inherit expidus;
-            });
-
-            pkgs = base-pkgs.appendOverlays ([
-              self.overlays.${target}
-            ]);
-
-            modules = [
-              ../nixos/dev.nix
-              {
-                environment.systemPackages = [ pkg ];
-                virtualisation.sharedDirectories.source-code = {
-                  source = builtins.toString self;
-                  target = "/home/expidus-devel/source";
-                  options = [ "uname=developer" ];
-                };
-              }
-            ];
-          });
-      in systems // {
-        ${target} = if builtins.hasAttr expidus.system.current systems then systems.${expidus.system.current} else null;
+      nixosConfigurations = (nixosSystems // {
+        ${target} = if builtins.hasAttr expidus.system.current systems then nixosSystems.${expidus.system.current} else null;
       });
+
+      hydraJobs = {
+        ${target} = expidus.system.forAllLinux (system:
+          let
+            pkgs = nixpkgsFor.${system};
+          in (packageOverlay pkgs pkgs).${name});
+        "${target}-devvm" = expidus.system.forAllLinux (system: nixosSystems.${system}.config.system.build.vm);
+      };
 
       devShells = forAllSystems (system:
         let
