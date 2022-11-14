@@ -11,7 +11,7 @@ rec {
   }:
     let
       forAllSystems = lib.genAttrs systems;
-      nixpkgsFor = forAllSystems (system: import ../pkgs {
+      nixpkgsFor = forAllSystems (system: import ../pkgs/top-level/default.nix {
         inherit system;
         inherit (self) channels;
       });
@@ -94,7 +94,7 @@ rec {
         });
 
       nixosConfigurations = (nixosSystems // {
-        ${target} = if builtins.hasAttr expidus.system.current systems then nixosSystems.${expidus.system.current} else null;
+        ${target} = if builtins.hasAttr expidus.system.current nixosSystems then nixosSystems.${expidus.system.current} else null;
       });
 
       hydraJobs = {
