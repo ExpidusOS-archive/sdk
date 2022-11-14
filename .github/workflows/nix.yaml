@@ -11,7 +11,7 @@ jobs:
   flake:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -39,7 +39,7 @@ jobs:
   legacy:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout repository
@@ -62,11 +62,8 @@ jobs:
   package:
     strategy:
       matrix:
-        package: [vte, libical, libadwaita, cssparser, gxml, vadi, ntk, libdevident, libtokyo, genesis-shell, expidus-terminal]
-        os: [ubuntu-latest, macos-latest]
-        include:
-          - package: gtk-layer-shell
-            os: ubuntu-latest
+        package: [gtk-layer-shell, vte, libical, libadwaita, cssparser, gxml, vadi, ntk, libdevident, libtokyo, genesis-shell, expidus-terminal]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     needs: [flake]
     steps:
