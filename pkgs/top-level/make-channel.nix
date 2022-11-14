@@ -3,8 +3,8 @@
   system ? localSystem.system,
   crossSystem ? localSystem,
   channels ? {
-    nixpkgs = import ../lib/channels/nixpkgs.nix;
-    sdk = ../.;
+    nixpkgs = import ../../lib/channels/nixpkgs.nix;
+    sdk = ../..;
   },
   ...
 }@args:
