@@ -7,13 +7,19 @@ in with lib;
   configuration ? {} }:
 with import ("${expidus.channels.nixpkgs}/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
 let
+  pkgsConfig = {
+    allowUnfree = true;
+    allowBroken = true;
+    allowInsecurePredicate = true;
+  };
+
   version = fileContents ../.version;
   versionSuffix =
     (if stableBranch then "." else "-alpha") + "${toString (nixpkgs.revCount - 379959)}.${nixpkgs.shortRev}";
   allTestsForSystem = system:
     import ("${expidus.channels.nixpkgs}/nixos/tests/all-tests.nix") {
       inherit system;
-      pkgs = import ./.. { inherit system; };
+      pkgs = import ./.. { inherit system; config = pkgsConfig; };
       callTest = t: {
         ${system} = hydraJob t.test;
       };
@@ -21,7 +27,10 @@ let
   allTests =
     foldAttrs recursiveUpdate {} (map allTestsForSystem supportedSystems);
 
-  pkgs = import ./.. { system = "x86_64-linux"; };
+  pkgs = import ./.. {
+    system = "x86_64-linux";
+    config = pkgsConfig;
+  };
 
   versionModule =
     { system.nixos.versionSuffix = versionSuffix;
@@ -33,10 +42,14 @@ let
   makeIso =
     { module, type, system, ... }:
 
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
 
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules = makeModules module {
         isoImage.isoBaseName = "expidus-${type}";
       };
@@ -45,19 +58,27 @@ let
 
   makeSdImage =
     { module, system, ... }:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules = makeModules module {};
     }).config.system.build.sdImage);
 
 
   makeSystemTarball =
     { module, maintainers ? ["viric"], system }:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     let
       config = (import lib/eval-config.nix {
         inherit system;
+        pkgs = import ../. {
+          inherit system;
+          config = pkgsConfig;
+        };
         modules = makeModules module {};
       }).config;
       tarball = config.system.build.tarball;
@@ -73,6 +94,10 @@ let
 
   buildFromConfig = module: sel: forAllSystems (system: hydraJob (sel (import ./lib/eval-config.nix {
     inherit system;
+    pkgs = import ../. {
+      inherit system;
+      config = pkgsConfig;
+    };
     modules = makeModules module
       ({ ... }:
       { fileSystems."/".device  = mkDefault "/dev/sda1";
@@ -84,6 +109,10 @@ let
     let
       configEvaled = import lib/eval-config.nix {
         inherit system;
+        pkgs = import ../. {
+          inherit system;
+          config = pkgsConfig;
+        };
         modules = makeModules module {};
       };
       build = configEvaled.config.system.build;
