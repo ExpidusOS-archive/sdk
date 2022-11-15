@@ -41,9 +41,7 @@ let
 
   makeIso =
     { module, type, system, ... }:
-
     with import ./.. { inherit system; config = pkgsConfig; };
-
     hydraJob ((import lib/eval-config.nix {
       inherit system;
       pkgs = import ../. {
@@ -200,9 +198,13 @@ in rec {
 
   # A bootable VirtualBox virtual appliance as an OVA file (i.e. packaged OVF).
   ova = forMatchingSystems [ "x86_64-linux" ] (system:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules =
         [ versionModule
           ("${expidus.channels.nixpkgs}/nixos/modules/installer/virtualbox-demo.nix")
@@ -213,9 +215,13 @@ in rec {
 
   # KVM image for proxmox in VMA format
   proxmoxImage = forMatchingSystems [ "x86_64-linux" ] (system:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules = [
         ("${expidus.channels.nixpkgs}/nixos/modules/virtualisation/proxmox-image.nix")
       ];
@@ -224,9 +230,13 @@ in rec {
 
   # LXC tarball for proxmox
   proxmoxLXC = forMatchingSystems [ "x86_64-linux" ] (system:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules = [
         ("${expidus.channels.nixpkgs}/nixos/modules/virtualisation/proxmox-lxc.nix")
       ];
@@ -235,9 +245,13 @@ in rec {
 
   # A disk image that can be imported to Amazon EC2 and registered as an AMI
   amazonImage = forMatchingSystems [ "x86_64-linux" "aarch64-linux" ] (system:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules =
         [ configuration
           versionModule
@@ -247,9 +261,13 @@ in rec {
 
   );
   amazonImageZfs = forMatchingSystems [ "x86_64-linux" "aarch64-linux" ] (system:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules =
         [ configuration
           versionModule
@@ -261,9 +279,13 @@ in rec {
   # Test job for https://github.com/NixOS/nixpkgs/issues/121354 to test
   # automatic sizing without blocking the channel.
   amazonImageAutomaticSize = forMatchingSystems [ "x86_64-linux" "aarch64-linux" ] (system:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules =
         [ configuration
           versionModule
@@ -276,9 +298,13 @@ in rec {
 
   # An image that can be imported into lxd and used for container creation
   lxdImage = forMatchingSystems [ "x86_64-linux" "aarch64-linux" ] (system:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules =
         [ configuration
           versionModule
@@ -290,9 +316,13 @@ in rec {
 
   # Metadata for the lxd image
   lxdMeta = forMatchingSystems [ "x86_64-linux" "aarch64-linux" ] (system:
-    with import ./.. { inherit system; };
+    with import ./.. { inherit system; config = pkgsConfig; };
     hydraJob ((import lib/eval-config.nix {
       inherit system;
+      pkgs = import ../. {
+        inherit system;
+        config = pkgsConfig;
+      };
       modules =
         [ configuration
           versionModule
@@ -305,6 +335,10 @@ in rec {
   dummy = forAllSystems (system: pkgs.runCommand "dummy"
     { toplevel = (import lib/eval-config.nix {
         inherit system;
+        pkgs = import ../. {
+          inherit system;
+          config = pkgsConfig;
+        };
         modules = singleton ({ ... }:
           { fileSystems."/".device  = mkDefault "/dev/sda1";
             boot.loader.grub.device = mkDefault "/dev/sda";
