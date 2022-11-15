@@ -56,7 +56,7 @@ let
     hydraJob ((import lib/eval-config.nix {
       inherit system;
       pkgs = import ../. {
-        inherit system;
+        crossSystem.system = system;
         config = pkgsConfig;
       };
       modules = makeModules module {
@@ -71,7 +71,7 @@ let
     hydraJob ((import lib/eval-config.nix {
       inherit system;
       pkgs = import ../. {
-        inherit system;
+        crossSystem.system = system;
         config = pkgsConfig;
       };
       modules = makeModules module {};
@@ -85,7 +85,7 @@ let
       config = (import lib/eval-config.nix {
         inherit system;
         pkgs = import ../. {
-          inherit system;
+          crossSystem.system = system;
           config = pkgsConfig;
         };
         modules = makeModules module {};
@@ -104,7 +104,7 @@ let
   buildFromConfig = module: sel: forAllSystems (system: hydraJob (sel (import ./lib/eval-config.nix {
     inherit system;
     pkgs = import ../. {
-      inherit system;
+      crossSystem.system = system;
       config = pkgsConfig;
     };
     modules = makeModules module
@@ -119,7 +119,7 @@ let
       configEvaled = import lib/eval-config.nix {
         inherit system;
         pkgs = import ../. {
-          inherit system;
+          crossSystem.system = system;
           config = pkgsConfig;
         };
         modules = makeModules module {};
