@@ -8,9 +8,9 @@ in with lib;
 with import ("${expidus.channels.nixpkgs}/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
 let
   pkgsConfig = {
-    allowUnfree = true;
     allowBroken = true;
-    allowInsecurePredicate = true;
+    allowUnfreePredicate = _: true;
+    allowInsecurePredicate = _: true;
   };
 
   version = fileContents ../.version;
