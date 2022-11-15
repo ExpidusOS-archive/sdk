@@ -17,32 +17,15 @@ rec {
       });
       wrapped = name + (if target == "default" then "" else "-${target}");
 
-      packageOverlay = final: prev: {
-        ${name} =
-          if name == "expidus-sdk" then
-            (prev.callPackage ../pkgs/development/tools/expidus-sdk {})
-          else
-            (prev.${name}.overrideAttrs (old:
-              let
-                packages = emptyPackages // (packagesFor { inherit final prev old; });
-                separateDebugInfo = if prev.stdenv.isDarwin then false else true;
-              in {
-                version = self.rev or "dirty";
-                src = builtins.path {
-                  inherit name;
-                  path = prev.lib.cleanSource (builtins.toString self);
-                };
-
-                inherit separateDebugInfo;
-                nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ packages.nativeBuildInputs else [];
-                buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ packages.buildInputs else [];
-                propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ packages.propagatedBuildInputs else [];
-
-                meta = old.meta // {
-                  outputsToInstall = old.meta.outputsToInstall or [ "out" ] ++ (prev.lib.optional separateDebugInfo "debug");
-                };
-              }));
-      };
+      packageOverlay = final: prev:
+        let
+          packages = emptyPackages // (packagesFor {
+            inherit final prev;
+            old = prev.${name};
+          });
+        in {
+          ${name} = packages.overlay;
+        };
 
       nixosSystems = expidus.system.forAllLinux (system:
         let
@@ -122,4 +105,41 @@ rec {
           };
         });
     };
+
+  makeOverride = {
+    self,
+    target ? "default",
+    name,
+    systems ? expidus.system.supported,
+    packagesFor ? ({ final, prev, old }: emptyPackages)
+  }: make {
+    inherit self target name systems;
+    packagesFor = ({ final, prev, old }@args:
+      let
+        packages = emptyPackages // (packagesFor args);
+      in packages // {
+        overlay = if name == "expidus-sdk" then
+          (prev.callPackage ../pkgs/development/tools/expidus-sdk {})
+        else
+          (prev.${name}.overrideAttrs (old:
+            let
+              separateDebugInfo = if prev.stdenv.isDarwin then false else true;
+            in {
+              version = self.rev or "dirty";
+              src = builtins.path {
+                inherit name;
+                path = prev.lib.cleanSource (builtins.toString self);
+              };
+
+              inherit separateDebugInfo;
+              nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ packages.nativeBuildInputs else [];
+              buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ packages.buildInputs else [];
+              propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ packages.propagatedBuildInputs else [];
+
+              meta = old.meta // {
+                outputsToInstall = old.meta.outputsToInstall or [ "out" ] ++ (prev.lib.optional separateDebugInfo "debug");
+              };
+            }));
+      });
+  };
 }

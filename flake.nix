@@ -4,7 +4,7 @@
   outputs = { self }@inputs:
     let
       lib = import ./lib;
-      sdk-flake = lib.expidus.mkFlake { inherit self; name = "expidus-sdk"; };
+      sdk-flake = lib.expidus.flake.makeOverride { inherit self; name = "expidus-sdk"; };
     in sdk-flake // ({
       inherit lib self;
       libExpidus = lib.expidus;
