@@ -81,6 +81,8 @@ in {
       version = mkDefault (cfg.release + cfg.versionSuffix);
     };
 
+    system.stateVersion = "22.05";
+
     environment.etc = {
       "lsb-release".source = "${pkgs.expidus-sdk.sys}/etc/lsb-release";
       "os-release".source = "${pkgs.expidus-sdk.sys}/etc/os-release";
