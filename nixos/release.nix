@@ -1,18 +1,29 @@
 let
   lib = import ../lib;
+  pkgsConfig = {
+    allowBroken = true;
+    allowUnfreePredicate = _: true;
+    allowInsecurePredicate = _: true;
+    inHydra = true;
+    permittedInsecurePackages = [
+      "cockroach"
+      "nodejs-12.22.12"
+      "n8n"
+      "solr-8.6.3"
+      "python3.9-flower-1.0.0"
+    ];
+  };
 in with lib;
 { nixpkgs ? { outPath = cleanSource ./..; revCount = 130979; shortRev = "gfedcba"; },
   stableBranch ? false,
   supportedSystems ? [ "x86_64-linux" "aarch64-linux" ],
   configuration ? {} }:
-with import ("${expidus.channels.nixpkgs}/pkgs/top-level/release-lib.nix") { inherit supportedSystems; };
+with import ("${expidus.channels.nixpkgs}/pkgs/top-level/release-lib.nix") {
+  inherit supportedSystems;
+  packageSet = import ../.;
+  nixpkgsArgs = { config = pkgsConfig; };
+};
 let
-  pkgsConfig = {
-    allowBroken = true;
-    allowUnfreePredicate = _: true;
-    allowInsecurePredicate = _: true;
-  };
-
   version = fileContents ../.version;
   versionSuffix =
     (if stableBranch then "." else "-alpha") + "${toString (nixpkgs.revCount - 379959)}.${nixpkgs.shortRev}";
