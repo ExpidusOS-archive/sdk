@@ -8,7 +8,7 @@ rec {
     name,
     systems ? expidus.system.supported,
     packagesFor ? ({ final, prev, old }: emptyPackages)
-  }:
+  }@flake:
     let
       forAllSystems = lib.genAttrs systems;
       nixpkgsFor = forAllSystems (system: import ../pkgs/top-level/default.nix {
@@ -22,21 +22,21 @@ rec {
             inherit final prev;
             old = prev.${name};
           });
-        in {
-          ${name} = packages.overlay.overrideAttrs (old:
+        in builtins.mapAttrs (name: pkg:
+          pkg.overrideAttrs (old:
             let
               separateDebugInfo = if prev.stdenv.isDarwin then false else true;
+              config = if name == flake.name then packages else (packages.${name} or emptyPackages);
             in {
               inherit separateDebugInfo;
-              nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ packages.nativeBuildInputs else [];
-              buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ packages.buildInputs else [];
-              propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ packages.propagatedBuildInputs else [];
+              nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ config.nativeBuildInputs else [];
+              buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ config.buildInputs else [];
+              propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ config.propagatedBuildInputs else [];
 
               meta = old.meta // {
                 outputsToInstall = old.meta.outputsToInstall or [ "out" ] ++ (prev.lib.optional separateDebugInfo "debug");
               };
-            });
-        };
+            })) packages.overlay;
 
       nixosSystems = expidus.system.forAllLinux (system:
         let
@@ -132,16 +132,18 @@ rec {
       let
         packages = emptyPackages // (packagesFor args);
       in packages // {
-        overlay = if name == "expidus-sdk" then
-          (prev.callPackage ../pkgs/development/tools/expidus-sdk {})
-        else
-          (prev.${name}.overrideAttrs (old: {
-            version = self.rev or "dirty";
-            src = builtins.path {
-              inherit name;
-              path = builtins.toString self;
-            };
-          }));
+        overlay = {
+          ${name} = if name == "expidus-sdk" then
+            (prev.callPackage ../pkgs/development/tools/expidus-sdk {})
+          else
+            (prev.${name}.overrideAttrs (old: {
+              version = self.rev or "dirty";
+              src = builtins.path {
+                inherit name;
+                path = builtins.toString self;
+              };
+            }));
+        };
       });
   };
 }
