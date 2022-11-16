@@ -9,7 +9,9 @@
 , allowDocBook ? true
 , prefix ? ../../..
 }:
+
 with pkgs;
+
 let
   inherit (lib) hasPrefix removePrefix;
 
@@ -29,9 +31,9 @@ let
   stripAnyPrefixes = lib.flip (lib.foldr lib.removePrefix) prefixesToStrip;
 
   optionsDoc = buildPackages.nixosOptionsDoc {
-    inherit options revision baseOptionsJSON warningsAreErrors;
+    inherit options revision baseOptionsJSON warningsAreErrors allowDocBook;
     transformOptions = opt: opt // {
-      # Clean up declaration sites to not refer to the ExpidusOS source tree.
+      # Clean up declaration sites to not refer to the NixOS source tree.
       declarations = map stripAnyPrefixes opt.declarations;
     };
   };
@@ -92,7 +94,7 @@ let
   toc = builtins.toFile "toc.xml"
     ''
       <toc role="chunk-toc">
-        <d:tocentry xmlns:d="http://docbook.org/ns/docbook" linkend="book-nixos-manual"><?dbhtml filename="index.html"?>
+        <d:tocentry xmlns:d="http://docbook.org/ns/docbook" linkend="book-expidus-manual"><?dbhtml filename="index.html"?>
           <d:tocentry linkend="ch-options"><?dbhtml filename="options.html"?></d:tocentry>
           <d:tocentry linkend="ch-release-notes"><?dbhtml filename="release-notes.html"?></d:tocentry>
         </d:tocentry>
@@ -119,7 +121,7 @@ let
   manual-combined = runCommand "expidus-manual-combined"
     { inherit sources;
       nativeBuildInputs = [ buildPackages.libxml2.bin buildPackages.libxslt.bin ];
-      meta.description = "The ExpidusOS manual as plain docbook XML";
+      meta.description = "The NixOS manual as plain docbook XML";
     }
     ''
       ${copySources}
@@ -200,20 +202,22 @@ let
       </targetset>
       EOF
     '';
+
 in rec {
   inherit generatedSources;
+
   inherit (optionsDoc) optionsJSON optionsNix optionsDocBook;
 
   # Generate the NixOS manual.
   manualHTML = runCommand "expidus-manual-html"
     { inherit sources;
       nativeBuildInputs = [ buildPackages.libxml2.bin buildPackages.libxslt.bin ];
-      meta.description = "The ExpidusOS manual in HTML format";
+      meta.description = "The NixOS manual in HTML format";
       allowedReferences = ["out"];
     }
     ''
       # Generate the HTML manual.
-      dst=$out/share/doc/nixos
+      dst=$out/share/doc/expidus
       mkdir -p $dst
       xsltproc \
         ${manualXsltprocOptions} \
@@ -242,7 +246,7 @@ in rec {
   manual = manualHTML;
 
   # Index page of the NixOS manual.
-  manualHTMLIndex = "${manualHTML}/share/doc/nixos/index.html";
+  manualHTMLIndex = "${manualHTML}/share/doc/expidus/index.html";
 
   manualEpub = runCommand "expidus-manual-epub"
     { inherit sources;
@@ -250,7 +254,7 @@ in rec {
     }
     ''
       # Generate the epub manual.
-      dst=$out/share/doc/nixos
+      dst=$out/share/doc/expidus
 
       xsltproc \
         ${manualXsltprocOptions} \
@@ -262,7 +266,7 @@ in rec {
       mkdir -p $dst/epub/OEBPS/images/callouts
       cp -r ${docbook_xsl_ns}/xml/xsl/docbook/images/callouts/*.svg $dst/epub/OEBPS/images/callouts # */
       echo "application/epub+zip" > mimetype
-      manual="$dst/nixos-manual.epub"
+      manual="$dst/expidus-manual.epub"
       zip -0Xq "$manual" mimetype
       cd $dst/epub && zip -Xr9D "$manual" *
 

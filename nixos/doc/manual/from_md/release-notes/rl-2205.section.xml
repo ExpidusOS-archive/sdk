@@ -142,39 +142,16 @@
       </listitem>
       <listitem>
         <para>
-          <link xlink:href="https://docs.docker.com/engine/security/rootless/">rootless
-          Docker</link>, a <literal>systemd --user</literal> Docker
-          service which runs without root permissions. Available as
-          <link xlink:href="options.html#opt-virtualisation.docker.rootless.enable">virtualisation.docker.rootless.enable</link>.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <link xlink:href="https://conduit.rs/">matrix-conduit</link>,
-          a simple, fast and reliable chat server powered by matrix.
-          Available as
-          <link xlink:href="option.html#opt-services.matrix-conduit.enable">services.matrix-conduit</link>.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <link xlink:href="https://github.com/vvilhonen/nethoscope">nethoscope</link>,
-          listen to your network traffic. Available as
-          <link linkend="opt-programs.nethoscope.enable">programs.nethoscope</link>.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          <link xlink:href="https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-overview.html">filebeat</link>,
-          a lightweight shipper for forwarding and centralizing log
-          data. Available as
-          <link linkend="opt-services.filebeat.enable">services.filebeat</link>.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
           <link xlink:href="https://github.com/linux-apfs/linux-apfs-rw">apfs</link>,
           a kernel module for mounting the Apple File System (APFS).
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <link xlink:href="https://gitlab.com/DarkElvenAngel/argononed">argonone</link>,
+          a replacement daemon for the Raspberry Pi Argon One power
+          button and cooler. Available at
+          <link xlink:href="options.html#opt-services.hardware.argonone.enable">services.hardware.argonone</link>.
         </para>
       </listitem>
       <listitem>
@@ -190,6 +167,13 @@
           <link xlink:href="https://loic-sharma.github.io/BaGet/">BaGet</link>,
           a lightweight NuGet and symbol server. Available at
           <link linkend="opt-services.baget.enable">services.baget</link>.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <link xlink:href="https://github.com/xddxdd/bird-lg-go">bird-lg</link>,
+          a BGP looking glass for Bird Routing. Available as
+          <link linkend="opt-services.bird-lg.package">services.bird-lg</link>.
         </para>
       </listitem>
       <listitem>
@@ -343,13 +327,6 @@
       </listitem>
       <listitem>
         <para>
-          <link xlink:href="https://maddy.email">maddy</link>, a
-          composable all-in-one mail server. Available as
-          <link linkend="opt-services.maddy.enable">services.maddy</link>.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
           <link xlink:href="https://maddy.email/">Maddy</link>, a free
           an open source mail server. Availabe as
           <link linkend="opt-services.maddy.enable">services.maddy</link>.
@@ -486,7 +463,7 @@
           <link xlink:href="https://docs.docker.com/engine/security/rootless/">rootless
           Docker</link>, a <literal>systemd --user</literal> Docker
           service which runs without root permissions. Available as
-          <link xlink:href="options.html#opt-virtualisation.docker.rootless.enable">virtualisation.docker.rootless.enable</link>.
+          <link linkend="opt-virtualisation.docker.rootless.enable">virtualisation.docker.rootless.enable</link>.
         </para>
       </listitem>
       <listitem>
@@ -2155,6 +2132,13 @@ sudo cp /var/lib/redis/dump.rdb /var/lib/redis-peertube/dump.rdb
       </listitem>
       <listitem>
         <para>
+          Added the <literal>keter</literal> NixOS module. Keter reverse
+          proxies requests to your loaded application based on virtual
+          hostnames.
+        </para>
+      </listitem>
+      <listitem>
+        <para>
           If you are using Wayland you can choose to use the Ozone
           Wayland support in Chrome and several Electron apps by setting
           the environment variable <literal>NIXOS_OZONE_WL=1</literal>
@@ -2542,10 +2526,9 @@ sudo cp /var/lib/redis/dump.rdb /var/lib/redis-peertube/dump.rdb
       <listitem>
         <para>
           The logrotate module also has been updated to freeform syntax:
-          <link linkend="opt-services.logrotate.paths">services.logrotate.paths</link>
-          and
-          <link linkend="opt-services.logrotate.extraConfig">services.logrotate.extraConfig</link>
-          will work, but issue deprecation warnings and
+          <literal>services.logrotate.paths</literal> and
+          <literal>services.logrotate.extraConfig</literal> will work,
+          but issue deprecation warnings and
           <link linkend="opt-services.logrotate.settings">services.logrotate.settings</link>
           should now be used instead.
         </para>
@@ -2739,17 +2722,6 @@ sudo cp /var/lib/redis/dump.rdb /var/lib/redis-peertube/dump.rdb
           automatically with
           <literal>services.nextcloud.database.createLocally</literal>
           enabled.
-        </para>
-      </listitem>
-      <listitem>
-        <para>
-          Matrix Synapse now requires entries in the
-          <literal>state_group_edges</literal> table to be unique, in
-          order to prevent accidentally introducing duplicate
-          information (for example, because a database backup was
-          restored multiple times). If your Synapse database already has
-          duplicate rows in this table, this could fail with an error
-          and require manual remediation.
         </para>
       </listitem>
       <listitem>

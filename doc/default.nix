@@ -3,7 +3,7 @@ let
   lib = pkgs.lib;
   doc-support = import ./doc-support { inherit pkgs nixpkgs; };
 in pkgs.stdenv.mkDerivation {
-  name = "expidus-sdk-manual";
+  name = "expidus-manual";
 
   nativeBuildInputs = with pkgs; [
     pandoc
@@ -22,16 +22,16 @@ in pkgs.stdenv.mkDerivation {
   '';
 
   installPhase = ''
-    dest="$out/share/doc/expidus-sdk"
+    dest="$out/share/doc/expidus"
     mkdir -p "$(dirname "$dest")"
     mv out/html "$dest"
     mv "$dest/index.html" "$dest/manual.html"
 
-    mv out/epub/manual.epub "$dest/expidus-sdk-manual.epub"
+    mv out/epub/manual.epub "$dest/expidus-manual.epub"
 
     mkdir -p $out/nix-support/
     echo "doc manual $dest manual.html" >> $out/nix-support/hydra-build-products
-    echo "doc manual $dest expidus-sdk-manual.epub" >> $out/nix-support/hydra-build-products
+    echo "doc manual $dest expidus-manual.epub" >> $out/nix-support/hydra-build-products
   '';
 
   # Environment variables

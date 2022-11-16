@@ -1,12 +1,6 @@
 # Source (https://github.com/NixOS/nixpkgs/blob/nixos-22.05/nixos/lib/default.nix)
-let
-  # The warning is in a top-level let binding so it is only printed once.
-  minimalModulesWarning = warn "lib.nixos.evalModules is experimental and subject to change. See nixos/lib/default.nix" null;
-  inherit (nonExtendedLib) warn;
-  nonExtendedLib = import ../../lib;
-in
 { # Optional. Allows an extended `lib` to be used instead of the regular Nixpkgs lib.
-  lib ? nonExtendedLib,
+  lib ? import ../../lib,
 
   # Feature flags allow you to opt in to unfinished code. These may change some
   # behavior or disable warnings.
@@ -20,6 +14,9 @@ let
   seqIf = cond: if cond then builtins.seq else a: b: b;
   # If cond, force `a` before returning any attr
   seqAttrsIf = cond: a: lib.mapAttrs (_: v: seqIf cond a v);
+
+  # The warning is in a top-level let binding so it is only printed once.
+  minimalModulesWarning = lib.warn "lib.nixos.evalModules is experimental and subject to change. See nixos/lib/default.nix" null;
 
   eval-config-minimal = import ./eval-config-minimal.nix { inherit lib; };
 

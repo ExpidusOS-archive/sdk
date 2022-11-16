@@ -33,7 +33,7 @@ format: doc-support/result
 .PHONY: fix-misc-xml
 fix-misc-xml:
 	find . -iname '*.xml' -type f \
-		-exec ../nixos/doc/varlistentry-fixer.rb {} ';'
+		-exec ../nixpkgs/doc/varlistentry-fixer.rb {} ';'
 
 .PHONY: clean
 clean:
