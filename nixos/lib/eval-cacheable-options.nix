@@ -12,6 +12,7 @@ let
   channels = {
     nixpkgs = nixpkgsPath;
     home-manager = homeManagerPath;
+    sdk = sdkPath;
   };
 
   lib = import "${libPath}/overlay.nix" channels;
@@ -47,7 +48,7 @@ let
       inherit lib;
       # duplicate of the declaration in all-packages.nix
       buildPackages.nixosOptionsDoc = attrs:
-        (import "${nixpkgsPath}/nixos/lib/make-options-doc")
+        (import "${sdkPath}/nixos/lib/make-options-doc")
           ({ inherit pkgs lib; } // attrs);
     };
     config = config.config;
