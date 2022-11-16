@@ -168,7 +168,7 @@ let
     #
 
     # Search using a "marker file"
-    search --set=root --file /EFI/nixos-installer-image
+    search --set=root --file /EFI/expidus-installer-image
 
     insmod gfxterm
     insmod png
@@ -241,7 +241,7 @@ let
     mkdir -p $out/EFI/boot/
 
     # Add a marker so GRUB can find the filesystem.
-    touch $out/EFI/nixos-installer-image
+    touch $out/EFI/expidus-installer-image
 
     # ALWAYS required modules.
     MODULES="fat iso9660 part_gpt part_msdos \
@@ -489,7 +489,7 @@ in
 
     isoImage.volumeID = mkOption {
       # nixos-$EDITION-$RELEASE-$ARCH
-      default = "nixos${optionalString (config.isoImage.edition != "") "-${config.isoImage.edition}"}-${config.system.nixos.release}-${pkgs.stdenv.hostPlatform.uname.processor}";
+      default = "expidus${optionalString (config.isoImage.edition != "") "-${config.isoImage.edition}"}-${config.system.expidus.release}-${pkgs.stdenv.hostPlatform.uname.processor}";
       description = lib.mdDoc ''
         Specifies the label or volume ID of the generated ISO image.
         Note that the label is used by stage 1 of the boot process to
@@ -717,7 +717,7 @@ in
         config.system.build.toplevel.drvPath;
 
     # Create the squashfs image that contains the Nix store.
-    system.build.squashfsStore = pkgs.callPackage ../../../lib/make-squashfs.nix {
+    system.build.squashfsStore = pkgs.callPackage "${lib.expidus.channels.nixpkgs}/nixos/lib/make-squashfs.nix" {
       storeContents = config.isoImage.storeContents;
       comp = config.isoImage.squashfsCompression;
     };

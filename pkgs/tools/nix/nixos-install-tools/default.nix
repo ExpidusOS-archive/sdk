@@ -14,10 +14,10 @@
 }:
 let
   inherit (nixos {}) config;
-  version = config.system.nixos.version;
+  version = config.system.expidus.version;
 in
 (buildEnv {
-  name = "nixos-install-tools-${version}";
+  name = "expidus-install-tools-${version}";
   paths = lib.attrValues {
     # See nixos/modules/installer/tools/tools.nix
     inherit (config.system.build)
@@ -30,7 +30,7 @@ in
   extraOutputsToInstall = ["man"];
 
   meta = {
-    description = "The essential commands from the NixOS installer as a package";
+    description = "The essential commands from the ExpidusOS installer as a package";
     longDescription = ''
       With this package, you get the commands like nixos-generate-config and
       nixos-install that you would otherwise only find on a NixOS system, such
@@ -39,13 +39,13 @@ in
       This way, you can install NixOS using a machine that only has Nix.
     '';
     license = lib.licenses.mit;
-    homepage = "https://nixos.org";
+    homepage = "https://expidusos.com";
     platforms = lib.platforms.linux;
   };
 
   passthru.tests = {
     nixos-tests = lib.recurseIntoAttrs nixosTests.installer;
-    nixos-install-help = runCommand "test-nixos-install-help" {
+    nixos-install-help = runCommand "test-expidus-install-help" {
       nativeBuildInputs = [
         man
         nixos-install-tools
@@ -68,5 +68,5 @@ in
   };
 }).overrideAttrs (o: {
   inherit version;
-  pname = "nixos-install-tools";
+  pname = "expidus-install-tools";
 })
