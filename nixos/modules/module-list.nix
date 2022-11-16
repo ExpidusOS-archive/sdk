@@ -4,7 +4,9 @@
   nixos ? "${nixpkgs}/nixos"
 }:
 let
-  nixpkgsModules = import "${nixpkgs}/nixos/modules/module-list.nix";
+  nixpkgsModules = [({ config, lib, pkgs, ... }: {
+    imports = import "${nixpkgs}/nixos/modules/module-list.nix";
+  })];
 
   replacesModules = builtins.map (path: ({ config, lib, pkgs, ... }: {
     disabledModules = [ "${nixos}/modules/${path}" ];

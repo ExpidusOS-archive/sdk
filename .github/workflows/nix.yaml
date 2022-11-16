@@ -131,10 +131,6 @@ jobs:
           - attr: iso_minimal_new_kernel
             arch: aarch64-linux
           - attr: sd_image
-            arch: armv6l-linux
-          - attr: sd_image
-            arch: armv7l-linux
-          - attr: sd_image
             arch: aarch64-linux
           - attr: sd_image_new_kernel
             arch: aarch64-linux
