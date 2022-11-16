@@ -19,7 +19,7 @@ let
   modulesPath = "${nixosPath}/modules";
   # dummy pkgs set that contains no packages, only `pkgs.lib` from the full set.
   # not having `pkgs.lib` causes all users of `pkgs.formats` to fail.
-  pkgs = import "${nixpkgsPath}/pkgs/pkgs-lib/default.nix" {
+  pkgs = import pkgsLibPath {
     inherit lib;
     pkgs = null;
   };
