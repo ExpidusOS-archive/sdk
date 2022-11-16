@@ -7,7 +7,7 @@ let
   }: lib.evalModules {
     inherit prefix modules;
     specialArgs = {
-      modulesPath = builtins.toString ../modules;
+      modulesPath = lib.expidus.channels.nixpkgs;
       inherit lib;
     } // specialArgs;
   };
