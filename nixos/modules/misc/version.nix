@@ -21,11 +21,11 @@ in {
     expidus.version = mkOption {
       internal = true;
       type = types.str;
+      default = expidus.trivial.version;
       description = "The full ExpidusOS version (e.g. <literal>16.03.1160.f2d4ee1</literal>).";
     };
 
     expidus.release = mkOption {
-      readOnly = true;
       type = types.str;
       default = expidus.trivial.release;
       description = "The ExpidusOS release (e.g. <literal>16.03</literal>).";
@@ -46,7 +46,6 @@ in {
     };
 
     expidus.codeName = mkOption {
-      readOnly = true;
       type = types.str;
       default = expidus.trivial.codeName;
       description = "The ExpidusOS release code name (e.g. <literal>Emu</literal>).";
@@ -90,10 +89,6 @@ in {
   };
 
   config = {
-    system.expidus = {
-      version = mkDefault (cfg.release + cfg.versionSuffix);
-    };
-
     system.stateVersion = lib.version;
 
     environment.etc = {

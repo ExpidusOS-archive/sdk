@@ -4,24 +4,22 @@
   outputs = { self }@inputs:
     let
       lib = (import ./lib).extend (final: prev: {
-        expidus = prev.expidus.extend (f: p: {
-          trivial = p.trivial // (rec {
-            revision = self.shortRev or "dirty";
-            revisionTag = "-${revision}";
-            version = p.trivial.release + p.trivial.versionSuffix + revisionTag;
-          });
-        });
-
         nixos = import ./nixos/lib { lib = final; };
         nixosSystem = args:
           import ./nixos/lib/eval-config.nix (args // {
-            modules = args.modules ++ [{
-              system.expidus.versionSuffix = self.shortRev or "dirty";
-              system.expidus.revision = final.mkIf (self ? rev) self.rev;
-            }];
-          } // lib.optionalAttrs (! args ? system) {
+            lib = args.lib or lib;
+            pkgs = args.pkgs or self.legacyPackages.${args.system};
+          } //  lib.optionalAttrs (! args ? system) {
             system = null;
           });
+
+        expidus = prev.expidus.extend (f: p: {
+          trivial = p.trivial // (p.trivial.makeVersion {
+            revision = self.shortRev or "dirty";
+          });
+
+          flake = import ./lib/flake.nix { inherit lib; expidus = f; };
+        });
       });
 
       sdk-flake = lib.expidus.flake.makeOverride { inherit self; name = "expidus-sdk"; };
