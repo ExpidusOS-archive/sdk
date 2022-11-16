@@ -67,7 +67,7 @@ let
 
       mkdir $out/bin
       export localeArchive="${config.i18n.glibcLocales}/lib/locale/locale-archive"
-      substituteAll ${"${lib.channels.nixpkgs}/nixos/modules/system/activation/switch-to-configuration.pl"} $out/bin/switch-to-configuration
+      substituteAll ${"${lib.expidus.channels.nixpkgs}/nixos/modules/system/activation/switch-to-configuration.pl"} $out/bin/switch-to-configuration
       chmod +x $out/bin/switch-to-configuration
       ${optionalString (pkgs.stdenv.hostPlatform == pkgs.stdenv.buildPlatform) ''
         if ! output=$($perl/bin/perl -c $out/bin/switch-to-configuration 2>&1); then
