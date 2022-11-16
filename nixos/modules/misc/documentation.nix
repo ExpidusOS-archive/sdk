@@ -72,6 +72,7 @@ let
           pkgsLibPath = filter "${toString lib.expidus.channels.nixpkgs}/pkgs/pkgs-lib";
           nixosPath = filter "${toString lib.expidus.channels.nixpkgs}/nixos";
           nixpkgsPath = filter "${toString lib.expidus.channels.nixpkgs}";
+          homeManagerPath = filter "${toString lib.expidus.channels.home-manager}";
           sdkPath = filter "${toString pkgs.path}";
           modules = map (p: ''"${removePrefix "${modulesPath}/" (toString p)}"'') docModules.lazy;
         } ''
@@ -84,6 +85,7 @@ let
             --argstr pkgsLibPath "$pkgsLibPath" \
             --argstr nixosPath "$nixosPath" \
             --argstr nixpkgsPath "$nixpkgsPath" \
+            --argstr homeManagerPath "$homeManagerPath" \
             --argstr sdkPath "$sdkPath" \
             --arg modules "[ $modules ]" \
             --argstr stateVersion "${options.system.stateVersion.default}" \

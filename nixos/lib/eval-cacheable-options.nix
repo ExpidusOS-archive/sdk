@@ -2,6 +2,7 @@
 , pkgsLibPath
 , nixosPath
 , nixpkgsPath
+, homeManagerPath
 , sdkPath
 , modules
 , stateVersion
@@ -10,6 +11,7 @@
 let
   channels = {
     nixpkgs = nixpkgsPath;
+    home-manager = homeManagerPath;
   };
 
   lib = import "${libPath}/overlay.nix" channels;

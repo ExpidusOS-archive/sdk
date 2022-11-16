@@ -36,7 +36,7 @@ let
     };
   };
 
-  nixos-lib = import ../../lib {};
+  nixos-lib = import ../../lib { inherit lib; };
 
   testOptionsDoc = let
       eval = nixos-lib.evalTest {
