@@ -35,14 +35,6 @@ let
       nixos-install-tools = callPackage ../tools/nix/nixos-install-tools/default.nix { inherit args channels; };
       gtk-layer-shell = self.callPackage ../development/libraries/gtk-layer-shell/default.nix {};
 
-      libadwaita = super.libadwaita.overrideAttrs (old: {
-        doCheck = super.stdenv.isLinux;
-        buildInputs = old.buildInputs ++ self.lib.optionals self.stdenv.isDarwin (with self.darwin.apple_sdk.frameworks; [
-          AppKit Foundation
-        ]);
-        meta.platforms = self.lib.platforms.unix;
-      });
-
       libical = super.libical.overrideAttrs (old: {
         meta.broken = false;
       });

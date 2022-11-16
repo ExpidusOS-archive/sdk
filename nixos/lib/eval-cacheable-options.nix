@@ -14,6 +14,7 @@ let
     home-manager = homeManagerPath;
     sdk = sdkPath;
   };
+  channelNames = builtins.attrNames channels;
 
   lib = import "${libPath}/overlay.nix" channels;
   modulesPath = "${nixosPath}/modules";
@@ -36,7 +37,7 @@ let
     system.stateVersion = stateVersion;
   };
   eval = lib.evalModules {
-    modules = (map (m: "${modulesPath}/${m}") modules) ++ [
+    modules = (map (m: builtins.replaceStrings (builtins.map (name: "[${name}]") channelNames) (builtins.map (name: channels.${name}) channelNames) m) modules) ++ [
       config
     ];
     specialArgs = {

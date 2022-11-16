@@ -74,7 +74,7 @@ let
           nixpkgsPath = filter "${toString lib.expidus.channels.nixpkgs}";
           homeManagerPath = filter "${toString lib.expidus.channels.home-manager}";
           sdkPath = filter "${toString pkgs.path}";
-          modules = map (p: ''"${removePrefix "${modulesPath}/" (toString p)}"'') docModules.lazy;
+          modules = map (p: ''"${p}"'') docModules.lazy;
         } ''
           export NIX_STORE_DIR=$TMPDIR/store
           export NIX_STATE_DIR=$TMPDIR/state
