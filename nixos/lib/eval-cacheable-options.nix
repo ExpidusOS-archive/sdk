@@ -32,7 +32,7 @@ let
     system.stateVersion = stateVersion;
   };
   eval = lib.evalModules {
-    modules = (map (m: "${modulesPath}/${m}") modules) ++ [
+    modules = modules ++ [
       config
     ];
     specialArgs = {

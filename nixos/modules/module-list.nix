@@ -1,12 +1,13 @@
 {
   nixpkgs ? (import ../../lib/channels/nixpkgs.nix),
-  home-manager ? (import ../../lib/channels/home-manager.nix)
+  home-manager ? (import ../../lib/channels/home-manager.nix),
+  nixos ? "${nixpkgs}/nixos"
 }:
 let
   nixpkgsModules = import "${nixpkgs}/nixos/modules/module-list.nix";
 
   replacesModules = builtins.map (path: ({ config, lib, pkgs, ... }: {
-    disabledModules = [ "${nixpkgs}/nixos/modules/${path}" ];
+    disabledModules = [ "${nixos}/modules/${path}" ];
     imports = [ ./${path} ];
   })) [
     "misc/nixpkgs.nix"
