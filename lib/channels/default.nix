@@ -6,6 +6,6 @@ in forAllChannels (name:
   let
     key = builtins.replaceStrings [ "-" ] [ "_" ] name;
     env = builtins.getEnv "EXPIDUS_SDK_CHANNEL_${key}_PATH";
-  in if env != null then
+  in if env != "" then
     env
   else import ./${name}.nix)
