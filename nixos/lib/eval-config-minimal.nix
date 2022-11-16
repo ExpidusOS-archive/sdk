@@ -7,7 +7,7 @@ let
   }: lib.evalModules {
     inherit prefix modules;
     specialArgs = {
-      modulesPath = lib.expidus.channels.nixpkgs;
+      modulesPath = "${lib.expidus.channels.nixpkgs}/nixos/modules";
       inherit lib;
     } // specialArgs;
   };
