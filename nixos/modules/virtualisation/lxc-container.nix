@@ -60,9 +60,9 @@ in {
             architecture = builtins.elemAt (builtins.match "^([a-z0-9_]+).+" (toString pkgs.system)) 0;
             creation_date = 1;
             properties = {
-              description = "NixOS ${config.system.nixos.codeName} ${config.system.expidus.label} ${pkgs.system}";
+              description = "ExpidusOS ${config.system.expidus.codeName} ${config.system.expidus.label} ${pkgs.system}";
               os = "nixos";
-              release = "${config.system.nixos.codeName}";
+              release = "${config.system.expidus.codeName}";
             };
             templates = templates.properties;
           };

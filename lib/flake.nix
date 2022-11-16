@@ -38,7 +38,10 @@ rec {
             prev = packages;
             old = pkg;
           });
-        in import ../nixos/lib/eval-config.nix {
+
+          nixosSystem = if builtins.hasAttr "nixosSystem" lib then lib.nixosSystem
+          else import ../nixos/lib/eval-config.nix;
+        in nixosSystem {
           inherit system;
 
           lib = lib.extend (self: prev: {

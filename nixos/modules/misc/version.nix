@@ -1,47 +1,60 @@
 args@{ config, lib, options, pkgs, ... }:
 with lib;
 let
-  cfg = config.system.nixos;
-  opt = options.system.nixos;
+  cfg = config.system.expidus;
+  opt = options.system.expidus;
 in {
+  disabledModules = [
+    "${lib.expidus.channels.nixpkgs}/nixos/modules/misc/label.nix"
+  ];
+
+  imports = [
+    ./label.nix
+    (mkRenamedOptionModule [ "system" "nixos" "version" ] [ "system" "expidus" "version" ])
+    (mkRenamedOptionModule [ "system" "nixos" "release" ] [ "system" "expidus" "release" ])
+    (mkRenamedOptionModule [ "system" "nixos" "versionSuffix" ] [ "system" "expidus" "versionSuffix" ])
+    (mkRenamedOptionModule [ "system" "nixos" "revision" ] [ "system" "expidus" "revision" ])
+    (mkRenamedOptionModule [ "system" "nixos" "codeName" ] [ "system" "expidus" "codeName" ])
+  ];
+
   options.system = {
-    nixos.version = mkOption {
+    expidus.version = mkOption {
       internal = true;
       type = types.str;
-      description = "The full NixOS version (e.g. <literal>16.03.1160.f2d4ee1</literal>).";
+      description = "The full ExpidusOS version (e.g. <literal>16.03.1160.f2d4ee1</literal>).";
     };
 
-    nixos.release = mkOption {
+    expidus.release = mkOption {
       readOnly = true;
       type = types.str;
-      default = trivial.release;
-      description = "The NixOS release (e.g. <literal>16.03</literal>).";
+      default = expidus.trivial.release;
+      description = "The ExpidusOS release (e.g. <literal>16.03</literal>).";
     };
 
-    nixos.versionSuffix = mkOption {
+    expidus.versionSuffix = mkOption {
       internal = true;
       type = types.str;
-      default = trivial.versionSuffix;
-      description = "The NixOS version suffix (e.g. <literal>1160.f2d4ee1</literal>).";
+      default = expidus.trivial.versionSuffix;
+      description = "The ExpidusOS version suffix (e.g. <literal>1160.f2d4ee1</literal>).";
     };
 
-    nixos.revision = mkOption {
+    expidus.revision = mkOption {
       internal = true;
       type = types.nullOr types.str;
-      default = trivial.revisionWithDefault null;
-      description = "The Git revision from which this NixOS configuration was built.";
+      default = expidus.trivial.revisionWithDefault null;
+      description = "The Git revision from which this ExpidusOS configuration was built.";
     };
 
-    nixos.codeName = mkOption {
+    expidus.codeName = mkOption {
       readOnly = true;
       type = types.str;
-      default = trivial.codeName;
-      description = "The NixOS release code name (e.g. <literal>Emu</literal>).";
+      default = expidus.trivial.codeName;
+      description = "The ExpidusOS release code name (e.g. <literal>Emu</literal>).";
     };
 
     stateVersion = mkOption {
       type = types.str;
-      default = "22.05";
+      default = lib.version;
       description = ''
         Every once in a while, a new NixOS release may change
         configuration defaults in a way incompatible with stateful
@@ -77,11 +90,11 @@ in {
   };
 
   config = {
-    system.nixos = {
+    system.expidus = {
       version = mkDefault (cfg.release + cfg.versionSuffix);
     };
 
-    system.stateVersion = "22.05";
+    system.stateVersion = lib.version;
 
     environment.etc = {
       "lsb-release".source = "${pkgs.expidus-sdk.sys}/etc/lsb-release";
