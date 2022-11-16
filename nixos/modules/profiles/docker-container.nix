@@ -5,7 +5,11 @@ let
   base = import ("${lib.expidus.channels.nixpkgs}/nixos/modules/profiles/docker-container.nix") args;
   pkgs2storeContents = l : map (x: { object = x; symlink = "none"; }) l;
 in {
-  inherit (base) imports boot system;
+  inherit (base) imports boot;
+
+  system.activationScripts.installInitScript = ''
+    ln -fs $systemConfig/init /init
+  '';
 
   system.build.tarball = pkgs.callPackage ../../lib/make-system-tarball.nix {
     contents = [

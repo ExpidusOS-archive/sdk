@@ -99,6 +99,4 @@ in
     wlr.enable = true;
     gtkUsePortal = true;
   };
-
-  system.stateVersion = "22.05";
 }
