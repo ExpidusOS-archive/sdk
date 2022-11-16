@@ -41,7 +41,7 @@ in {
     expidus.revision = mkOption {
       internal = true;
       type = types.nullOr types.str;
-      default = expidus.trivial.revisionWithDefault null;
+      default = expidus.trivial.revision;
       description = "The Git revision from which this ExpidusOS configuration was built.";
     };
 
