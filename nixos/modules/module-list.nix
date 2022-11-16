@@ -8,7 +8,7 @@ let
     import module ((builtins.removeAttrs args [ "modulesPath" ]) // ({
       modulesPath = "${nixos}/modules";
     }))
-  )) import "${nixpkgs}/nixos/modules/module-list.nix";
+  )) (import "${nixpkgs}/nixos/modules/module-list.nix");
 
   replacesModules = builtins.map (path: ({ config, lib, pkgs, ... }: {
     disabledModules = [ "${nixos}/modules/${path}" ];
