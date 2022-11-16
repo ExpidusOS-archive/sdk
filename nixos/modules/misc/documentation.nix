@@ -71,7 +71,7 @@ let
           libPath = filter "${toString pkgs.path}/lib";
           pkgsLibPath = filter "${toString pkgs.path}/pkgs/pkgs-lib";
           nixosPath = filter "${toString pkgs.path}/nixos";
-          nixpkgsPath = filter "${toString nixpkgs}";
+          nixpkgsPath = filter "${toString lib.expidus.channels.nixpkgs}";
           modules = map (p: ''"${removePrefix "${modulesPath}/" (toString p)}"'') docModules.lazy;
         } ''
           export NIX_STORE_DIR=$TMPDIR/store

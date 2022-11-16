@@ -11,6 +11,7 @@ let
   })) [
     "misc/nixpkgs.nix"
     "misc/documentation.nix"
+    "misc/label.nix"
     "misc/version.nix"
     "misc/assertions.nix"
     "system/boot/stage-2.nix"

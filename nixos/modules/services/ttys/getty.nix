@@ -102,7 +102,7 @@ in
 
   config = {
     # Note: this is set here rather than up there so that changing
-    # nixos.label would not rebuild manual pages
+    # expidus.label would not rebuild manual pages
     services.getty.greetingLine = mkDefault ''<<< Welcome to ExpidusOS ${lib.expidus.trivial.version} (\m) - \l >>>'';
 
     systemd.services."getty@" =

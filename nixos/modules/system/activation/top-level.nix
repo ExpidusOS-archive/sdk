@@ -61,8 +61,8 @@ let
       ln -s "$systemd" $out/systemd
 
       echo -n "systemd ${toString config.systemd.package.interfaceVersion}" > $out/init-interface-version
-      echo -n "$nixosLabel" > $out/nixos-version
       echo -n "$expidusLabel" > $out/expidus-version
+      ln -s "$out/expidus-version" "$out/nixos-version"
       echo -n "${config.boot.kernelPackages.stdenv.hostPlatform.system}" > $out/system
 
       mkdir $out/bin
@@ -90,7 +90,7 @@ let
   # `switch-to-configuration' that activates the configuration and
   # makes it bootable.
   baseSystem = pkgs.stdenvNoCC.mkDerivation ({
-    name = "nixos-system-${config.system.name}-${config.system.nixos.label}";
+    name = "nixos-system-${config.system.name}-${config.system.expidus.label}";
     preferLocalBuild = true;
     allowSubstitutes = false;
     buildCommand = systemBuilder;
@@ -105,7 +105,7 @@ let
     installBootLoader = config.system.build.installBootLoader;
     activationScript = config.system.activationScripts.script;
     dryActivationScript = config.system.dryActivationScript;
-    nixosLabel = config.system.nixos.label;
+    expidusLabel = config.system.expidus.label;
 
     # Needed by switch-to-configuration.
     perl = pkgs.perl.withPackages (p: with p; [ ConfigIniFiles FileSlurp ]);
@@ -285,7 +285,7 @@ in
         The name of the system used in the {option}`system.build.toplevel` derivation.
 
         That derivation has the following name:
-        `"nixos-system-''${config.system.name}-''${config.system.nixos.label}"`
+        `"expidus-system-''${config.system.name}-''${config.system.expidus.label}"`
       '';
     };
   };
