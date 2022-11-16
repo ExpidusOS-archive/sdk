@@ -13,7 +13,6 @@ rec {
       forAllSystems = lib.genAttrs systems;
       nixpkgsFor = forAllSystems (system: import ../pkgs/top-level/default.nix {
         inherit system;
-        inherit (self) channels;
       });
       wrapped = name + (if target == "default" then "" else "-${target}");
 
@@ -24,7 +23,19 @@ rec {
             old = prev.${name};
           });
         in {
-          ${name} = packages.overlay;
+          ${name} = packages.overlay.overrideAttrs (old:
+            let
+              separateDebugInfo = if prev.stdenv.isDarwin then false else true;
+            in {
+              inherit separateDebugInfo;
+              nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ packages.nativeBuildInputs else [];
+              buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ packages.buildInputs else [];
+              propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ packages.propagatedBuildInputs else [];
+
+              meta = old.meta // {
+                outputsToInstall = old.meta.outputsToInstall or [ "out" ] ++ (prev.lib.optional separateDebugInfo "debug");
+              };
+            });
         };
 
       nixosSystems = expidus.system.forAllLinux (system:
@@ -49,7 +60,7 @@ rec {
           });
 
           pkgs = base-pkgs.appendOverlays ([
-            self.overlays.${target}
+            packageOverlay
           ]);
 
           modules = [
@@ -124,25 +135,13 @@ rec {
         overlay = if name == "expidus-sdk" then
           (prev.callPackage ../pkgs/development/tools/expidus-sdk {})
         else
-          (prev.${name}.overrideAttrs (old:
-            let
-              separateDebugInfo = if prev.stdenv.isDarwin then false else true;
-            in {
-              version = self.rev or "dirty";
-              src = builtins.path {
-                inherit name;
-                path = prev.lib.cleanSource (builtins.toString self);
-              };
-
-              inherit separateDebugInfo;
-              nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ packages.nativeBuildInputs else [];
-              buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ packages.buildInputs else [];
-              propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ packages.propagatedBuildInputs else [];
-
-              meta = old.meta // {
-                outputsToInstall = old.meta.outputsToInstall or [ "out" ] ++ (prev.lib.optional separateDebugInfo "debug");
-              };
-            }));
+          (prev.${name}.overrideAttrs (old: {
+            version = self.rev or "dirty";
+            src = builtins.path {
+              inherit name;
+              path = builtins.toString self;
+            };
+          }));
       });
   };
 }
