@@ -70,8 +70,9 @@ let
         pkgs.runCommand "lazy-options.json" {
           libPath = filter "${toString pkgs.path}/lib";
           pkgsLibPath = filter "${toString pkgs.path}/pkgs/pkgs-lib";
-          nixosPath = filter "${toString pkgs.path}/nixos";
+          nixosPath = filter "${toString lib.expidus.channels.nixpkgs}/nixos";
           nixpkgsPath = filter "${toString lib.expidus.channels.nixpkgs}";
+          sdkPath = filter "${toString pkgs.path}";
           modules = map (p: ''"${removePrefix "${modulesPath}/" (toString p)}"'') docModules.lazy;
         } ''
           export NIX_STORE_DIR=$TMPDIR/store
@@ -83,6 +84,7 @@ let
             --argstr pkgsLibPath "$pkgsLibPath" \
             --argstr nixosPath "$nixosPath" \
             --argstr nixpkgsPath "$nixpkgsPath" \
+            --argstr sdkPath "$sdkPath" \
             --arg modules "[ $modules ]" \
             --argstr stateVersion "${options.system.stateVersion.default}" \
             --argstr release "${config.system.expidus.release}" \
