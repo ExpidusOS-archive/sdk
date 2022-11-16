@@ -78,6 +78,9 @@ let
         } ''
           export NIX_STORE_DIR=$TMPDIR/store
           export NIX_STATE_DIR=$TMPDIR/state
+          export EXPIDUS_SDK_CHANNEL_nixpkgs_PATH=$nixpkgsPath
+          export EXPIDUS_SDK_CHANNEL_sdk_PATH=$sdkPath
+          export EXPIDUS_SDK_CHANNEL_home_manager_PATH=$homeManagerPath
           ${pkgs.buildPackages.nix}/bin/nix-instantiate \
             --show-trace \
             --eval --json --strict \
