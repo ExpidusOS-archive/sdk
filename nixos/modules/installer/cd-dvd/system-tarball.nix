@@ -83,8 +83,8 @@ in
         fi
 
         # nixos-rebuild also requires a "system" profile and an
-        # /etc/NIXOS tag.
-        touch /etc/NIXOS
+        # /etc/EXPIDUS tag.
+        touch /etc/EXPIDUS
         ${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --set /run/current-system
       '';
 

@@ -29,7 +29,7 @@ let
 
   manual = import ../../doc/manual rec {
     inherit pkgs config;
-    version = config.system.nixos.release;
+    version = config.system.expidus.release;
     revision = "release-${version}";
     extraSources = cfg.nixos.extraModuleSources;
     options =
@@ -85,7 +85,7 @@ let
             --argstr nixpkgsPath "$nixpkgsPath" \
             --arg modules "[ $modules ]" \
             --argstr stateVersion "${options.system.stateVersion.default}" \
-            --argstr release "${config.system.nixos.release}" \
+            --argstr release "${config.system.expidus.release}" \
             $nixosPath/lib/eval-cacheable-options.nix > $out \
             || {
               echo -en "\e[1;31m"

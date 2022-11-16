@@ -45,8 +45,8 @@ let
   };
 
   versionModule =
-    { system.nixos.versionSuffix = versionSuffix;
-      system.nixos.revision = nixpkgs.rev or nixpkgs.shortRev;
+    { system.expidus.versionSuffix = versionSuffix;
+      system.expidus.revision = nixpkgs.rev or nixpkgs.shortRev;
     };
 
   makeModules = module: rest: [ configuration versionModule module rest ];

@@ -280,7 +280,7 @@ let
           ln -s /nix/var/nix/profiles/system-1-link /nix/var/nix/profiles/system
 
           # Install bootloader
-          touch /etc/NIXOS
+          touch /etc/EXPIDUS
           export NIXOS_INSTALL_BOOTLOADER=1
           ${config.system.build.toplevel}/bin/switch-to-configuration boot
 
