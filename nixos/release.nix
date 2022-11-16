@@ -1,6 +1,7 @@
 let
   lib = import ../lib;
   pkgsConfig = {
+    allowUnfree = true;
     allowBroken = true;
     allowUnfreePredicate = _: true;
     allowInsecurePredicate = _: true;

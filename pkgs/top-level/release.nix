@@ -16,7 +16,7 @@ with (import ../../lib);
   nixpkgsArgs ? { config = { allowUnfree = false; inHydra = true; }; }
 }@args:
 with (import "${nixpkgs.outPath}/lib/channels");
-with import "${nixpkgs}/pkgs/top-level/release.nix" { inherit supportedSystems scrubJobs nixpkgsArgs; };
+with import "${nixpkgs.outPath}/pkgs/top-level/release.nix" { inherit supportedSystems scrubJobs nixpkgsArgs; };
 let
   systemsWithAnySupport = supportedSystems ++ limitedSupportedSystems;
 
@@ -28,11 +28,11 @@ let
   nonPackageJobs =
     { tarball = import ./make-tarball.nix { inherit pkgs nixpkgs officialRelease supportedSystems; };
 
-      metrics = import "${nixpkgs}/pkgs/top-level/metrics.nix" { inherit pkgs nixpkgs; };
+      metrics = import "${nixpkgs.outPath}/pkgs/top-level/metrics.nix" { inherit pkgs nixpkgs; };
 
       manual = import ../../doc { inherit pkgs nixpkgs; };
-      lib-tests = import "${nixpkgs}/lib/tests/release.nix" { inherit pkgs; };
-      pkgs-lib-tests = import "${nixpkgs}/pkgs-lib/tests" { inherit pkgs; };
+      lib-tests = import "${nixpkgs.outPath}/lib/tests/release.nix" { inherit pkgs; };
+      pkgs-lib-tests = import "${nixpkgs.outPath}/pkgs-lib/tests" { inherit pkgs; };
 
       darwin-tested = if supportDarwin.x86_64 then pkgs.releaseTools.aggregate
         { name = "expidus-packages-darwin-${jobs.tarball.version}";
@@ -159,7 +159,7 @@ let
         genAttrs systemsWithAnySupport
           (system: {
             inherit
-              (import "${nixpkgs}/pkgs/stdenv/linux/make-bootstrap-tools.nix" {
+              (import "${nixpkgs.outPath}/pkgs/stdenv/linux/make-bootstrap-tools.nix" {
                 pkgs = import ../.. {
                   localSystem = { inherit system; };
                 };
@@ -170,7 +170,7 @@ let
         // optionalAttrs supportDarwin.x86_64 {
           x86_64-darwin =
             let
-              bootstrap = import "${nixpkgs}/pkgs/stdenv/darwin/make-bootstrap-tools.nix" {
+              bootstrap = import "${nixpkgs.outPath}/pkgs/stdenv/darwin/make-bootstrap-tools.nix" {
                 localSystem = { system = "x86_64-darwin"; };
               };
             in {
@@ -183,7 +183,7 @@ let
           # Cross compiled bootstrap tools
           aarch64-darwin =
             let
-              bootstrap = import "${nixpkgs}/pkgs/stdenv/darwin/make-bootstrap-tools.nix" {
+              bootstrap = import "${nixpkgs.outPath}/pkgs/stdenv/darwin/make-bootstrap-tools.nix" {
                 localSystem = { system = "x86_64-darwin"; };
                 crossSystem = { system = "aarch64-darwin"; };
               };
