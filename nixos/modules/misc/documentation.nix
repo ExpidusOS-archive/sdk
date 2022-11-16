@@ -69,7 +69,7 @@ let
       in
         pkgs.runCommand "lazy-options.json" {
           libPath = filter "${toString pkgs.path}/lib";
-          pkgsLibPath = filter "${toString pkgs.path}/pkgs/pkgs-lib";
+          pkgsLibPath = filter "${toString lib.expidus.channels.nixpkgs}/pkgs/pkgs-lib";
           nixosPath = filter "${toString lib.expidus.channels.nixpkgs}/nixos";
           nixpkgsPath = filter "${toString lib.expidus.channels.nixpkgs}";
           sdkPath = filter "${toString pkgs.path}";

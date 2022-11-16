@@ -40,7 +40,7 @@ let
       inherit config pkgs utils;
     };
   };
-  docs = import "${nixpkgsPath}/nixos/doc/manual" {
+  docs = import "${sdkPath}/nixos/doc/manual" {
     pkgs = pkgs // {
       inherit lib;
       # duplicate of the declaration in all-packages.nix
