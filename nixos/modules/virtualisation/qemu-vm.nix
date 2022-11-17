@@ -873,7 +873,7 @@ in
       ''
         # Mark this as a NixOS machine.
         mkdir -p $targetRoot/etc
-        echo -n > $targetRoot/etc/NIXOS
+        echo -n > $targetRoot/etc/EXPIDUS
 
         # Fix the permissions on /tmp.
         chmod 1777 $targetRoot/tmp
