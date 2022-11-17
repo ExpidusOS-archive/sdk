@@ -97,13 +97,6 @@
                 </para>
               </xsl:if>
 
-              <xsl:if test="count(attr[@name = 'declarations']/list/*) != 0">
-                <para>
-                  <emphasis>Declared by:</emphasis>
-                </para>
-                <xsl:apply-templates select="attr[@name = 'declarations']" />
-              </xsl:if>
-
               <xsl:if test="count(attr[@name = 'definitions']/list/*) != 0">
                 <para>
                   <emphasis>Defined by:</emphasis>
@@ -212,23 +205,6 @@
 
   <xsl:template match="attrs[attr[@name = '_type' and string[@value = 'derivation']]]">
     <replaceable>(build of <xsl:value-of select="attr[@name = 'name']/string/@value" />)</replaceable>
-  </xsl:template>
-
-  <xsl:template match="attr[@name = 'declarations' or @name = 'definitions']">
-    <simplelist>
-      <!--
-        Example:
-          opt.declarations = [ { name = "foo/bar.nix"; url = "https://github.com/....."; } ];
-      -->
-      <xsl:for-each select="list/attrs[attr[@name = 'name']]">
-        <member><filename>
-          <xsl:if test="attr[@name = 'url']">
-            <xsl:attribute name="xlink:href"><xsl:value-of select="attr[@name = 'url']/string/@value"/></xsl:attribute>
-          </xsl:if>
-          <xsl:value-of select="attr[@name = 'name']/string/@value"/>
-        </filename></member>
-      </xsl:for-each>
-    </simplelist>
   </xsl:template>
 
 
