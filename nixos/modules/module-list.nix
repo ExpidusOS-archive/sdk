@@ -18,6 +18,7 @@
     "system/boot/stage-1.nix"
     "system/activation/no-clone.nix"
     "system/activation/top-level.nix"
+    "tasks/network-interfaces.nix"
     "installer/tools/tools.nix"
     "services/misc/gitit.nix"
     "services/misc/nix-daemon.nix"
