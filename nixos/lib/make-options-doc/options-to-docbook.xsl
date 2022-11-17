@@ -238,24 +238,8 @@
           <!-- Hyperlink the filename either to the NixOS Subversion
           repository (if it’s a module and we have a revision number),
           or to the local filesystem. -->
-          <xsl:choose>
-            <xsl:when test="not(starts-with(@value, '/'))">
-              <xsl:choose>
-                <xsl:when test="$revision = 'local'">
-                  <xsl:attribute name="xlink:href">https://github.com/NixOS/nixpkgs/blob/master/<xsl:value-of select="@value"/></xsl:attribute>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:attribute name="xlink:href">https://github.com/NixOS/nixpkgs/blob/<xsl:value-of select="$revision"/>/<xsl:value-of select="@value"/></xsl:attribute>
-                </xsl:otherwise>
-              </xsl:choose>
-            </xsl:when>
-            <xsl:when test="$revision != 'local' and $program = 'nixops' and contains(@value, '/nix/')">
-              <xsl:attribute name="xlink:href">https://github.com/NixOS/nixops/blob/<xsl:value-of select="$revision"/>/nix/<xsl:value-of select="substring-after(@value, '/nix/')"/></xsl:attribute>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:attribute name="xlink:href">file://<xsl:value-of select="@value"/></xsl:attribute>
-            </xsl:otherwise>
-          </xsl:choose>
+          <!-- FIXME: check with our channels -->
+          <xsl:attribute name="xlink:href">file://<xsl:value-of select="@value"/></xsl:attribute>
           <!-- Print the filename and make it user-friendly by replacing the
           /nix/store/<hash> prefix by the default location of nixos
           sources. -->

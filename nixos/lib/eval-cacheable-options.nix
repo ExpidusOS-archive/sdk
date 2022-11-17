@@ -4,6 +4,7 @@
 , nixpkgsPath
 , homeManagerPath
 , sdkPath
+, modulesPath
 , modules
 , stateVersion
 , release
@@ -12,12 +13,11 @@ let
   channels = {
     nixpkgs = nixpkgsPath;
     home-manager = homeManagerPath;
-    sdk = sdkPath;
+    sdk = modulesPath;
   };
   channelNames = builtins.attrNames channels;
 
   lib = import "${libPath}/overlay.nix" channels;
-  modulesPath = "${sdkPath}/nixos/modules";
   # dummy pkgs set that contains no packages, only `pkgs.lib` from the full set.
   # not having `pkgs.lib` causes all users of `pkgs.formats` to fail.
   pkgs = import pkgsLibPath {

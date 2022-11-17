@@ -65,7 +65,7 @@ let
               && (t == "file" -> hasSuffix ".nix" n)
             );
 
-        sdkPath = filter (toString lib.expidus.channels.sdk);
+        sdkPath = (toString pkgs.path);
       in
         pkgs.runCommand "lazy-options.json" {
           libPath = filter "${toString pkgs.path}/lib";
@@ -73,7 +73,8 @@ let
           nixosPath = filter "${toString lib.expidus.channels.nixpkgs}/nixos";
           nixpkgsPath = filter "${toString lib.expidus.channels.nixpkgs}";
           homeManagerPath = filter "${toString lib.expidus.channels.home-manager}";
-          inherit sdkPath;
+          sdkPath = filter "${sdkPath}";
+          modulesPath = filter "${toString sdkPath}/nixos/modules";
           modules = lib.flatten (map (p:
             let
               path = toString p;
@@ -84,9 +85,9 @@ let
                   value = ''"[${name}]${unprefixed}"'';
                 in if isChanged then
                   value
-                else "") (lib.expidus.channels // { sdk = sdkPath; });
+                else "") (lib.expidus.channels // { sdk = "${sdkPath}/nixos/modules"; });
               filtered = builtins.filter (value: value != "") (builtins.attrValues paths);
-            in paths) docModules.lazy);
+            in filtered) docModules.lazy);
         } ''
           export NIX_STORE_DIR=$TMPDIR/store
           export NIX_STATE_DIR=$TMPDIR/state
@@ -101,6 +102,7 @@ let
             --argstr nixosPath "$nixosPath" \
             --argstr nixpkgsPath "$nixpkgsPath" \
             --argstr homeManagerPath "$homeManagerPath" \
+            --argstr modulesPath "$modulesPath" \
             --argstr sdkPath "$sdkPath" \
             --arg modules "[ $modules ]" \
             --argstr stateVersion "${lib.version}" \
