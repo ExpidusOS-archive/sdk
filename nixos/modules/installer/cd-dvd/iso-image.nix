@@ -103,35 +103,35 @@ let
     DEFAULT boot
 
     LABEL boot
-    MENU LABEL NixOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel}
+    MENU LABEL ExpidusOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel}
     LINUX /boot/${config.system.boot.loader.kernelFile}
     APPEND init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams}
     INITRD /boot/${config.system.boot.loader.initrdFile}
 
     # A variant to boot with 'nomodeset'
     LABEL boot-nomodeset
-    MENU LABEL NixOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel} (nomodeset)
+    MENU LABEL ExpidusOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel} (nomodeset)
     LINUX /boot/${config.system.boot.loader.kernelFile}
     APPEND init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams} nomodeset
     INITRD /boot/${config.system.boot.loader.initrdFile}
 
     # A variant to boot with 'copytoram'
     LABEL boot-copytoram
-    MENU LABEL NixOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel} (copytoram)
+    MENU LABEL ExpidusOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel} (copytoram)
     LINUX /boot/${config.system.boot.loader.kernelFile}
     APPEND init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams} copytoram
     INITRD /boot/${config.system.boot.loader.initrdFile}
 
     # A variant to boot with verbose logging to the console
     LABEL boot-debug
-    MENU LABEL NixOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel} (debug)
+    MENU LABEL ExpidusOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel} (debug)
     LINUX /boot/${config.system.boot.loader.kernelFile}
     APPEND init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams} loglevel=7
     INITRD /boot/${config.system.boot.loader.initrdFile}
 
     # A variant to boot with a serial console enabled
     LABEL boot-serial
-    MENU LABEL NixOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel} (serial console=ttyS0,115200n8)
+    MENU LABEL ExpidusOS ${config.system.expidus.label}${config.isoImage.appendToMenuLabel} (serial console=ttyS0,115200n8)
     LINUX /boot/${config.system.boot.loader.kernelFile}
     APPEND init=${config.system.build.toplevel}/init ${toString config.boot.kernelParams} console=ttyS0,115200n8
     INITRD /boot/${config.system.boot.loader.initrdFile}
@@ -188,7 +188,7 @@ let
     ]}
 
     # Fonts can be loaded?
-    # (This font is assumed to always be provided as a fallback by NixOS)
+    # (This font is assumed to always be provided as a fallback by ExpidusOS)
     if loadfont (\$root)/EFI/boot/unicode.pf2; then
       set with_fonts=true
     fi
@@ -573,7 +573,7 @@ in
 
     isoImage.syslinuxTheme = mkOption {
       default = ''
-        MENU TITLE NixOS
+        MENU TITLE ExpidusOS
         MENU RESOLUTION 800 600
         MENU CLEAR
         MENU ROWS 6
