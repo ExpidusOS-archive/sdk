@@ -257,7 +257,7 @@ in
           - This includes man pages like
             {manpage}`configuration.nix(5)` if {option}`documentation.man.enable` is
             set.
-          - This includes the HTML manual and the {command}`nixos-help` command if
+          - This includes the HTML manual and the {command}`expidus-help` command if
             {option}`documentation.doc.enable` is set.
         '';
       };
@@ -377,7 +377,7 @@ in
 
       environment.systemPackages = []
         ++ optional cfg.man.enable manual.manpages
-        ++ optionals cfg.doc.enable [ manual.manualHTML nixos-help ];
+        ++ optionals cfg.doc.enable [ manual.manualHTML expidus-help ];
     })
 
   ]);
