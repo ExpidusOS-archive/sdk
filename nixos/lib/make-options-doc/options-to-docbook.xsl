@@ -228,34 +228,6 @@
           <xsl:value-of select="attr[@name = 'name']/string/@value"/>
         </filename></member>
       </xsl:for-each>
-
-      <!--
-        When the declarations/definitions are raw strings,
-        fall back to hardcoded location logic, specific to Nixpkgs.
-      -->
-      <xsl:for-each select="list/string">
-        <member><filename>
-          <!-- Hyperlink the filename either to the NixOS Subversion
-          repository (if it’s a module and we have a revision number),
-          or to the local filesystem. -->
-          <!-- FIXME: check with our channels -->
-          <xsl:attribute name="xlink:href">file://<xsl:value-of select="@value"/></xsl:attribute>
-          <!-- Print the filename and make it user-friendly by replacing the
-          /nix/store/<hash> prefix by the default location of nixos
-          sources. -->
-          <xsl:choose>
-            <xsl:when test="not(starts-with(@value, '/'))">
-              &lt;nixpkgs/<xsl:value-of select="@value"/>&gt;
-            </xsl:when>
-            <xsl:when test="contains(@value, 'nixops') and contains(@value, '/nix/')">
-              &lt;nixops/<xsl:value-of select="substring-after(@value, '/nix/')"/>&gt;
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="@value" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </filename></member>
-      </xsl:for-each>
     </simplelist>
   </xsl:template>
 
