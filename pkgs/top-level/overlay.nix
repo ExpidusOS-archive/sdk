@@ -32,6 +32,10 @@ let
           };
         in c.config.system.build // c;
 
+      nixosOptionsDoc = attrs:
+        (import ../../nixos/lib/make-options-doc)
+        ({ inherit pkgs lib; } // attrs);
+
       nixos-install-tools = callPackage ../tools/nix/nixos-install-tools/default.nix { inherit args channels; };
       gtk-layer-shell = self.callPackage ../development/libraries/gtk-layer-shell/default.nix {};
 

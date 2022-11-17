@@ -88,7 +88,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        attr: [channel, manual]
+        attr: [channel]
     runs-on: ubuntu-latest
     needs: [package]
     steps:
@@ -121,7 +121,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        attr: [iso_minimal, iso_plasma5, iso_gnome, iso_genesis, iso_minimal_new_kernel,
+        attr: [manual, iso_minimal, iso_plasma5, iso_gnome, iso_genesis, iso_minimal_new_kernel,
           ova, proxmoxImage, proxmoxLXC, amazonImage, amazonImageZfs, amazonImageAutomaticSize,
           lxdImage, lxdMeta, dummy]
         arch: [x86_64-linux]
