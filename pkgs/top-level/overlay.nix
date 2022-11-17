@@ -34,7 +34,7 @@ let
 
       nixosOptionsDoc = attrs:
         (import ../../nixos/lib/make-options-doc)
-        ({ inherit pkgs lib; } // attrs);
+        ({ inherit lib; pkgs = self; } // attrs);
 
       nixos-install-tools = callPackage ../tools/nix/nixos-install-tools/default.nix { inherit args channels; };
       gtk-layer-shell = self.callPackage ../development/libraries/gtk-layer-shell/default.nix {};
