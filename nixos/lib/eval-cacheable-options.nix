@@ -37,7 +37,7 @@ let
     system.stateVersion = stateVersion;
   };
   eval = lib.evalModules {
-    modules = (map (m: builtins.replaceStrings (builtins.map (name: "[${name}]") channelNames) (builtins.map (name: channels.${name}) channelNames) m) modules) ++ [
+    modules = (map (m: builtins.replaceStrings (builtins.map (name: "[${name}]") channelNames) (builtins.map (name: toString channels.${name}) channelNames) m) modules) ++ [
       config
     ];
     specialArgs = {
