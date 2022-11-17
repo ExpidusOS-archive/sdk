@@ -2,9 +2,9 @@ evalConfigArgs@
 {
   system ? builtins.currentSystem,
   pkgs ? (import ../../. { system = builtins.currentSystem; crossSystem = { inherit system; }; }),
-  baseModules ? import ../modules/module-list.nix {
-      inherit (pkgs.lib.expidus.channels) nixpkgs home-manager;
-    },
+  baseModules ? (import ../modules/module-list.nix {
+      inherit (pkgs.lib.expidus.channels) nixpkgs home-manager sdk;
+    }).allModules,
   extraArgs ? {},
   specialArgs ? {},
   modules,

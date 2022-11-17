@@ -1,9 +1,6 @@
 { config, options, lib, pkgs, utils, modules, baseModules, extraModules, modulesPath, specialArgs, ... }:
-
 with lib;
-
 let
-
   cfg = config.documentation;
   allOpts = options;
 
@@ -20,11 +17,12 @@ let
 
   docModules =
     let
-      p = partition canCacheDocs (baseModules ++ cfg.nixos.extraModules);
+      modules = baseModules ++ cfg.nixos.extraModules;
+      p = partition canCacheDocs modules;
     in
       {
         lazy = p.right;
-        eager = p.wrong ++ optionals cfg.nixos.includeAllModules (extraModules ++ modules);
+        eager = p.wrong ++ optionals cfg.nixos.includeAllModules modules;
       };
 
   manual = import ../../doc/manual rec {
@@ -66,6 +64,8 @@ let
               && (t == "directory" -> baseNameOf n != "tests")
               && (t == "file" -> hasSuffix ".nix" n)
             );
+
+        sdkPath = filter (toString lib.expidus.channels.sdk);
       in
         pkgs.runCommand "lazy-options.json" {
           libPath = filter "${toString pkgs.path}/lib";
@@ -73,21 +73,20 @@ let
           nixosPath = filter "${toString lib.expidus.channels.nixpkgs}/nixos";
           nixpkgsPath = filter "${toString lib.expidus.channels.nixpkgs}";
           homeManagerPath = filter "${toString lib.expidus.channels.home-manager}";
-          sdkPath = filter "${toString pkgs.path}";
-          modules = map (p:
+          inherit sdkPath;
+          modules = lib.flatten (map (p:
             let
               path = toString p;
-              paths = builtins.mapAttrs (name: value:
+              paths = builtins.mapAttrs (name: channel:
                 let
-                  prefix = lib.expidus.channels.${name};
-                  unprefixed = removePrefix prefix path;
+                  unprefixed = removePrefix channel path;
                   isChanged = path != unprefixed;
                   value = ''"[${name}]${unprefixed}"'';
-                in if isChanged then value else "") lib.expidus.channels;
+                in if isChanged then
+                  value
+                else "") (lib.expidus.channels // { sdk = sdkPath; });
               filtered = builtins.filter (value: value != "") (builtins.attrValues paths);
-            in if builtins.length filtered < 1 then
-              path
-            else builtins.elemAt filtered 0) docModules.lazy;
+            in paths) docModules.lazy);
         } ''
           export NIX_STORE_DIR=$TMPDIR/store
           export NIX_STATE_DIR=$TMPDIR/state
@@ -104,9 +103,9 @@ let
             --argstr homeManagerPath "$homeManagerPath" \
             --argstr sdkPath "$sdkPath" \
             --arg modules "[ $modules ]" \
-            --argstr stateVersion "${options.system.stateVersion.default}" \
+            --argstr stateVersion "${lib.version}" \
             --argstr release "${config.system.expidus.release}" \
-            $nixosPath/lib/eval-cacheable-options.nix > $out \
+            $sdkPath/nixos/lib/eval-cacheable-options.nix > $out \
             || {
               echo -en "\e[1;31m"
               echo 'Cacheable portion of option doc build failed.'
@@ -127,8 +126,8 @@ let
   };
 
 
-  nixos-help = let
-    helpScript = pkgs.writeShellScriptBin "nixos-help" ''
+  expidus-help = let
+    helpScript = pkgs.writeShellScriptBin "expidus-help" ''
       # Finds first executable browser in a colon-separated list.
       # (see how xdg-open defines BROWSER)
       browser="$(
@@ -146,16 +145,16 @@ let
     '';
 
     desktopItem = pkgs.makeDesktopItem {
-      name = "nixos-manual";
-      desktopName = "NixOS Manual";
-      genericName = "View NixOS documentation in a web browser";
+      name = "expidus-manual";
+      desktopName = "ExpidusOS Manual";
+      genericName = "View ExpidusOS documentation in a web browser";
       icon = "nix-snowflake";
-      exec = "nixos-help";
+      exec = "expidus-help";
       categories = ["System"];
     };
 
     in pkgs.symlinkJoin {
-      name = "nixos-help";
+      name = "expidus-help";
       paths = [
         helpScript
         desktopItem

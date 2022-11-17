@@ -17,7 +17,7 @@ let
   channelNames = builtins.attrNames channels;
 
   lib = import "${libPath}/overlay.nix" channels;
-  modulesPath = "${nixosPath}/modules";
+  modulesPath = "${sdkPath}/nixos/modules";
   # dummy pkgs set that contains no packages, only `pkgs.lib` from the full set.
   # not having `pkgs.lib` causes all users of `pkgs.formats` to fail.
   pkgs = import pkgsLibPath {
@@ -37,7 +37,7 @@ let
     system.stateVersion = stateVersion;
   };
   eval = lib.evalModules {
-    modules = (map (m: builtins.replaceStrings (builtins.map (name: "[${name}]") channelNames) (builtins.map (name: toString channels.${name}) channelNames) m) modules) ++ [
+    modules = (map (m: builtins.replaceStrings (builtins.map (name: "[${name}]") channelNames) (builtins.map (name: toString channels.${name}) channelNames) (toString m)) modules) ++ [
       config
     ];
     specialArgs = {

@@ -1,14 +1,14 @@
 {
   nixpkgs ? (import ../../lib/channels/nixpkgs.nix),
   home-manager ? (import ../../lib/channels/home-manager.nix),
-  nixos ? "${nixpkgs}/nixos"
-}:
-let
+  sdk ? (import ../../lib/channels/sdk.nix),
+  nixos ? "${nixpkgs}/nixos",
+}: rec {
   nixpkgsModules = import "${nixpkgs}/nixos/modules/module-list.nix";
 
   replacesModules = builtins.map (path: ({ config, lib, pkgs, ... }: {
     disabledModules = [ "${nixos}/modules/${path}" ];
-    imports = [ ./${path} ];
+    imports = [ "${sdk}/nixos/modules/${path}" ];
   })) [
     "misc/nixpkgs.nix"
     "misc/documentation.nix"
@@ -25,9 +25,20 @@ let
     "services/ttys/getty.nix"
   ];
 
+  extendModules = [
+    ("${home-manager}/nixos")
+  ];
+
   expidusModules = [
     ./programs/expidus-terminal.nix
     ./services/x11/desktop-managers/genesis.nix
-    ("${home-manager}/nixos")
   ];
-in nixpkgsModules ++ replacesModules ++ expidusModules
+
+  by-channel = {
+    sdk = replacesModules ++ expidusModules;
+    home-manager = [ ("${home-manager}/nixos") ];
+    nixpkgs = nixpkgsModules;
+  };
+
+  allModules = nixpkgsModules ++ replacesModules ++ extendModules ++ expidusModules;
+}
