@@ -76,16 +76,18 @@ let
           sdkPath = filter "${toString pkgs.path}";
           modules = map (p:
             let
+              path = toString p;
               paths = builtins.mapAttrs (name: value:
                 let
-                  path = toString p;
                   prefix = lib.expidus.channels.${name};
                   unprefixed = removePrefix prefix path;
                   isChanged = path != unprefixed;
                   value = ''"[${name}]${unprefixed}"'';
                 in if isChanged then value else "") lib.expidus.channels;
               filtered = builtins.filter (value: value != "") (builtins.attrValues paths);
-            in builtins.elemAt filtered 0) docModules.lazy;
+            in if builtins.length filtered < 1 then
+              path
+            else builtins.elemAt filtered 0) docModules.lazy;
         } ''
           export NIX_STORE_DIR=$TMPDIR/store
           export NIX_STATE_DIR=$TMPDIR/state
