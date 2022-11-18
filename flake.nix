@@ -42,18 +42,23 @@
             with pkgs;
             (import ./nixos/lib/eval-config.nix {
               inherit system pkgs;
-              modules = [({
+              modules = ["${toString ./nixos/modules/installer/cd-dvd}/installation-cd-${type}.nix" ({
                 isoImage.isoBaseName = "expidus-${type}";
-              }) "${lib.expidus.channels.sdk}/nixos/modules/installer/cd-dvd/installation-cd-${type}.nix"];
+              })];
             }).config.system.build.isoImage;
         in {
           channel = import ./nixos/lib/make-channel.nix {
             inherit pkgs;
-            nixpkgs = { revCount = 130979; shortRev = "gfedcba"; } // self;
+            nixpkgs = {
+              outPath = cleanSource ./.;
+              revCount = 130979;
+              shortRev = lib.expidus.trivial.revision or "gfedcba";
+            };
             inherit (lib.expidus.trivial) version versionSuffix;
           };
 
           iso-minimal = makeIso "minimal";
+
           iso-plasma5 = makeIso "graphical-calamares-plasma5";
           iso-gnome = makeIso "graphical-calamares-gnome";
           iso-genesis = makeIso "graphical-calamares-genesis";
@@ -62,10 +67,7 @@
       forReleaseJobs = lib.genAttrs [ "channel" "iso-minimal" "iso-plasma5" "iso-gnome" "iso-genesis" ];
 
       sdk-hydra = forReleaseJobs (name:
-        lib.expidus.system.forAllLinux (system:
-          let
-            drv = sdk-extra.${system}.${name};
-          in lib.hydraJob drv));
+        lib.expidus.system.forAllLinux (system: sdk-extra.${system}.${name}));
     in sdk-flake // ({
       inherit lib self;
       libExpidus = lib.expidus;
