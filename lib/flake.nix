@@ -12,7 +12,8 @@ rec {
     let
       forAllSystems = lib.genAttrs systems;
       nixpkgsFor = forAllSystems (system: import ../pkgs/top-level/default.nix {
-        inherit system;
+        system = expidus.system.current;
+        crossSystem = { inherit system; };
       });
       wrapped = name + (if target == "default" then "" else "-${target}");
 
@@ -27,11 +28,12 @@ rec {
             let
               separateDebugInfo = if prev.stdenv.isDarwin then false else true;
               config = if name == flake.name then packages else (packages.${name} or emptyPackages);
+              overrideAttr = name: if builtins.hasAttr name old then old.${name} ++ config.${name} else [];
             in {
               inherit separateDebugInfo;
-              nativeBuildInputs = if builtins.hasAttr "nativeBuildInputs" old then old.nativeBuildInputs ++ config.nativeBuildInputs else [];
-              buildInputs = if builtins.hasAttr "buildInputs" old then old.buildInputs ++ config.buildInputs else [];
-              propagatedBuildInputs = if builtins.hasAttr "propagatedBuildInputs" old then old.propagatedBuildInputs ++ config.propagatedBuildInputs else [];
+              nativeBuildInputs = overrideAttr "nativeBuildInputs";
+              buildInputs = overrideAttr "buildInputs";
+              propagatedBuildInputs = overrideAttr "propagatedBuildInputs";
 
               meta = old.meta // {
                 outputsToInstall = old.meta.outputsToInstall or [ "out" ] ++ (prev.lib.optional separateDebugInfo "debug");
