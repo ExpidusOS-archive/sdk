@@ -17,7 +17,7 @@ let
 in with lib;
 { nixpkgs ? { outPath = cleanSource ./..; revCount = 130979; shortRev = "gfedcba"; },
   stableBranch ? false,
-  supportedSystems ? [ "x86_64-linux" "aarch64-linux" ],
+  supportedSystems ? lib.expidus.system.supported,
   configuration ? {} }:
 with import ("${expidus.channels.nixpkgs}/pkgs/top-level/release-lib.nix") {
   inherit supportedSystems;
