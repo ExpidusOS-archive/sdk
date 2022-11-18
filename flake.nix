@@ -72,6 +72,10 @@
       legacyPackages = lib.expidus.system.forAll (system: import ./. { inherit system; });
 
       hydraJobs = sdk-flake.hydraJobs // sdk-hydra;
-      packages = sdk-flake.packages // sdk-extra;
+      packages = lib.expidus.system.forAll (system:
+        let
+          flake = sdk-flake.packages.${system};
+          hydra = if builtins.hasAttr system sdk-extra then sdk-extra.${system} else {};
+        in flake // hydra);
     });
 }
