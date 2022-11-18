@@ -28,56 +28,44 @@
         supportedSystems = lib.expidus.system.supported;
         packageSet = import ./.;
       };
-    in sdk-flake // ({
-      inherit lib self;
-      libExpidus = lib.expidus;
-      legacyPackages = lib.expidus.system.forAll (system: import ./. { inherit system; });
 
-      packages = lib.expidus.system.forAll (system:
-        with release-lib;
+      sdk-extra = lib.expidus.system.forAllLinux (system:
         with lib;
+        with release-lib;
         let
-          flake-base = if builtins.hasAttr system sdk-flake.packages then sdk-flake.packages.${system} else {};
-
           pkgs = import ./pkgs/top-level/default.nix {
             system = lib.expidus.system.current;
             crossSystem = { inherit system; };
           };
 
-          makeIso = { module, type, ... }:
+          makeIso = type:
             with pkgs;
-            hydraJob ((import ./nixos/lib/eval-config.nix {
+            (import ./nixos/lib/eval-config.nix {
               inherit system pkgs;
               modules = [({
                 isoImage.isoBaseName = "expidus-${type}";
-              }) module];
-            }).config.system.build.isoImage);
-        in (flake-base // {
+              }) ./nixos/modules/installer/cd-dvd/installation-cd-${type}.nix];
+            }).config.system.build.isoImage;
+        in {
           channel = import ./nixos/lib/make-channel.nix {
             inherit pkgs;
-            nixpkgs = self;
+            nixpkgs = { revCount = 130979; shortRev = "gfedcba"; } // self;
             inherit (lib.expidus.trivial) version versionSuffix;
           };
 
-          iso-minimal = makeIso {
-            module = ./nixos/modules/installer/cd-dvd/installation-cd-minimal.nix;
-            type = "minimal";
-          };
+          iso-minimal = makeIso "minimal";
+          iso-plasma5 = makeIso "graphical-calamares-plasma5";
+          iso-gnome = makeIso "graphical-calamares-gnome";
+          iso-genesis = makeIso "graphical-calamares-genesis";
+        });
+    in sdk-flake // ({
+      inherit lib self;
+      libExpidus = lib.expidus;
+      legacyPackages = lib.expidus.system.forAll (system: import ./. { inherit system; });
 
-          iso-plasma5 = makeIso {
-            module = ./nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-plasma5.nix;
-            type = "plasma5";
-          };
+      hydraJobs = sdk-flake.hydraJobs // (lib.genAttrs [ "channel" "iso-minimal" "iso-plasma5" "iso-gnome" "iso-genesis" ] (name:
+        lib.expidus.system.forAllLinux (system: lib.hydraJob sdk-extra.${system}.${name})));
 
-          iso-gnome = makeIso {
-            module = ./nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-gnome.nix;
-            type = "gnome";
-          };
-
-          iso-genesis = makeIso {
-            module = ./nixos/modules/installer/cd-dvd/installation-cd-graphical-calamares-genesis.nix;
-            type = "genesis";
-          };
-        }));
+      packages = sdk-flake.packages // sdk-extra;
     });
 }

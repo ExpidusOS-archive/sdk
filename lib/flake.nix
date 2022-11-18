@@ -101,7 +101,6 @@ rec {
           let
             pkgs = nixpkgsFor.${system};
           in (packageOverlay pkgs pkgs).${name});
-        "${target}-devvm" = expidus.system.forAllLinux (system: nixosSystems.${system}.config.system.build.vm);
       };
 
       devShells = forAllSystems (system:
