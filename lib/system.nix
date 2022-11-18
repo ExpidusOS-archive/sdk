@@ -1,6 +1,15 @@
 { lib }:
 let
-  current = if builtins.hasAttr "currentSystem" builtins then builtins.toString builtins.currentSystem else "x86_64-linux";
+  currentBultin = if builtins.hasAttr "currentSystem" builtins then builtins.toString builtins.currentSystem else null;
+  currentEnv =
+    let
+      env = builtins.getEnv "EXPIDUS_SDK_HOST";
+      splitten = lib.split "-" env;
+    in if env != "" then
+      "${builtins.elemAt splitten 0}-${builtins.elemAt splitten 1}"
+    else null;
+
+  current = if currentEnv == null then currentBultin else (if currentEnv == null then "x86_64-linux" else currentEnv);
   isSupported = value: value == true;
   getSupportedList = list: builtins.map (system: system == current) list;
   checkSupport = list: (builtins.length (builtins.filter isSupported (getSupportedList list))) > 0;
