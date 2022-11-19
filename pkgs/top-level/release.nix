@@ -13,7 +13,15 @@ with (import ../../lib);
   # Strip most of attributes when evaluating to spare memory usage
   scrubJobs ? true,
   # Attributes passed to nixpkgs. Don't build packages marked as unfree.
-  nixpkgsArgs ? { config = { allowUnfree = false; inHydra = true; }; }
+  nixpkgsArgs ? {
+    config = {
+      allowUnfree = true;
+      allowBroken = true;
+      allowUnfreePredicate = _: true;
+      allowInsecurePredicate = _: true;
+      inHydra = true;
+    };
+  }
 }@args:
 let
   inherit (expidus) channels;
