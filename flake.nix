@@ -69,7 +69,7 @@
       sdk-hydra = forReleaseJobs (name:
         lib.expidus.system.forAllLinux (system: sdk-extra.${system}.${name}));
     in sdk-flake // ({
-      inherit lib self;
+      inherit lib;
       libExpidus = lib.expidus;
       legacyPackages = lib.expidus.system.forAll (system: import ./. { inherit system; });
 
