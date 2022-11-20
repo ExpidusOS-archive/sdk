@@ -36,6 +36,10 @@ let
         (import ../../nixos/lib/make-options-doc)
         ({ inherit lib; pkgs = self; } // attrs);
 
+      nix = super.nix.overrideAttrs (old: {
+        doInstallCheck = self.stdenv.hostPlatform == self.stdenv.buildPlatform;
+      });
+
       nixos-install-tools = callPackage ../tools/nix/nixos-install-tools/default.nix { inherit args channels; };
       gtk-layer-shell = self.callPackage ../development/libraries/gtk-layer-shell/default.nix {};
 
