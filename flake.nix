@@ -71,7 +71,10 @@
     in sdk-flake // ({
       inherit lib;
       libExpidus = lib.expidus;
-      legacyPackages = lib.expidus.system.forAll (system: import ./. { inherit system; });
+      legacyPackages = lib.expidus.system.forAll (system: import ./. {
+        system = lib.expidus.system.current;
+        crossSystem = { inherit system; };
+      });
 
       hydraJobs = sdk-flake.hydraJobs // sdk-hydra;
       packages = lib.expidus.system.forAll (system:

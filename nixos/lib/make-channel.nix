@@ -4,7 +4,7 @@ pkgs.releaseTools.makeSourceTarball {
   src = nixpkgs;
   officialRelease = false; # FIXME: fix this in makeSourceTarball
   inherit version versionSuffix;
-  buildInputs = [ pkgs.nix ];
+  buildInputs = with pkgs; [ pkgsBuildHost.nix ];
   distPhase = ''
     echo -n $VERSION_SUFFIX > .version-suffix
     echo -n ${nixpkgs.rev or nixpkgs.shortRev} > .git-revision
@@ -13,7 +13,7 @@ pkgs.releaseTools.makeSourceTarball {
     cp -prd . ../$releaseName
     chmod -R u+w ../$releaseName
     ln -s . ../$releaseName/nixpkgs # hack to make ‘<nixpkgs>’ work
-    NIX_STATE_DIR=$TMPDIR nix-env -f ../$releaseName/pkgs/top-level/make-channel.nix --argstr homeManager ${pkgs.lib.expidus.channels.home-manager} --argstr nixpkgs ${pkgs.lib.expidus.channels.nixpkgs} --argstr sdk ${pkgs.path} --show-trace -qaP --meta --xml \* > /dev/null
+    NIX_STATE_DIR=$TMPDIR ${pkgs.pkgsBuildHost.nix}/bin/nix-env -f ../$releaseName/pkgs/top-level/make-channel.nix --argstr homeManager ${pkgs.lib.expidus.channels.home-manager} --argstr nixpkgs ${pkgs.lib.expidus.channels.nixpkgs} --argstr sdk ${pkgs.path} --show-trace -qaP --meta --xml \* > /dev/null
     cd ..
     chmod -R u+w $releaseName
     tar cfJ $out/tarballs/$releaseName.tar.xz $releaseName
