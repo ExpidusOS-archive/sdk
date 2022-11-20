@@ -40,6 +40,30 @@ let
         doInstallCheck = self.stdenv.hostPlatform == self.stdenv.buildPlatform;
       });
 
+      glib = super.glib.overrideAttrs (old:
+        let
+          buildDocs = self.stdenv.hostPlatform == self.stdenv.buildPlatform && !self.stdenv.hostPlatform.isStatic;
+        in rec {
+          nativeBuildInputs = with self.pkgsBuildHost; ([
+            meson
+            ninja
+            pkg-config
+            perl
+            python3
+            gettext
+          ] ++ lib.optionals buildDocs [
+            gtk-doc
+            docbook_xsl
+            docbook_xml_dtd_45
+            libxml2
+            libxslt
+          ]);
+
+          preConfigure = ''
+            export PATH="$PATH:${lib.makeBinPath nativeBuildInputs}"
+          '';
+        });
+
       nixos-install-tools = callPackage ../tools/nix/nixos-install-tools/default.nix { inherit args channels; };
       gtk-layer-shell = self.callPackage ../development/libraries/gtk-layer-shell/default.nix {};
 
