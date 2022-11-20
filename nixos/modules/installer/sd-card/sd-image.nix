@@ -34,7 +34,7 @@ in
 
   options.sdImage = {
     imageName = mkOption {
-      default = "${config.sdImage.imageBaseName}-${config.system.nixos.label}-${pkgs.stdenv.hostPlatform.system}.img";
+      default = "${config.sdImage.imageBaseName}-${config.system.expidus.label}-${pkgs.stdenv.hostPlatform.system}.img";
       description = lib.mdDoc ''
         Name of the generated image file.
       '';
