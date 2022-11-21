@@ -1,7 +1,7 @@
 {
   description = "SDK for ExpidusOS";
 
-  outputs = { self }@inputs:
+  outputs = { self }:
     let
       lib = (import ./lib).extend (final: prev: {
         nixos = import ./nixos/lib { lib = final; };
@@ -62,11 +62,13 @@
         };
       };
 
-      release-base = lib.expidus.system.forAllLinux (system:
-        let pkgs = import ./pkgs/top-level/default.nix {
-          system = lib.expidus.system.current;
-          crossSystem = { inherit system; };
-        };
+      release-base = lib.expidus.system.forAll (system:
+        let
+          pkgs = import ./pkgs/top-level/default.nix {
+            system = lib.expidus.system.current;
+            crossSystem = { inherit system; };
+          };
+          sysconfig = lib.expidus.system.make system;
         in with pkgs;
         with lib; lib.mergeAttrs
           {
@@ -83,7 +85,7 @@
               inherit (lib.expidus.trivial) version versionSuffix;
             };
           }
-          (if (builtins.tryEval grub2_efi).success then {
+          (if (builtins.tryEval grub2_efi).success && sysconfig.isLinux then {
             iso-minimal = makeIso system "minimal";
             iso-plasma5 = makeIso system "graphical-calamares-plasma5";
             iso-gnome = makeIso system "graphical-calamares-gnome";
