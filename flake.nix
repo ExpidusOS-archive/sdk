@@ -54,6 +54,9 @@
         }).config.system.build.sdImage;
 
       release-unique = {
+        aarch64-linux = {
+          raspberry-pi = makeSdImage "aarch64-linux" "aarch64-installer";
+        };
         armv6l-linux = {
           raspberry-pi = makeSdImage "armv6l-linux" "raspberrypi-installer";
         };
@@ -115,8 +118,8 @@
       hydraJobs = sdk-flake.hydraJobs // sdk-hydra;
       packages = lib.expidus.system.forAll (system:
         let
-          flake = release.${system};
-          hydra = release.${system} or {};
-        in flake // hydra);
+          base = sdk-flake.packages.${system};
+          releases = release.${system} or {};
+        in base // releases);
     });
 }

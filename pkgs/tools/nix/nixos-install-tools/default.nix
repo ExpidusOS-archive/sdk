@@ -9,8 +9,7 @@
   runCommand,
   nixosTests,
   system,
-  channels,
-  args
+  channels
 }:
 let
   inherit (nixos {}) config;
