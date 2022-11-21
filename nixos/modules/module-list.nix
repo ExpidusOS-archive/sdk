@@ -33,6 +33,7 @@
   expidusModules = [
     ./programs/expidus-terminal.nix
     ./services/x11/desktop-managers/genesis.nix
+    ./system/device.nix
   ];
 
   by-channel = {
