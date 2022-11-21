@@ -9,26 +9,6 @@ rec {
     doInstallCheck = stdenv.hostPlatform == stdenv.buildPlatform;
   });
 
-  glib = super.glib.overrideAttrs (old:
-    let
-      buildDocs = stdenv.hostPlatform == stdenv.buildPlatform && !stdenv.hostPlatform.isStatic;
-    in {
-      nativeBuildInputs = with pkgs; [
-        meson
-        ninja
-        pkg-config
-        perl
-        python3
-        gettext
-        libxslt
-        docbook_xsl
-      ] ++ lib.optionals buildDocs [
-        gtk-doc
-        docbook_xml_dtd_45
-        libxml2
-      ];
-    });
-
   ninja = super.ninja.overrideAttrs (old: {
     src = fetchFromGitHub {
       owner = "NickCao";
