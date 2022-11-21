@@ -48,9 +48,9 @@ rec {
     });
 
   wrapFirefox = pkgs.callPackage ../applications/networking/browsers/firefox/wrapper.nix {};
-  firefox = wrapFirefox firefox-packages.firefox;
+  firefox = wrapFirefox firefox-packages.firefox {};
   firefox-esr = firefox-esr-102;
-  firefox-esr-102 = wrapFirefox firefox-packages.firefox-esr-102;
+  firefox-esr-102 = wrapFirefox firefox-packages.firefox-esr-102 {};
 
   nixos-install-tools = callPackage ../tools/nix/nixos-install-tools/default.nix { inherit (lib.expidus) channels; };
   gtk-layer-shell = pkgs.callPackage ../development/libraries/gtk-layer-shell/default.nix {};

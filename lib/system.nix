@@ -15,7 +15,7 @@ in
 rec {
   inherit current currentBultin currentEnv;
 
-  linux = [ "aarch64-linux" "armv6l-linux" "i686-linux" "x86_64-linux" ];
+  linux = lib.platforms.linux;
   darwin = [ "aarch64-darwin" "x86_64-darwin" ];
   
   isDarwin = checkSupport darwin;
