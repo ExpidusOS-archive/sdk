@@ -369,6 +369,7 @@ in
         type = types.listOf types.str;
         default = [
           "nixpkgs=/nix/var/nix/profiles/per-user/root/channels/nixos"
+          "home-manager=${lib.expidus.channels.home-manager}"
           "nixos-config=/etc/nixos/configuration.nix"
           "/nix/var/nix/profiles/per-user/root/channels"
         ];
