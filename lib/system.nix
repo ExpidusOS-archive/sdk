@@ -15,14 +15,17 @@ in
 rec {
   inherit current currentBultin currentEnv;
 
-  linux = lib.platforms.linux;
-  darwin = [ "aarch64-darwin" "x86_64-darwin" ];
+  inherit (lib.platforms) cygwin linux;
+  darwin = builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ];
   
+  isCygwin = checkSupport cygwin;
   isDarwin = checkSupport darwin;
   isLinux = checkSupport linux;
 
-  supported = linux ++ (if isDarwin then darwin else []);
+  supported = linux ++ cygwin ++ (if isDarwin then darwin else []);
 
+  forAllCygwin = lib.genAttrs cygwin;
+  forAllDarwin = lib.genAttrs darwin;
   forAllLinux = lib.genAttrs linux;
   forAll = lib.genAttrs supported;
 }
