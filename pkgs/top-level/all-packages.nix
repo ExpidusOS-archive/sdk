@@ -48,6 +48,15 @@ rec {
       ];
     });
 
+  ninja = super.ninja.overrideAttrs (old: {
+    src = fetchFromGitHub {
+      owner = "NickCao";
+      repo = "ninja";
+      rev = "92330cc2320cc8aac432d80da12235abcb2bb449";
+      sha256 = "G5mIIHET2Wi6RANqAyIiY+APgz7nASYOkNrkjVK14AA=";
+    };
+  });
+
   efivar = super.efivar.overrideAttrs (old: {
     patches = (old.patches or []) ++ [
       (fetchpatch {
