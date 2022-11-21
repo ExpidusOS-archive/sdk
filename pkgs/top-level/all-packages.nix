@@ -4,6 +4,7 @@ let
   callPackage = path: attrs: (pkgs.lib.callPackageWith pkgs) path attrs;
   firefox-packages = callPackage ../applications/networking/browsers/firefox/packages.nix {};
 in
+with pkgs;
 rec {
   nixos = configuration:
     let
@@ -46,6 +47,15 @@ rec {
         libxml2
       ];
     });
+
+  efivar = super.efivar.overrideAttrs (old: {
+    patches = (old.patches or []) ++ [
+      (fetchpatch {
+        url = "https://github.com/rhboot/efivar/commit/ca48d3964d26f5e3b38d73655f19b1836b16bd2d.patch";
+        hash = "sha256-DkNFIK4i7Eypyf2UeK7qHW36N2FSVRJ2rnOVLriWi5c=";
+      })
+    ];
+  });
 
   wrapFirefox = pkgs.callPackage ../applications/networking/browsers/firefox/wrapper.nix {};
   firefox = wrapFirefox firefox-packages.firefox {};
