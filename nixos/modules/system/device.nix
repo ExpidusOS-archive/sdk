@@ -47,4 +47,12 @@ in {
       [("${lib.expidus.channels.mobile-nixos}/lib/configuration.nix" { device = device.name; })]
     else [device.module];
   else [];
+
+  config.nixpkgs.overlays = mkIf (device != null) [
+    (self: super: {
+      expidus-sdk = super.expidus-sdk.override {
+        variant = if device.isMobile then "mobile" else "desktop";
+      };
+    })
+  ];
 }

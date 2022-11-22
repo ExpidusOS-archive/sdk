@@ -1,4 +1,4 @@
-{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14, vala, nix, glib, git, path }:
+{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14, vala, nix, glib, git, path, variant ? "desktop" }:
 with lib;
 stdenv.mkDerivation rec {
   name = "expidus-sdk";
@@ -6,7 +6,7 @@ stdenv.mkDerivation rec {
   inherit (lib.expidus.trivial) version;
   
   configurePlatforms = [ "host" "build" "target" ];
-  configureFlags = [ "--bindir=$system/bin" "--datadir=$system/share" ];
+  configureFlags = [ "--bindir=$system/bin" "--datadir=$system/share" "-Dvariant=${variant}" ];
 
   outputs = [ "out" "sys" ];
 

@@ -15,6 +15,8 @@ longver = '@0@'.format(meson.project_version())
 shortver = longver
 git = find_program('git', native: true, required: false)
 conf_data = configuration_data()
+conf_data.set('BUILD_USER', 'nobody')
+conf_data.set('VARIANT', get_option('variant'))
 
 if git.found()
   git_commit = run_command([git, 'rev-parse', '--short', 'HEAD'])
@@ -83,6 +85,7 @@ if nix.found()
   install_subdir('system', install_dir: nix_channeldir, strip_directory: false)
   install_subdir('wrappers', install_dir: nix_channeldir, strip_directory: false)
   install_data('meson.build', install_dir: nix_channeldir)
+  install_data('meson_options.txt', install_dir: nix_channeldir)
 
   install_subdir('doc', install_dir: nix_channeldir, strip_directory: false)
   install_subdir('lib', install_dir: nix_channeldir, strip_directory: false)
