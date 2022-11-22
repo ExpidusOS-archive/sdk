@@ -1,7 +1,12 @@
-{ config, lib, options, ... }:
+{ config, lib, options, ... }@args:
 with lib;
 let
   device = if config.system.device != null then config.system.devices.${config.system.device} else null;
+
+  module = if device != null then
+    (if device.isMobile then (import "${lib.expidus.channels.mobile-nixos}/devices/${device.name}")
+    else (import device.module))
+  else (args: {});
 
   addCheckDesc = desc: elemType: check: types.addCheck elemType check
     // { description = "${elemType.description} (with check: ${desc})"; };
@@ -33,20 +38,16 @@ in {
         name = mkDefault name;
       };
     }));
+    default = {};
   };
 
   options.system.device = mkOption {
     description = ''
       The name of a device in system.devices
     '';
-    type = type.nullOr nonEmptyStr;
+    type = types.nullOr nonEmptyStr;
+    default = null;
   };
-
-  imports = if device != null then
-    if device.isMobile then
-      [("${lib.expidus.channels.mobile-nixos}/lib/configuration.nix" { device = device.name; })]
-    else [device.module];
-  else [];
 
   config.nixpkgs.overlays = mkIf (device != null) [
     (self: super: {
