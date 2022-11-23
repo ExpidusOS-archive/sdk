@@ -31,8 +31,6 @@ jobs:
           skipPush: "${{ github.event_name == 'pull_request' }}"
       - name: Build Flake
         run: nix build -L
-      - name: Check Flake
-        run: nix flake check
       - name: Bundle Flake
         if: (github.event_name != 'pull_request') && (matrix.os == 'ubuntu-latest')
         run: nix bundle

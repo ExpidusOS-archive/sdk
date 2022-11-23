@@ -31,10 +31,11 @@
   };
 
   # Theme calamares with GNOME theme
-  qt5 = {
-    enable = true;
-    platformTheme = "gnome";
-  };
+  # FIXME: security error with qtwebkit
+  #qt5 = {
+  #  enable = true;
+  #  platformTheme = "gnome";
+  #};
 
   # Fix scaling for calamares on wayland
   environment.variables = {
