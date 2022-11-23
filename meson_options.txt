@@ -1,1 +1,1 @@
-option('variant', type: 'array', default: 'desktop', choices: ['mobile', 'desktop'])
+option('variant', type: 'array', value: 'desktop', choices: ['mobile', 'desktop'])
