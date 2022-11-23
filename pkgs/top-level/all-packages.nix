@@ -2,14 +2,22 @@
 pkgs: super:
 let
   callPackage = path: attrs: (pkgs.lib.callPackageWith pkgs) path attrs;
-  firefox-packages = callPackage ../applications/networking/browsers/firefox/packages.nix {};
 in
 with pkgs;
 rec {
+  buildMozillaMach = opts: pkgs.callPackage (import ../applications/networking/browsers/firefox/common.nix opts) {};
+  firefoxPackages = recurseIntoAttrs (pkgs.callPackage ../applications/networking/browsers/firefox/packages.nix {});
   wrapFirefox = pkgs.callPackage ../applications/networking/browsers/firefox/wrapper.nix {};
-  firefox = wrapFirefox firefox-packages.firefox {};
+
+  firefox-unwrapped = firefoxPackages.firefox;
+  firefox-esr-102-unwrapped = firefoxPackages.firefox-esr-102;
+  firefox-esr-unwrapped = firefoxPackages.firefox-esr-102;
+
+  firefox = wrapFirefox firefox-unwrapped { };
+  firefox-wayland = wrapFirefox firefox-unwrapped { forceWayland = true; };
   firefox-esr = firefox-esr-102;
-  firefox-esr-102 = wrapFirefox firefox-packages.firefox-esr-102 {};
+  firefox-esr-102 = wrapFirefox firefox-esr-102-unwrapped { };
+  firefox-esr-wayland = wrapFirefox firefox-esr-102-unwrapped { forceWayland = true; };
 
   nixos-install-tools = callPackage ../tools/nix/nixos-install-tools/default.nix { inherit (lib.expidus) channels; };
   gtk-layer-shell = pkgs.callPackage ../development/libraries/gtk-layer-shell/default.nix {};
