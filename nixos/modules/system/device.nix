@@ -30,7 +30,7 @@ in {
         };
         isMobile = mkOption {
           description = "Use name as a nixOS Mobile device instead";
-          type = type.bool;
+          type = types.bool;
         };
       };
 
