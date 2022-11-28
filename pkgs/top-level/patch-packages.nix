@@ -20,6 +20,4 @@ rec {
       sha256 = "G5mIIHET2Wi6RANqAyIiY+APgz7nASYOkNrkjVK14AA=";
     };
   }) else super.ninja;
-
-  llvmPackages = super.llvmPackages_14;
 }
