@@ -7,6 +7,7 @@ let
     binaryName ? "firefox",
     application ? "browser",
     applicationName ? "Mozilla Firefox",
+    desktopName ? (lib.toUpper (lib.substring 0 1 applicationName) + lib.substring 1 (-1) applicationName),
     nameSuffix ? "",
     wmClass ? null,
     cfg ? config.${applicationName} or {},
