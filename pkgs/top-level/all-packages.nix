@@ -5,7 +5,7 @@ let
 in
 with pkgs;
 rec {
-  firefoxPackages = pkgs.callPackage ../applications/networking/browsers/firefox/default.nix {};
+  firefoxPackages = pkgs.callPackage ../applications/networking/browsers/firefox/default.nix { inherit (super) firefoxPackages; };
 
   firefox-unwrapped = firefoxPackages.firefox;
   firefox-esr-102-unwrapped = firefoxPackages.firefox-esr-102;
