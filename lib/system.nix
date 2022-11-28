@@ -9,6 +9,22 @@ let
 
   current = if currentEnv == null then (if currentBultin == null then "x86_64-linux" else currentBultin) else currentEnv;
 
+  defaultCygwin = lib.platforms.cygwin;
+  defaultDarwin = builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ];
+  defaultLinux = lib.lists.subtractLists [
+    "s390x-linux"
+    "s390-linux"
+    "riscv32-linux"
+    "powerpc64-linux"
+    "mips64el-linux"
+    "mipsel-linux"
+    "microblazeel-linux"
+    "microblaze-linux"
+    "m68k-linux"
+    "armv7a-linux"
+    "armv5tel-linux"
+  ] lib.platforms.linux;
+
   makeSystemSet = systems:
     let
       systemFilter = name: builtins.filter (str:
@@ -22,13 +38,13 @@ let
     };
 
   makeSupported = {
-    cygwin ? lib.platforms.cygwin,
-    linux ? lib.platforms.linux,
-    darwin ? builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ]
+    cygwin ? defaultCygwin,
+    linux ? defaultLinux,
+    darwin ? defaultDarwin
   }@args: ({
-    cygwin = lib.platforms.cygwin;
-    linux = lib.platforms.linux;
-    darwin = builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ];
+    cygwin = defaultCygwin;
+    linux = defaultLinux;
+    darwin = defaultDarwin;
   } // args);
 
   make = {
@@ -56,6 +72,12 @@ let
       forAll = lib.genAttrs (_supported.linux ++ _supported.cygwin ++ (if isDarwin then _supported.darwin else []));
     }) // (if isToplevel then {
       inherit getSupported isSupported;
+
+      defaultSupports = {
+        darwin = defaultDarwin;
+        cygwin = defaultCygwin;
+        linux = defaultLinux;
+      };
     } else {
       getSupported = getSupported currentSystem;
       isSupported = isSupported currentSystem;
