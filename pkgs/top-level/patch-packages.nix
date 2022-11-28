@@ -21,5 +21,5 @@ rec {
     };
   }) else super.ninja;
 
-  llvmPackages = super.llvmPackages_12;
+  llvmPackages = super.llvmPackages_14;
 }
