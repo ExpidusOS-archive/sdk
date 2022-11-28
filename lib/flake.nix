@@ -10,9 +10,10 @@ rec {
     packagesFor ? ({ final, prev, old }: emptyPackages)
   }@flake:
     let
-      forAllSystems = lib.genAttrs systems;
-      nixpkgsFor = forAllSystems (system: import ../pkgs/top-level/default.nix {
-        system = expidus.system.current;
+      sysconfig = expidus.system.make { supported = systems; };
+
+      nixpkgsFor = sysconfig.forAll (system: import ../pkgs/top-level/default.nix {
+        system = sysconfig.current;
         crossSystem = { inherit system; };
       });
       wrapped = name + (if target == "default" then "" else "-${target}");
@@ -40,7 +41,7 @@ rec {
               };
             })) packages.overlay;
 
-      nixosSystems = expidus.system.forAllLinux (system:
+      nixosSystems = sysconfig.forAllLinux (system:
         let
           base-pkgs = nixpkgsFor.${system};
           pkgs = packageOverlay base-pkgs base-pkgs;
@@ -80,12 +81,12 @@ rec {
     in {
       overlays.${target} = packageOverlay;
 
-      legacyPackages = forAllSystems (system:
+      legacyPackages = sysconfig.forAll (system:
         let
           pkgs = nixpkgsFor.${system};
         in (packageOverlay pkgs pkgs));
 
-      packages = forAllSystems (system:
+      packages = sysconfig.forAll (system:
         let
           pkgs = nixpkgsFor.${system};
         in {
@@ -97,13 +98,13 @@ rec {
       });
 
       hydraJobs = {
-        ${target} = expidus.system.forAllLinux (system:
+        ${target} = sysconfig.forAllLinux (system:
           let
             pkgs = nixpkgsFor.${system};
           in (packageOverlay pkgs pkgs).${name});
       };
 
-      devShells = forAllSystems (system:
+      devShells = sysconfig.forAll (system:
         let
           pkgs = nixpkgsFor.${system};
           pkg = self.packages.${system}.${target};

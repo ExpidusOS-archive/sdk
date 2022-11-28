@@ -68,7 +68,9 @@
             system = lib.expidus.system.current;
             crossSystem = { inherit system; };
           };
-          sysconfig = lib.expidus.system.make system;
+          sysconfig = lib.expidus.system.make {
+            currentSystem = system;
+          };
         in with pkgs;
         with lib; lib.mergeAttrs
           {
