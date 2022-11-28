@@ -62,15 +62,14 @@ let
         pref("${key}", ${builtins.toJSON value.value});
       '') defaultPrefs));
 
-      inherit (drv) gtk_modules libs;
     in stdenv.mkDerivation rec {
       inherit (drv) pname version passthru meta;
 
       nativeBuildInputs = [ makeWrapper ];
       buildInputs = [ drv.gtk3 ];
 
-      libs = lib.makeLibraryPath libs + ":" + lib.makeSearchPathOutput "lib" "lib64" libs;
-      gtk_modules = map (x: x + x.gtkModule) gtk_modules;
+      libs = lib.makeLibraryPath drv.libs + ":" + lib.makeSearchPathOutput "lib" "lib64" drv.libs;
+      gtk_modules = map (x: x + x.gtkModule) drv.gtk_modules;
       disallowedRequisites = [ stdenv.cc ];
 
       installPhase = ''
