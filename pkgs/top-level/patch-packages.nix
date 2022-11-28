@@ -27,5 +27,10 @@ rec {
         broken = false;
       };
     });
+    compiler-rt-libc = super.llvmPackages.compiler-rt-libc.overrideAttrs (old: {
+      meta = {
+        broken = false;
+      };
+    });
   };
 }
