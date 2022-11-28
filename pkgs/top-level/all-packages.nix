@@ -5,9 +5,7 @@ let
 in
 with pkgs;
 rec {
-  buildMozillaMach = opts: pkgs.callPackage (import ../applications/networking/browsers/firefox/common.nix opts) {};
-  firefoxPackages = recurseIntoAttrs (pkgs.callPackage ../applications/networking/browsers/firefox/packages.nix {});
-  wrapFirefox = pkgs.callPackage ../applications/networking/browsers/firefox/wrapper.nix {};
+  firefoxPackages = pkgs.callPackage ../applications/networking/browsers/firefox/default.nix {};
 
   firefox-unwrapped = firefoxPackages.firefox;
   firefox-esr-102-unwrapped = firefoxPackages.firefox-esr-102;
