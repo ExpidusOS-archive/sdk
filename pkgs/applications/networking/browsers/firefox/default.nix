@@ -1,7 +1,7 @@
 { lib, stdenv, writeText, makeBinaryWrapper, makeWrapper, makeDesktopItem, config, wrapFirefox, firefoxPackages,
   browserpass, bukubrow, tridactyl-native, chrome-gnome-shell, uget-integrator, plasma5Packages, fx_cast_bridge,
   libcanberra-gtk3, udev, libva, mesa, libnotify, xorg, cups, pciutils, pipewire, ffmpeg_5, libkrb5, libglvnd,
-  alsa-lib, zlib, libpulseaudio, sndio, libjack2, opensc }:
+  alsa-lib, zlib, libpulseaudio, sndio, libjack2, opensc, lndir }:
 let
   override = drv: {
     binaryName ? "firefox",
@@ -140,7 +140,7 @@ let
         };
       }));
 
-      nativeBuildInputs = [ makeWrapper ];
+      nativeBuildInputs = [ makeWrapper lndir ];
       buildInputs = [ drv.gtk3 ];
 
       libs = lib.makeLibraryPath libs + ":" + lib.makeSearchPathOutput "lib" "lib64" libs;
