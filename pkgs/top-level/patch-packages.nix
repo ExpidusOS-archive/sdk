@@ -21,16 +21,5 @@ rec {
     };
   }) else super.ninja;
 
-  llvmPackages = super.llvmPackages // {
-    compiler-rt = super.llvmPackages.compiler-rt.overrideAttrs (old: {
-      meta = {
-        broken = false;
-      };
-    });
-    compiler-rt-libc = super.llvmPackages.compiler-rt-libc.overrideAttrs (old: {
-      meta = {
-        broken = false;
-      };
-    });
-  };
+  llvmPackages = super.llvmPackages_12;
 }
