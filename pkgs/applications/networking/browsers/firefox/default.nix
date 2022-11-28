@@ -1,16 +1,14 @@
-{ lib, stdenv, writeText, makeBinaryWrapper, makeWrapper, config, wrapFirefox, firefoxPackages, browserpass,
-  bukubrow, tridactyl-native, chrome-gnome-shell, uget-integrator, plasma5Packages, fx_cast_bridge, libcanberra-gtk3,
-  udev, libva, mesa, libnotify, xorg, cups, pciutils, pipewire, ffmpeg_5, libkrb5, libglvnd, alsa-lib, zlib,
-  libpulseaudio, sndio, libjack2, opensc }:
+{ lib, stdenv, writeText, makeBinaryWrapper, makeWrapper, makeDesktopItem, config, wrapFirefox, firefoxPackages,
+  browserpass, bukubrow, tridactyl-native, chrome-gnome-shell, uget-integrator, plasma5Packages, fx_cast_bridge,
+  libcanberra-gtk3, udev, libva, mesa, libnotify, xorg, cups, pciutils, pipewire, ffmpeg_5, libkrb5, libglvnd,
+  alsa-lib, zlib, libpulseaudio, sndio, libjack2, opensc }:
 let
-  makeFiles = { applicationName }: rec {
-  };
-
   override = drv: {
     binaryName ? "firefox",
     application ? "browser",
     applicationName ? "Mozilla Firefox",
     nameSuffix ? "",
+    wmClass ? null,
     cfg ? config.${applicationName} or {},
     icon ? applicationName,
     libName ? binaryName,
@@ -20,6 +18,8 @@ let
     ...
   }@args:
     let
+      launcherName = "${applicationName}${nameSuffix}";
+
       ffmpegSupport = drv.ffmpegSupport or false;
       gssSupport = drv.gssSupport or false;
       alsaSupport = drv.alsaSupport or false;
@@ -80,7 +80,64 @@ let
       '') defaultPrefs));
 
     in stdenv.mkDerivation {
-      inherit (drv) pname version passthru meta desktopItem;
+      inherit (drv) pname version passthru meta;
+
+      desktopItem = makeDesktopItem ({
+        name = applicationName;
+        exec = "${launcherName} %U";
+        inherit icon;
+        desktopName = "${desktopName}${nameSuffix}";
+        startupNotify = true;
+        startupWMClass = wmClass;
+        terminal = false;
+      } // (if libName == "thunderbird" then {
+        genericName = "Email Client";
+        comment = "Read and write e-mails or RSS feeds, or manage tasks on calendars.";
+        categories = [
+          "Network" "Chat" "Email" "Feed" "GTK" "News"
+        ];
+        keywords = [
+          "mail" "email" "e-mail" "messages" "rss" "calendar"
+          "address book" "addressbook" "chat"
+        ];
+        mimeTypes = [
+          "message/rfc822"
+          "x-scheme-handler/mailto"
+          "text/calendar"
+          "text/x-vcard"
+        ];
+        actions = {
+          profile-manager-window = {
+            name = "Profile Manager";
+            exec = "${launcherName} --ProfileManager";
+          };
+        };
+      } else {
+        genericName = "Web Browser";
+        categories = [ "Network" "WebBrowser" ];
+        mimeTypes = [
+          "text/html"
+          "text/xml"
+          "application/xhtml+xml"
+          "application/vnd.mozilla.xul+xml"
+          "x-scheme-handler/http"
+          "x-scheme-handler/https"
+        ];
+        actions = {
+          new-window = {
+            name = "New Window";
+            exec = "${launcherName} --new-window %U";
+          };
+          new-private-window = {
+            name = "New Private Window";
+            exec = "${launcherName} --private-window %U";
+          };
+          profile-manager-window = {
+            name = "Profile Manager";
+            exec = "${launcherName} --ProfileManager";
+          };
+        };
+      }));
 
       nativeBuildInputs = [ makeWrapper ];
       buildInputs = [ drv.gtk3 ];
