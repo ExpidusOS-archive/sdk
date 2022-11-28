@@ -1,5 +1,7 @@
 { lib, stdenv, writeText, makeBinaryWrapper, makeWrapper, config, wrapFirefox, firefoxPackages, browserpass,
-  bukubrow, tridactyl-native, chrome-gnome-shell, uget-integrator, plasma5Packages, fx_cast_bridge }:
+  bukubrow, tridactyl-native, chrome-gnome-shell, uget-integrator, plasma5Packages, fx_cast_bridge, libcanberra-gtk3,
+  udev, libva, mesa, libnotify, xorg, cups, pciutils, pipewire, ffmpeg_5, libkrb5, libglvnd, alsa-lib, zlib,
+  libpulseaudio, sndio, libjack2, opensc }:
 let
   makeFiles = { applicationName }: rec {
   };
@@ -12,6 +14,7 @@ let
     cfg ? config.${applicationName} or {},
     icon ? applicationName,
     libName ? binaryName,
+    useGlvnd ? true,
     extraNativeMessagingHosts ? [],
     pkcs11Modules ? [],
     ...
@@ -36,6 +39,20 @@ let
           ++ lib.optional (cfg.enableFXCastBridge or false) fx_cast_bridge
           ++ extraNativeMessagingHosts
         );
+
+      libs = lib.optionals stdenv.isLinux [ udev libva mesa libnotify xorg.libXScrnSaver cups pciutils ]
+        ++ lib.optional pipewireSupport pipewire
+        ++ lib.optional ffmpegSupport ffmpeg_5
+        ++ lib.optional gssSupport libkrb5
+        ++ lib.optional useGlvnd libglvnd
+        ++ lib.optionals (cfg.enableQuakeLive or false)
+        (with xorg; [ stdenv.cc libX11 libXxf86dga libXxf86vm libXext libXt alsa-lib zlib ])
+        ++ lib.optional (config.pulseaudio or true) libpulseaudio
+        ++ lib.optional alsaSupport alsa-lib
+        ++ lib.optional sndioSupport sndio
+        ++ lib.optional jackSupport libjack2
+        ++ lib.optional smartcardSupport opensc
+        ++ pkcs11Modules;
 
       distributionIni = writeText "distribution.ini" (lib.generators.toINI {} {
         Global = {
@@ -62,14 +79,14 @@ let
         pref("${key}", ${builtins.toJSON value.value});
       '') defaultPrefs));
 
-    in stdenv.mkDerivation rec {
+    in stdenv.mkDerivation {
       inherit (drv) pname version passthru meta;
 
       nativeBuildInputs = [ makeWrapper ];
       buildInputs = [ drv.gtk3 ];
 
-      libs = lib.makeLibraryPath drv.libs + ":" + lib.makeSearchPathOutput "lib" "lib64" drv.libs;
-      gtk_modules = map (x: x + x.gtkModule) drv.gtk_modules;
+      libs = lib.makeLibraryPath libs + ":" + lib.makeSearchPathOutput "lib" "lib64" libs;
+      gtk_modules = map (x: x + x.gtkModule) [ libcanberra-gtk3 ];
       disallowedRequisites = [ stdenv.cc ];
 
       installPhase = ''
