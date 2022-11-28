@@ -1,4 +1,5 @@
-{ lib, stdenv, writeText, makeBinaryWrapper, makeWrapper, wrapFirefox, firefoxPackages }:
+{ lib, stdenv, writeText, makeBinaryWrapper, makeWrapper, config, wrapFirefox, firefoxPackages, browserpass,
+  bukubrow, tridactyl-native, chrome-gnome-shell, uget-integrator, plasma5Packages, fx_cast_bridge }:
 let
   makeFiles = { applicationName }: rec {
   };
@@ -8,10 +9,34 @@ let
     application ? "browser",
     applicationName ? "Mozilla Firefox",
     nameSuffix ? "",
+    cfg ? config.${applicationName} or {},
+    icon ? applicationName,
     libName ? binaryName,
+    extraNativeMessagingHosts ? [],
+    pkcs11Modules ? [],
     ...
   }@args:
     let
+      ffmpegSupport = drv.ffmpegSupport or false;
+      gssSupport = drv.gssSupport or false;
+      alsaSupport = drv.alsaSupport or false;
+      pipewireSupport = drv.pipewireSupport or false;
+      sndioSupport = drv.sndioSupport or false;
+      jackSupport = drv.jackSupport or false;
+      smartcardSupport = cfg.smartcardSupport or false;
+
+      nativeMessagingHosts =
+        ([ ]
+          ++ lib.optional (cfg.enableBrowserpass or false) (lib.getBin browserpass)
+          ++ lib.optional (cfg.enableBukubrow or false) bukubrow
+          ++ lib.optional (cfg.enableTridactylNative or false) tridactyl-native
+          ++ lib.optional (cfg.enableGnomeExtensions or false) chrome-gnome-shell
+          ++ lib.optional (cfg.enableUgetIntegrator or false) uget-integrator
+          ++ lib.optional (cfg.enablePlasmaBrowserIntegration or false) plasma5Packages.plasma-browser-integration
+          ++ lib.optional (cfg.enableFXCastBridge or false) fx_cast_bridge
+          ++ extraNativeMessagingHosts
+        );
+
       distributionIni = writeText "distribution.ini" (lib.generators.toINI {} {
         Global = {
           id = "expidus";
@@ -42,6 +67,7 @@ let
       inherit (drv) pname version passthru meta;
 
       nativeBuildInputs = [ makeWrapper ];
+      buildInputs = [ drv.gtk3 ];
 
       libs = lib.makeLibraryPath libs + ":" + lib.makeSearchPathOutput "lib" "lib64" libs;
       gtk_modules = map (x: x + x.gtkModule) gtk_modules;
