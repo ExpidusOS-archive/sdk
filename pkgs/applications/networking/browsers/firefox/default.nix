@@ -89,7 +89,7 @@ let
       gtk_modules = map (x: x + x.gtkModule) [ libcanberra-gtk3 ];
       disallowedRequisites = [ stdenv.cc ];
 
-      installPhase = ''
+      buildPhase = ''
         cd "${drv}"
         find . -type d -exec mkdir -p "$out"/{} \;
         find . -type f \( -not -name "${applicationName}" \) -exec ln -sT "${drv}"/{} "$out"/{} \;
