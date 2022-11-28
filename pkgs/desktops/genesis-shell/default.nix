@@ -29,6 +29,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/ExpidusOS/genesis";
     license = licenses.gpl3Only;
     maintainers = with expidus.maintainers; [ TheComputerGuy ];
-    platforms = lib.lists.subtractLists (builtins.map (name: "${name}-cygwin") [ "i686" "x86_64" ]) (builtins.mapValues lib.expidus.system.defaultSupported);
+    platforms = lib.lists.subtractLists (builtins.map (name: "${name}-cygwin") [ "i686" "x86_64" ]) (builtins.attrValues lib.expidus.system.defaultSupported);
   };
 }

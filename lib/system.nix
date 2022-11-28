@@ -73,7 +73,7 @@ let
     }) // (if isToplevel then {
       inherit getSupported isSupported;
 
-      defaultSupports = {
+      defaultSupported = {
         darwin = defaultDarwin;
         cygwin = defaultCygwin;
         linux = defaultLinux;
