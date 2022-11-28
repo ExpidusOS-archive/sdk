@@ -80,7 +80,7 @@ let
       '') defaultPrefs));
 
     in stdenv.mkDerivation {
-      inherit (drv) pname version passthru meta;
+      inherit (drv) pname version passthru meta desktopItem;
 
       nativeBuildInputs = [ makeWrapper ];
       buildInputs = [ drv.gtk3 ];
