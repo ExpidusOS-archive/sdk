@@ -205,6 +205,7 @@ let
             --set MOZ_SYSTEM_DIR "$out/lib/mozilla" \
             --set MOZ_LEGACY_PROFILES 1 \
             --set MOZ_ALLOW_DOWNGRADE 1 \
+            --set-default GTK_THEME "Tokyo-Night" \
             --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
             --prefix XDG_DATA_DIRS : "${libtokyo}/share" \
             ${lib.optionalString forceWayland "--set MOZ_ENABLE_WAYLAND 1"} \
