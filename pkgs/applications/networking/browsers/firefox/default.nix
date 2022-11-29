@@ -1,7 +1,7 @@
 { lib, stdenv, writeText, makeBinaryWrapper, makeWrapper, makeDesktopItem, config, wrapFirefox, firefoxPackages,
   browserpass, bukubrow, tridactyl-native, chrome-gnome-shell, uget-integrator, plasma5Packages, fx_cast_bridge,
   libcanberra-gtk3, udev, libva, mesa, libnotify, xorg, cups, pciutils, pipewire, ffmpeg_5, libkrb5, libglvnd,
-  alsa-lib, zlib, libpulseaudio, sndio, libjack2, opensc, lndir }:
+  alsa-lib, zlib, libpulseaudio, sndio, libjack2, opensc, lndir, xdg-utils, libtokyo }:
 let
   override = drv: {
     binaryName ? "firefox",
@@ -12,10 +12,11 @@ let
     wmClass ? null,
     cfg ? config.${applicationName} or {},
     icon ? applicationName,
-    libName ? binaryName,
+    libName ? drv.libName or "firefox",
     useGlvnd ? true,
     extraNativeMessagingHosts ? [],
     pkcs11Modules ? [],
+    forceWayland ? false,
     ...
   }@args:
     let
@@ -197,10 +198,16 @@ let
         makeWrapper "$oldExe" \
           "''${executablePath}${nameSuffix}" \
             --prefix LD_LIBRARY_PATH ':' "$libs" \
-            --prefix PATH ':' "$out/bin" \
+            --suffix-each GTK_PATH ':' "$gtk_modules" \
+            --prefix PATH ':' "${xdg-utils}/bin" \
+            --suffix PATH ':' "$out/bin" \
             --set MOZ_APP_LAUNCHER "${applicationName}${nameSuffix}" \
             --set MOZ_SYSTEM_DIR "$out/lib/mozilla" \
+            --set MOZ_LEGACY_PROFILES 1 \
+            --set MOZ_ALLOW_DOWNGRADE 1 \
             --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
+            --prefix XDG_DATA_DIRS : "${libtokyo}/share" \
+            ${lib.optionalString forceWayland "--set MOZ_ENABLE_WAYLAND 1"} \
             "''${oldWrapperArgs[@]}"
 
         if [ -e "${drv}/share/icons" ]; then
