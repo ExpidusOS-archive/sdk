@@ -203,7 +203,7 @@ let
             --prefix PATH ':' "${xdg-utils}/bin" \
             --suffix PATH ':' "$out/bin" \
             --set MOZ_APP_LAUNCHER "${applicationName}${nameSuffix}" \
-            --set MOZ_SYSTEM_DIR "$out/lib/mozilla" \
+            --set MOZ_SYSTEM_DIR "$out/lib/${binaryName}" \
             --set MOZ_LEGACY_PROFILES 1 \
             --set MOZ_ALLOW_DOWNGRADE 1 \
             --set-default GTK_THEME "Tokyo-Night" \
@@ -240,7 +240,8 @@ let
         mkdir -p $out/lib/${libName}/distribution/extensions
 
         install -Dvm644 ${distributionIni} $out/lib/${binaryName}/distribution/distribution.init
-        install -Dvm644 ${defaultPrefsFile} $out/lib/${binaryName}/browser/defaults/preferences/expidus-default-prefs.js
+        install -Dvm644 ${defaultPrefsFile} $out/lib/${binaryName}/defaults/preferences/expidus-default-prefs.js
+        rm $out/lib/${binaryName}/defaults/preferences/nixos-default-perfs.js
       '';
 
       doInstallCheck = true;
