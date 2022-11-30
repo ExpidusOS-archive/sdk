@@ -241,7 +241,6 @@ let
 
         install -Dvm644 ${distributionIni} $out/lib/${binaryName}/distribution/distribution.init
         install -Dvm644 ${defaultPrefsFile} $out/lib/${binaryName}/browser/defaults/preferences/expidus-default-prefs.js
-        rm $out/lib/${binaryName}/browser/defaults/preferences/nixos-default-perfs.js
       '';
 
       doInstallCheck = true;
