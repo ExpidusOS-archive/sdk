@@ -85,7 +85,7 @@ let
       inherit (drv) pname version passthru meta;
 
       desktopItem = makeDesktopItem ({
-        name = applicationName;
+        name = binaryName;
         exec = "${launcherName} %U";
         inherit icon;
         desktopName = "${desktopName}${nameSuffix}";
@@ -152,8 +152,8 @@ let
       buildCommand = ''
         cd "${drv}"
         find . -type d -exec mkdir -p "$out"/{} \;
-        find . -type f \( -not -name "${applicationName}" \) -exec ln -sT "${drv}"/{} "$out"/{} \;
-        find . -type f \( -name "${applicationName}" -o -name "${applicationName}-bin" \) -print0 | while read -d $'\0' f; do
+        find . -type f \( -not -name "${binaryName}" \) -exec ln -sT "${drv}"/{} "$out"/{} \;
+        find . -type f \( -name "${binaryName}" -o -name "${binaryName}-bin" \) -print0 | while read -d $'\0' f; do
           cp -P --no-preserve=mode,ownership --remove-destination "${drv}/$f" "$out/$f"
           chmod a+rwx "$out/$f"
         done
@@ -167,7 +167,7 @@ let
         cd "$out"
 
         executablePrefix="$out/bin"
-        executablePath="$executablePrefix/${applicationName}"
+        executablePath="$executablePrefix/${binaryName}"
         oldWrapperArgs=()
 
         if [[ -L $executablePath ]]; then
@@ -192,7 +192,7 @@ let
             sed -i "s@${drv}@$out@g" "$executablePath"
           fi
           # Suffix the executable with -old, because -wrapped might already be used by the old wrapper.
-          oldExe="$executablePrefix/.${applicationName}"-old
+          oldExe="$executablePrefix/.${binaryName}"-old
           mv "$executablePath" "$oldExe"
         fi
 
