@@ -203,7 +203,7 @@ let
             --prefix PATH ':' "${xdg-utils}/bin" \
             --suffix PATH ':' "$out/bin" \
             --set MOZ_APP_LAUNCHER "${applicationName}${nameSuffix}" \
-            --set MOZ_SYSTEM_DIR "$out/lib/${binaryName}" \
+            --set MOZ_SYSTEM_DIR "$out/lib/mozilla" \
             --set MOZ_LEGACY_PROFILES 1 \
             --set MOZ_ALLOW_DOWNGRADE 1 \
             --set-default GTK_THEME "Tokyo-Night" \
