@@ -62,7 +62,7 @@ let
 
       echo -n "systemd ${toString config.systemd.package.interfaceVersion}" > $out/init-interface-version
       echo -n "$expidusLabel" > $out/expidus-version
-      ln -s "$out/expidus-version" "$out/nixos-version"
+      echo -n "$nixosLabel" > "$out/nixos-version"
       echo -n "${config.boot.kernelPackages.stdenv.hostPlatform.system}" > $out/system
 
       mkdir $out/bin
@@ -106,6 +106,7 @@ let
     activationScript = config.system.activationScripts.script;
     dryActivationScript = config.system.dryActivationScript;
     expidusLabel = config.system.expidus.label;
+    nixosLabel = lib.version;
 
     # Needed by switch-to-configuration.
     perl = pkgs.perl.withPackages (p: with p; [ ConfigIniFiles FileSlurp ]);
