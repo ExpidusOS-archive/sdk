@@ -54,77 +54,61 @@ in
     })
     (mkIf (cfg.enable && cfg.sessions.i3.enable)
       (let
-        genesis-i3-cfg = pkgs.writeTextFile {
-          name = "genesis-i3.cfg";
-          text = ''
-            include ~/.config/i3/config.d/*.conf
-            exec --no-startup-id ibus-daemon --xim -d -r
-            exec genesis-shell -m gadgets
-          '';
-        };
+        genesis-i3-cfg = pkgs.writeText "genesis-i3.cfg" ''
+          include ~/.config/i3/config.d/*.conf
+          exec --no-startup-id ibus-daemon --xim -d -r
+          exec genesis-shell -m gadgets
+        '';
+
+        genesis-i3 = pkgs.writeShellScriptBin "genesis-i3" ''
+          exec i3 "$@" -c ${genesis-i3-cfg}
+        '';
 
         genesis-i3-session = (pkgs.writeTextDir "share/xsessions/genesis-i3.desktop" ''
           [Desktop Entry]
           Name=Genesis i3 
           Comment=i3 with the Genesis Shell UI
-          Exec=genesis-i3
+          Exec=${genesis-i3}/bin/genesis-i3
           Type=Application
         '') // { providedSessions = [ "genesis-i3" ]; };
-
-        genesis-i3 = pkgs.writeShellScriptBin "genesis-i3" ''
-          exec i3 "$@" -c ${genesis-i3-cfg}
-        '';
       in {
-        environment.systemPackages = with pkgs; [
-          i3
-          genesis-i3
-          genesis-i3-session
-        ];
-
+        environment.systemPackages = with pkgs; [ genesis-i3 genesis-i3-session genesis-shell ];
         services.xserver.displayManager.sessionPackages = [ genesis-i3-session ];
         services.xserver.windowManager.i3.enable = true;
       }))
     (mkIf (cfg.enable && cfg.sessions.sway.enable)
       (let
-        genesis-sway-dbus-environment = pkgs.writeShellScriptBin "genesis-sway-dbus-environment" ''
+        genesis-sway-dbus-environment = pkgs.writeScript "genesis-sway-dbus-environment" ''
           dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
           systemctl --user stop pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
           systemctl --user start pipewire pipewire-media-session xdg-desktop-portal xdg-desktop-portal-wlr
         '';
 
-        genesis-sway-cfg = pkgs.writeTextFile {
-          name = "genesis-sway.cfg";
-          text = ''
-            include ~/.config/sway/config.d/*
+        genesis-sway-cfg = pkgs.writeText "genesis-sway.cfg" ''
+          include ~/.config/sway/config.d/*
 
-            exec genesis-sway-dbus-environment
-            exec --no-startup-id ibus-daemon --xim -d -r
-            exec genesis-shell -m gadgets
-          '';
-        };
+          exec ${genesis-sway-dbus-environment}
+          exec --no-startup-id ibus-daemon --xim -d -r
+          exec genesis-shell -m gadgets
+        '';
+
+        genesis-sway = pkgs.writeShellScriptBin "genesis-sway" ''
+          exec sway "$@" -c ${genesis-sway-cfg}
+        '';
 
         genesis-sway-session = (pkgs.writeTextDir "share/wayland-sessions/genesis-sway.desktop" ''
           [Desktop Entry]
           Name=Genesis Sway
           Comment=Sway with the Genesis Shell UI
-          Exec=genesis-sway
+          Exec=${genesis-sway}/bin/genesis-sway
           Type=Application
         '') // { providedSessions = [ "genesis-sway" ]; };
-
-        genesis-sway = pkgs.writeShellScriptBin "genesis-sway" ''
-          exec sway "$@" -c ${genesis-sway-cfg}
-        '';
       in {
-        environment.systemPackages = with pkgs; [
-          sway
-          genesis-sway-dbus-environment
-          genesis-sway
-          genesis-sway-session
-        ];
+        environment.systemPackages = with pkgs; [ genesis-sway genesis-sway-session genesis-shell ];
+        services.xserver.displayManager.sessionPackages = [ genesis-sway-session ];
 
         xdg.portal.wlr.enable = true;
 
-        services.xserver.displayManager.sessionPackages = [ genesis-sway-session ];
         programs.sway = {
           enable = true;
           wrapperFeatures.gtk = true;
