@@ -144,11 +144,12 @@ let
       nativeBuildInputs = [ makeWrapper lndir ];
       buildInputs = [ drv.gtk3 ];
 
+      preferLocalBuild = true;
       libs = lib.makeLibraryPath libs + ":" + lib.makeSearchPathOutput "lib" "lib64" libs;
       gtk_modules = map (x: x + x.gtkModule) [ libcanberra-gtk3 ];
       disallowedRequisites = [ stdenv.cc ];
 
-      buildPhase = ''
+      buildCommand = ''
         cd "${drv}"
         find . -type d -exec mkdir -p "$out"/{} \;
         find . -type f \( -not -name "${applicationName}" \) -exec ln -sT "${drv}"/{} "$out"/{} \;
