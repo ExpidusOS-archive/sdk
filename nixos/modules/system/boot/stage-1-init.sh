@@ -14,6 +14,8 @@ extraUtils="@extraUtils@"
 export LD_LIBRARY_PATH=@extraUtils@/lib
 export PATH=@extraUtils@/bin
 ln -s @extraUtils@/bin /bin
+# hardcoded in util-linux's mount helper search path `/run/wrappers/bin:/run/current-system/sw/bin:/sbin`
+ln -s @extraUtils@/bin /sbin
 
 # Copy the secrets to their needed location
 if [ -d "@extraUtils@/secrets" ]; then
@@ -340,6 +342,14 @@ checkFS() {
     return 0
 }
 
+escapeFstab() {
+    local original="$1"
+
+    # Replace space
+    local escaped="${original// /\\040}"
+    # Replace tab
+    echo "${escaped//$'\t'/\\011}"
+}
 
 # Function for mounting a file system.
 mountFS() {
@@ -402,7 +412,7 @@ mountFS() {
     done
 
     [ "$mountPoint" == "/" ] &&
-        [ -f "/mnt-root/etc/EXPIDUS_LUSTRATE" ] &&
+        [ -f "/mnt-root/etc/NIXOS_LUSTRATE" ] &&
         lustrateRoot "/mnt-root"
 
     true
@@ -432,9 +442,9 @@ lustrateRoot () {
     mv -v "$root/old-root.tmp" "$root/old-root"
 
     mkdir -m 0755 -p "$root/etc"
-    touch "$root/etc/EXPIDUS"
+    touch "$root/etc/NIXOS"
 
-    exec 4< "$root/old-root/etc/EXPIDUS_LUSTRATE"
+    exec 4< "$root/old-root/etc/NIXOS_LUSTRATE"
 
     echo
     echo "Restoring selected impurities:"
@@ -553,6 +563,9 @@ while read -u 3 mountPoint; do
 
       umount /tmp-iso
       rmdir /tmp-iso
+      if [ -n "$isoPath" ] && [ $fsType = "iso9660" ] && mountpoint -q /findiso; then
+       umount /findiso
+      fi
       continue
     fi
 
@@ -564,7 +577,7 @@ while read -u 3 mountPoint; do
         continue
     fi
 
-    mountFS "$device" "$mountPoint" "$options" "$fsType"
+    mountFS "$device" "$(escapeFstab "$mountPoint")" "$(escapeFstab "$options")" "$fsType"
 done
 
 exec 3>&-
