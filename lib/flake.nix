@@ -167,6 +167,7 @@ rec {
 
       buildCommand = ''
         cp -r $src $out
+        chown -R $(id -u) $out
 
         ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
       '';
