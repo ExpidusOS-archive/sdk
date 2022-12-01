@@ -175,7 +175,6 @@ rec {
         cp -r $src/* $out
       '';
 
-      inherit (src) narHash lastModified lastModifiedDate;
       submodules = true;
     };
 }
