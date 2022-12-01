@@ -219,7 +219,7 @@ in rec {
       };
       modules =
         [ versionModule
-          ("${expidus.channels.nixpkgs}/nixos/modules/installer/virtualbox-demo.nix")
+          ./nixos/modules/installer/virtualbox-demo.nix
         ];
     }).config.system.build.virtualBoxOVA)
 
