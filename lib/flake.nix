@@ -158,7 +158,7 @@ rec {
       makeEntry = key: input: ''
         mkdir -p $(dirname $out/${key})
         rm -rf $out/${key}
-        ln -s ${input.outPath} $out/${key}
+        cp -r ${input.outPath} $out/${key}
       '';
 
       id = lib.removePrefix "${builtins.storeDir}/" src.outPath;
