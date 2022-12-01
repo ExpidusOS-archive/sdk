@@ -156,20 +156,22 @@ rec {
       pkgs = import ../. { system = expidus.system.current; };
 
       makeEntry = key: input: ''
-        mkdir -p $(dirname $out/${key})
-        cp -r ${input.outPath} $out/${key}
+        mkdir -p $(dirname $src/${key})
+        cp -r ${input.outPath} $src/${key}
       '';
 
       id = lib.removePrefix "${builtins.storeDir}/" src.outPath;
     in pkgs.stdenvNoCC.mkDerivation {
       name = "${id}-with-submodules";
       inherit src;
+      srcs = builtins.attrValues inputs;
+
+      postUnpack = ''
+        ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
+      '';
 
       buildCommand = ''
         cp -r $src $out
-        chown -R $(id -u) $out
-
-        ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
       '';
     };
 }
