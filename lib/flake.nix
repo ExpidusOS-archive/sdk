@@ -89,9 +89,12 @@ rec {
       packages = sysconfig.forAll (system:
         let
           pkgs = nixpkgsFor.${system};
-        in {
+          vmTarget = if target == "default" then "vm" else target + "-vm";
+        in ({
           ${target} = (packageOverlay pkgs pkgs).${name};
-        });
+        }) // (if builtins.hasAttr system nixosSystems then {
+          ${vmTarget} = nixosSystems.${system}.config.system.build.vm;
+        } else {}));
 
       nixosConfigurations = (nixosSystems // {
         ${target} = if builtins.hasAttr expidus.system.current nixosSystems then nixosSystems.${expidus.system.current} else null;
