@@ -150,4 +150,17 @@ rec {
         };
       });
   };
+
+  makeSubmodules = src: inputs:
+    let
+      pkgs = import ../. { system = expidus.system.current; };
+      makeEntry = key: input: ''
+        mkdir -p $(dirname ${key})
+        cp -r ${input.outPath} $out/${key}
+      '';
+      id = lib.removePrefix "${builtins.storeDir}/" src.outPath;
+    in pkgs.runCommandNoCC "${id}-with-submodules" {} ''
+      cp -r ${src} $out
+      ${builtins.mapAttrs makeEntry inputs}
+    '';
 }
