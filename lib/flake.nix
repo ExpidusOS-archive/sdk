@@ -161,6 +161,6 @@ rec {
       id = lib.removePrefix "${builtins.storeDir}/" src.outPath;
     in pkgs.runCommandNoCC "${id}-with-submodules" {} ''
       cp -r ${src} $out
-      ${builtins.mapAttrs makeEntry inputs}
+      ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
     '';
 }
