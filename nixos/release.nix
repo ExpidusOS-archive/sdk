@@ -219,7 +219,7 @@ in rec {
       };
       modules =
         [ versionModule
-          ./nixos/modules/installer/virtualbox-demo.nix
+          ./modules/installer/virtualbox-demo.nix
         ];
     }).config.system.build.virtualBoxOVA)
 
