@@ -1,7 +1,7 @@
 { lib, stdenv, writeText, makeBinaryWrapper, makeWrapper, makeDesktopItem, config, wrapFirefox, firefoxPackages,
   browserpass, bukubrow, tridactyl-native, chrome-gnome-shell, uget-integrator, plasma5Packages, fx_cast_bridge,
   libcanberra-gtk3, udev, libva, mesa, libnotify, xorg, cups, pciutils, pipewire, ffmpeg_5, libkrb5, libglvnd,
-  alsa-lib, zlib, libpulseaudio, sndio, libjack2, opensc, lndir, xdg-utils, libtokyo }:
+  alsa-lib, zlib, libpulseaudio, sndio, libjack2, opensc, lndir, xdg-utils, gnome }:
 let
   override = drv: {
     binaryName ? "firefox",
@@ -203,45 +203,33 @@ let
             --prefix PATH ':' "${xdg-utils}/bin" \
             --suffix PATH ':' "$out/bin" \
             --set MOZ_APP_LAUNCHER "${applicationName}${nameSuffix}" \
-            --set MOZ_SYSTEM_DIR "$out/lib/mozilla" \
+            --set MOZ_SYSTEM_DIR "$out/lib/${libName}" \
             --set MOZ_LEGACY_PROFILES 1 \
             --set MOZ_ALLOW_DOWNGRADE 1 \
             --set-default GTK_THEME "Tokyo-Night" \
             --prefix XDG_DATA_DIRS : "$GSETTINGS_SCHEMAS_PATH" \
-            --prefix XDG_DATA_DIRS : "${libtokyo}/share" \
+            --prefix XDG_DATA_DIRS : "${gnome.adwaita-icon-theme}/share" \
             ${lib.optionalString forceWayland "--set MOZ_ENABLE_WAYLAND 1"} \
             "''${oldWrapperArgs[@]}"
 
-        if [ -e "${drv}/share/icons" ]; then
-            mkdir -p "$out/share"
-            ln -s "${drv}/share/icons" "$out/share/icons"
-        else
-            for res in 16 32 48 64 128; do
-            mkdir -p "$out/share/icons/hicolor/''${res}x''${res}/apps"
-            icon=$( find "${drv}/lib/" -name "default''${res}.png" )
-              if [ -e "$icon" ]; then ln -s "$icon" \
-                "$out/share/icons/hicolor/''${res}x''${res}/apps/${icon}.png"
-              fi
-            done
-        fi
-
         install -D -t $out/share/applications $desktopItem/share/applications/*
 
-        mkdir -p $out/lib/mozilla/native-messaging-hosts
+        mkdir -p $out/lib/${libName}/native-messaging-hosts
         for ext in ${toString nativeMessagingHosts}; do
-            ln -sLt $out/lib/mozilla/native-messaging-hosts $ext/lib/mozilla/native-messaging-hosts/*
+            ln -sLt $out/lib/${libName}/native-messaging-hosts $ext/lib/${libName}/native-messaging-hosts/*
         done
-        mkdir -p $out/lib/mozilla/pkcs11-modules
+        mkdir -p $out/lib/${libName}/pkcs11-modules
         for ext in ${toString pkcs11Modules}; do
-            ln -sLt $out/lib/mozilla/pkcs11-modules $ext/lib/mozilla/pkcs11-modules/*
+            ln -sLt $out/lib/${libName}/pkcs11-modules $ext/lib/${libName}/pkcs11-modules/*
         done
 
         mkdir -p $out/lib/${libName}
         mkdir -p $out/lib/${libName}/distribution/extensions
 
-        install -Dvm644 ${distributionIni} $out/lib/${binaryName}/distribution/distribution.init
-        install -Dvm644 ${defaultPrefsFile} $out/lib/${binaryName}/browser/defaults/preferences/expidus-default-prefs.js
-        # FIXME: rm $out/lib/${binaryName}/browser/defaults/preferences/nixos-default-perfs.js
+        rm $out/lib/${libName}/distribution/distribution.ini
+        rm $out/lib/${libName}/browser/defaults/preferences/nixos-default-prefs.js
+        install -Dvm644 ${distributionIni} $out/lib/${libName}/distribution/distribution.ini
+        install -Dvm644 ${defaultPrefsFile} $out/lib/${libName}/browser/defaults/preferences/expidus-default-prefs.js
       '';
 
       doInstallCheck = true;

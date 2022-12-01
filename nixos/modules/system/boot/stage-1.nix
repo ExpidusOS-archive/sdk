@@ -389,8 +389,8 @@ let
             '';
           symlink = "/etc/modprobe.d/ubuntu.conf";
         }
-        { object = config.environment.etc."modprobe.d/expidus.conf".source;
-          symlink = "/etc/modprobe.d/expidus.conf";
+        { object = config.environment.etc."modprobe.d/nixos.conf".source;
+          symlink = "/etc/modprobe.d/nixos.conf";
         }
         { object = pkgs.kmod-debian-aliases;
           symlink = "/etc/modprobe.d/debian.conf";
