@@ -173,8 +173,8 @@ rec {
         
         shopt -s dotglob
         mkdir -p $out
-        cp -r $src/* $out
         ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
+        cp -r $src/* $out
 
         runHook postUnpack
       '';
