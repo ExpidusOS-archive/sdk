@@ -142,7 +142,7 @@ rec {
               version = self.rev or "dirty";
               src = builtins.path {
                 inherit name;
-                path = builtins.toString self;
+                path = lib.cleanSource (builtins.toString self);
               };
             }));
         };
