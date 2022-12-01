@@ -140,7 +140,7 @@ rec {
           else
             (prev.${name}.overrideAttrs (old: {
               version = self.rev or "dirty";
-              src = lib.cleanSource self;
+              src = self;
             }));
         };
       });
