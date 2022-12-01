@@ -159,8 +159,14 @@ rec {
         cp -r ${input.outPath} $out/${key}
       '';
       id = lib.removePrefix "${builtins.storeDir}/" src.outPath;
-    in pkgs.runCommandNoCC "${id}-with-submodules" {} ''
-      cp -r ${src} $out
-      ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
-    '';
+    in pkgs.stdenvNoCC.mkDerivation {
+      name = "${id}-with-submodules";
+      inherit src;
+
+      buildCommand = ''
+        cp -r $src $out
+
+        ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
+      '';
+    };
 }
