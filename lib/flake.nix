@@ -167,8 +167,15 @@ rec {
       srcs = builtins.map (drv: drv.outPath) (builtins.attrValues inputs);
       sourceRoot = ".";
 
-      postUnpack = ''
+      unpackPhase = ''
+        runHook preUnpack
+        
+        shopt -s dotglob
+        mkdir -p $out
+        cp -r $src/* $out
         ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
+
+        runHook postUnpack
       '';
 
       inherit (src) narHash lastModified lastModifiedDate;
