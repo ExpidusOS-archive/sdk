@@ -154,10 +154,12 @@ rec {
   makeSubmodules = src: inputs:
     let
       pkgs = import ../. { system = expidus.system.current; };
+
       makeEntry = key: input: ''
-        mkdir -p $(dirname ${key})
+        mkdir -p $(dirname $out/${key})
         cp -r ${input.outPath} $out/${key}
       '';
+
       id = lib.removePrefix "${builtins.storeDir}/" src.outPath;
     in pkgs.stdenvNoCC.mkDerivation {
       name = "${id}-with-submodules";
