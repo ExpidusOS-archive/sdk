@@ -164,7 +164,6 @@ rec {
     in pkgs.stdenvNoCC.mkDerivation {
       name = "${id}-with-submodules";
       src = src.outPath;
-      srcs = builtins.map (drv: drv.outPath) (builtins.attrValues inputs);
 
       postUnpack = ''
         cp -r $src $out
