@@ -140,10 +140,7 @@ rec {
           else
             (prev.${name}.overrideAttrs (old: {
               version = self.rev or "dirty";
-              src = builtins.path {
-                inherit name;
-                path = lib.cleanSource (builtins.toString self);
-              };
+              src = lib.cleanSource self;
             }));
         };
       });
