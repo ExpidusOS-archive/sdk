@@ -78,6 +78,8 @@ rec {
             }
           ];
         });
+
+      vmTarget = if target == "default" then "vm" else target + "-vm";
     in {
       overlays.${target} = packageOverlay;
 
@@ -89,7 +91,6 @@ rec {
       packages = sysconfig.forAll (system:
         let
           pkgs = nixpkgsFor.${system};
-          vmTarget = if target == "default" then "vm" else target + "-vm";
         in ({
           ${target} = (packageOverlay pkgs pkgs).${name};
         }) // (if builtins.hasAttr system nixosSystems then {
@@ -105,6 +106,7 @@ rec {
           let
             pkgs = nixpkgsFor.${system};
           in (packageOverlay pkgs pkgs).${name});
+        ${vmTarget} = sysconfig.forAllLinux (system: nixosSystems.${system}.config.system.build.vm);
       };
 
       devShells = sysconfig.forAll (system:
