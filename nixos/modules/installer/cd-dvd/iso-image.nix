@@ -1,4 +1,4 @@
-# This module creates a bootable ISO image containing the given NixOS
+# This module creates a bootable ISO image containing the given ExpidusOS
 # configuration.  The derivation for the ISO image will be placed in
 # config.system.build.isoImage.
 
@@ -310,7 +310,7 @@ let
 
 
     # If the parameter iso_path is set, append the findiso parameter to the kernel
-    # line. We need this to allow the nixos iso to be booted from grub directly.
+    # line. We need this to allow the expidus iso to be booted from grub directly.
     if [ \''${iso_path} ] ; then
       set isoboot="findiso=\''${iso_path}"
     fi
@@ -452,7 +452,7 @@ in
     };
 
     isoImage.isoBaseName = mkOption {
-      default = "nixos";
+      default = "expidus";
       description = lib.mdDoc ''
         Prefix of the name of the generated ISO image file.
       '';
@@ -488,7 +488,7 @@ in
     };
 
     isoImage.volumeID = mkOption {
-      # nixos-$EDITION-$RELEASE-$ARCH
+      # expidus-$EDITION-$RELEASE-$ARCH
       default = "expidus${optionalString (config.isoImage.edition != "") "-${config.isoImage.edition}"}-${config.system.expidus.release}-${pkgs.stdenv.hostPlatform.uname.processor}";
       description = lib.mdDoc ''
         Specifies the label or volume ID of the generated ISO image.
@@ -606,11 +606,11 @@ in
       default = " Installer";
       example = " Live System";
       description = lib.mdDoc ''
-        The string to append after the menu label for the NixOS system.
-        This will be directly appended (without whitespace) to the NixOS version
+        The string to append after the menu label for the ExpidusOS system.
+        This will be directly appended (without whitespace) to the ExpidusOS version
         string, like for example if it is set to `XXX`:
 
-        `NixOS 99.99-pre666XXX`
+        `ExpidusOS 99.99-pre666XXX`
       '';
     };
 
