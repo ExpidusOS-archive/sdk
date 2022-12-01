@@ -163,12 +163,11 @@ rec {
       id = lib.removePrefix "${builtins.storeDir}/" src.outPath;
     in pkgs.stdenvNoCC.mkDerivation {
       name = "${id}-with-submodules";
-      src = src.outPath;
+      src = lib.cleanSource src.outPath;
       srcs = builtins.map (drv: drv.outPath) (builtins.attrValues inputs);
       sourceRoot = ".";
 
       postUnpack = ''
-        cp -r $src $out
         ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs makeEntry inputs))}
       '';
 
