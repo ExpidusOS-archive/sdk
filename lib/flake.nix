@@ -112,7 +112,7 @@ rec {
       devShells = sysconfig.forAll (system:
         let
           pkgs = nixpkgsFor.${system};
-          pkg = self.packages.${system}.${target};
+          pkg = (packageOverlay pkgs pkgs).${name};
           packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
           wrappedTarget = if target == "default" then "wrapped" else target + "-wrapped";
         in {
