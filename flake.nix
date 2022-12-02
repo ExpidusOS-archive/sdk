@@ -114,13 +114,12 @@
     in sdk-flake // ({
       inherit lib;
       libExpidus = lib.expidus;
-      legacyPackages = lib.expidus.system.forAll (system: import ./. {
-        system = lib.expidus.system.current;
-        crossSystem = { inherit system; };
+      legacyPackages = sdk-flake.metadata.sysconfig.forAllPossible (system: import ./. {
+        inherit system;
       });
 
       hydraJobs = sdk-flake.hydraJobs // sdk-hydra;
-      packages = lib.expidus.system.forAll (system:
+      packages = sdk-flake.metadata.sysconfig.forAllPossible (system:
         let
           base = sdk-flake.packages.${system};
           releases = release.${system} or {};

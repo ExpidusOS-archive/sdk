@@ -6,14 +6,10 @@ rec {
     self,
     target ? "default",
     name,
-    systems ? expidus.system.possible,
+    sysconfig ? expidus.system,
     packagesFor ? ({ final, prev, old }: emptyPackages)
   }@flake:
     let
-      sysconfig = expidus.system.make {
-        supported = systems;
-      };
-
       nixpkgsFor = sysconfig.forAllPossible (host:
         sysconfig.forAllPossible (target: import ../pkgs/top-level/default.nix {
           system = host;
@@ -101,7 +97,7 @@ rec {
           nixpkgsTarget = nixpkgsFor.${system};
           syshost = expidus.system.make {
             currentSystem = system;
-            supported = systems;
+            supported = sysconfig.possible;
           };
           pkgs = nixpkgsTarget.${system};
           forAllSystems = lib.genAttrs (builtins.map makeWrapped syshost.supported);
@@ -149,10 +145,10 @@ rec {
     self,
     target ? "default",
     name,
-    systems ? expidus.system.supported,
+    sysconfig ? expidus.system,
     packagesFor ? ({ final, prev, old }: emptyPackages)
   }: make {
-    inherit self target name systems;
+    inherit self target name sysconfig;
     packagesFor = ({ final, prev, old }@args:
       let
         packages = emptyPackages // (packagesFor args);
