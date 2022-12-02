@@ -157,18 +157,19 @@ rec {
           ${name} = if name == "expidus-sdk" then
             (prev.callPackage ../pkgs/development/tools/expidus-sdk {})
           else
-            (prev.${name}.overrideAttrs (old: {
-              version = self.rev or "dirty";
-              src = self;
-            }));
+            (prev.${name}.overrideAttrs (old:
+              let
+                src = if builtins.isFunction self then self prev else self;
+              in {
+                version = src.rev or "dirty";
+                inherit src;
+              }));
         };
       });
   };
 
-  makeSubmodules = src: inputs:
+  makeSubmodules = src: inputs: pkgs:
     let
-      pkgs = import ../. { system = expidus.system.current; };
-
       makeEntry = key: input: ''
         mkdir -p $(dirname $out/${key})
         rm -rf $out/${key}
@@ -176,7 +177,14 @@ rec {
       '';
 
       id = lib.removePrefix "${builtins.storeDir}/" src.outPath;
-    in pkgs.stdenvNoCC.mkDerivation {
+
+      passAttr = attr:
+        if builtins.hasAttr attr src then
+          {
+            "${attr}" = src.${attr};
+          }
+        else {};
+    in pkgs.stdenvNoCC.mkDerivation ({
       name = "${id}-with-submodules";
       src = lib.cleanSource src.outPath;
       srcs = builtins.map (drv: drv.outPath) (builtins.attrValues inputs);
@@ -190,5 +198,5 @@ rec {
       '';
 
       submodules = true;
-    };
+    } // passAttr "rev");
 }
