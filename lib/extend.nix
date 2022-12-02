@@ -13,6 +13,6 @@ in makeExtendible "expidus" ({ call, self, expidus }: rec {
 
   maintainers = import ./maintainers.nix;
   trivial = import ./trivial.nix { inherit lib; };
-  system = import ./system.nix { inherit lib; };
+  system = import ./system.nix { inherit lib expidus; };
   flake = import ./flake.nix { inherit lib expidus; };
 })

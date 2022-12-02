@@ -6,17 +6,23 @@ rec {
     self,
     target ? "default",
     name,
-    systems ? expidus.system.supported,
+    systems ? expidus.system.possible,
     packagesFor ? ({ final, prev, old }: emptyPackages)
   }@flake:
     let
-      sysconfig = expidus.system.make { supported = systems; };
+      sysconfig = expidus.system.make {
+        supported = systems;
+      };
 
-      nixpkgsFor = sysconfig.forAll (system: import ../pkgs/top-level/default.nix {
-        system = sysconfig.current;
-        crossSystem = { inherit system; };
-      });
+      nixpkgsFor = sysconfig.forAllPossible (host:
+        sysconfig.forAllPossible (target: import ../pkgs/top-level/default.nix {
+          system = host;
+          crossSystem = {
+            system = target;
+          };
+        }));
       wrapped = name + (if target == "default" then "" else "-${target}");
+      makeWrapped = key: if target == "default" then key else target + "-${key}";
 
       packageOverlay = final: prev:
         let
@@ -43,7 +49,7 @@ rec {
 
       nixosSystems = sysconfig.forAllLinux (system:
         let
-          base-pkgs = nixpkgsFor.${system};
+          base-pkgs = nixpkgsFor.${system}.${system};
           pkgs = packageOverlay base-pkgs base-pkgs;
 
           pkg = pkgs.${name};
@@ -78,23 +84,35 @@ rec {
             }
           ];
         });
-
-      vmTarget = if target == "default" then "vm" else target + "-vm";
     in {
       overlays.${target} = packageOverlay;
 
-      legacyPackages = sysconfig.forAll (system:
+      metadata = {
+        inherit target name sysconfig nixpkgsFor;
+      };
+
+      legacyPackages = sysconfig.forAllPossible (system:
         let
-          pkgs = nixpkgsFor.${system};
+          pkgs = nixpkgsFor.${system}.${system};
         in (packageOverlay pkgs pkgs));
 
-      packages = sysconfig.forAll (system:
+      packages = sysconfig.forAllPossible (system:
         let
-          pkgs = nixpkgsFor.${system};
+          nixpkgsTarget = nixpkgsFor.${system};
+          syshost = expidus.system.make {
+            currentSystem = system;
+            supported = systems;
+          };
+          pkgs = nixpkgsTarget.${system};
+          forAllSystems = lib.genAttrs (builtins.map makeWrapped syshost.supported);
         in ({
           ${target} = (packageOverlay pkgs pkgs).${name};
-        }) // (if builtins.hasAttr system nixosSystems then {
-          ${vmTarget} = nixosSystems.${system}.config.system.build.vm;
+        }) // forAllSystems (system:
+          let
+            pkgs = nixpkgsTarget.${system};
+          in (packageOverlay pkgs pkgs).${name}
+        ) // (if builtins.hasAttr system nixosSystems then {
+          ${makeWrapped "vm"} = nixosSystems.${system}.config.system.build.vm;
         } else {}));
 
       nixosConfigurations = (nixosSystems // {
@@ -104,14 +122,14 @@ rec {
       hydraJobs = {
         ${target} = sysconfig.forAllLinux (system:
           let
-            pkgs = nixpkgsFor.${system};
+            pkgs = nixpkgsFor.${system}.${system};
           in (packageOverlay pkgs pkgs).${name});
-        ${vmTarget} = sysconfig.forAllLinux (system: nixosSystems.${system}.config.system.build.vm);
+        ${makeWrapped "vm"} = sysconfig.forAllLinux (system: nixosSystems.${system}.config.system.build.vm);
       };
 
-      devShells = sysconfig.forAll (system:
+      devShells = sysconfig.forAllPossible (system:
         let
-          pkgs = nixpkgsFor.${system};
+          pkgs = nixpkgsFor.${system}.${system};
           pkg = (packageOverlay pkgs pkgs).${name};
           packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
           wrappedTarget = if target == "default" then "wrapped" else target + "-wrapped";

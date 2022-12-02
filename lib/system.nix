@@ -1,4 +1,4 @@
-{ lib }:
+{ lib, expidus }:
 let
   host = builtins.filter builtins.isString (builtins.split "-" (builtins.getEnv "EXPIDUS_SDK_HOST"));
   currentBultin = if builtins.hasAttr "currentSystem" builtins then builtins.toString builtins.currentSystem else null;
@@ -49,27 +49,35 @@ let
 
   make = {
     currentSystem ? current,
-    supported ? makeSupported {}
-  }:
+    supported ? makeSupported {},
+    allowDarwin ? false
+  }@args:
     let
       getSupported = system: list: builtins.map (value: value == system) list;
       isSupported = system: list: (builtins.length (builtins.filter (value: value == true) (getSupported system list))) > 0;
       isToplevel = currentSystem == current;
       _supported = makeSupported (if builtins.isList supported then makeSystemSet supported else supported);
+
+      isDarwin = isSupported currentSystem _supported.darwin;
+      canDarwin = isDarwin || allowDarwin;
+      supportedList = _supported.linux ++ _supported.cygwin ++ (if canDarwin then _supported.darwin else []);
+      possibleList = _supported.linux ++ _supported.cygwin ++ _supported.darwin;
     in (rec {
-      inherit isToplevel make makeSupported;
+      inherit isToplevel makeSupported make;
 
       current = currentSystem;
       isCygwin = isSupported currentSystem _supported.cygwin;
-      isDarwin = isSupported currentSystem _supported.darwin;
       isLinux = isSupported currentSystem _supported.linux;
+      inherit isDarwin canDarwin;
 
-      supported = _supported.linux ++ _supported.cygwin ++ (if isDarwin then _supported.darwin else []);
+      supported = supportedList;
+      possible = possibleList;
 
       forAllCygwin = lib.genAttrs _supported.cygwin;
       forAllDarwin = lib.genAttrs _supported.darwin;
       forAllLinux = lib.genAttrs _supported.linux;
-      forAll = lib.genAttrs (_supported.linux ++ _supported.cygwin ++ (if isDarwin then _supported.darwin else []));
+      forAll = lib.genAttrs supportedList;
+      forAllPossible = lib.genAttrs possibleList;
     }) // (if isToplevel then {
       inherit getSupported isSupported;
 
