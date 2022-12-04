@@ -3,13 +3,13 @@ stdenv.mkDerivation rec {
   pname = "libdevident";
   version = "0.2.0";
 
-  outputs = [ "out" "dev" "devdoc" ];
+  outputs = [ "out" "dev" "devdoc" "viewer" ];
 
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "libdevident";
-    rev = "2bae18ff5e50055a90f2159dce7d2a34bddabeee";
-    sha256 = "5mkCQL2ixCQv4KC5ggUgaMacss0hKk81qICpwMiHSpc=";
+    rev = "068c73165449672ad96fed5f70df0845b0069c73";
+    sha256 = "+YlcVmDfxvD9afnbVmXOrtJF28JDqQAHStCdZqEWxEY=";
   };
 
   doChecks = true;
@@ -17,6 +17,12 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ meson ninja pkg-config gobject-introspection vala expidus-sdk ];
   buildInputs = [ vadi glib gxml libpeas libtokyo ];
   propagatedBuildInputs = buildInputs;
+
+  postInstall = ''
+    mkdir -p $viewer/bin $viewer/share
+    mv $out/bin/devident-gtkviewer $viewer/bin
+    mv $out/share/applications $viewer/applications
+  '';
 
   meta = with lib; {
     description = "Device identification library";
