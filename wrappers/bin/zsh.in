@@ -1,0 +1,10 @@
+#!@SH_PATH@
+
+if [[ -z "$EXPIDUS_SDK_LIBDIR" ]]; then
+  export EXPIDUS_SDK_LIBDIR="@SDK_LIBDIR@"
+fi
+
+source "$EXPIDUS_SDK_LIBDIR/ensure.sh"
+
+export ZDOTDIR=$EXPIDUS_SDK_DATADIR
+exec @ZSH_PATH@ --rcs $@

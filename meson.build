@@ -36,6 +36,7 @@ endif
 
 i18n_args = ['--package-version=@0@'.format(longver), '--copyright-holder=Midstall Software']
 
+zsh = find_program('zsh', native: true, required: true)
 sh = find_program('sh', native: true, required: true)
 uncrustify = find_program('uncrustify', native: true, required: true)
 clang_format = find_program('clang-format', native: true, required: true)
@@ -71,6 +72,7 @@ conf_data.set('SDK_LIBDIR', sdk_libdir)
 conf_data.set('SDK_BINDIR', sdk_bindir)
 
 conf_data.set('SH_PATH', sh.full_path())
+conf_data.set('ZSH_PATH', zsh.full_path())
 conf_data.set('UNCRUSTIFY_PATH', uncrustify.full_path())
 conf_data.set('CLANG_FORMAT_PATH', clang_format.full_path())
 conf_data.set('VALAC_PATH', valac.full_path())
