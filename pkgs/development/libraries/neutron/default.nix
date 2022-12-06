@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, vala, gxml, vadi, glib, libpeas, expidus-sdk, darwin, windows, upower }
+{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, vala, gxml, vadi, glib, libpeas, expidus-sdk, darwin, windows, upower }:
 stdenv.mkDerivation rec {
   pname = "neutron";
   version = "2e0fdd759d42c6e0fb946d6bea1d61f8cdf01269";
