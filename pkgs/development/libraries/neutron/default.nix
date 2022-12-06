@@ -16,9 +16,9 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ meson ninja pkg-config gobject-introspection vala expidus-sdk ];
   buildInputs = [ vadi glib libpeas ]
-    ++ (lib.optionals stdenv.isLinux [ upower ])
-    ++ (lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [ IOKit ])
-    ++ (lib.optionals stdenv.isCygwin (with windows; [ w32api ]);
+    ++ (lib.optionals stdenv.isLinux [ upower ]))
+    ++ (lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [ IOKit ]))
+    ++ (lib.optionals stdenv.isCygwin (with windows; [ w32api ]));
 
   propagatedBuildInputs = buildInputs;
 
