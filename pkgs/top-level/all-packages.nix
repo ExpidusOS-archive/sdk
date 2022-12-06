@@ -21,6 +21,7 @@ rec {
   gtk-layer-shell = pkgs.callPackage ../development/libraries/gtk-layer-shell/default.nix {};
 
   expidus-sdk = callPackage ../development/tools/expidus-sdk/default.nix {};
+  neutron = callPackage ../development/libraries/neutron/default.nix {};
 
   cssparser = pkgs.callPackage ../development/libraries/cssparser/default.nix {};
   gxml = pkgs.callPackage ../development/libraries/gxml/default.nix {};
