@@ -32,6 +32,7 @@
 
   expidusModules = [
     ./programs/expidus-terminal.nix
+    ./security/expidus.nix
     ./services/x11/desktop-managers/genesis.nix
   ];
 
