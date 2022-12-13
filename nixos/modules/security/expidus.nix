@@ -15,11 +15,24 @@ in
   };
 
   config = mkIf cfg.enable {
-    security.apparmor = {
-      enable = mkForce true;
-      enableCache = mkForce true;
+    security = {
+      apparmor = {
+        enable = mkForce true;
+        enableCache = mkForce true;
+      };
+      pam.yubico.enable = mkForce true;
+      rtkit.enable = mkForce true;
+      tpm2.enable = mkForce true;
+      polkit.enable = mkForce true;
+      protectKernelImage = mkForce true;
     };
 
-    services.dbus.apparmor = mkForce "enabled";
+    boot.specialFileSystems."/proc".options = mkForce [ "nosuid" "nodev" "noexec" "hidepid=2" "gid=proc" ];
+    systemd.services.systemd-logind.serviceConfig.SupplementaryGroups = "proc";
+
+    services = {
+      dbus.apparmor = mkForce "required";
+      usbguard.enable = mkForce true;
+    };
   };
 }
