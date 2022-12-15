@@ -34,7 +34,7 @@ in
       gid = config.ids.gids.proc;
     };
 
-    boot.specialFileSystems."/proc".options = mkForce [ "nosuid" "nodev" "noexec" "hidepid=2" "gid=${config.ids.gids.proc}" ];
+    boot.specialFileSystems."/proc".options = mkForce [ "nosuid" "nodev" "noexec" "hidepid=2" "gid=${toString config.ids.gids.proc}" ];
     systemd.services.systemd-logind.serviceConfig.SupplementaryGroups = "proc";
 
     services = {
