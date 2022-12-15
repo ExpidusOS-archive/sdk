@@ -30,8 +30,11 @@ in
       protectKernelImage = mkForce true;
     };
 
-    users.groups.proc = {};
-    boot.specialFileSystems."/proc".options = mkForce [ "nosuid" "nodev" "noexec" "hidepid=2" "gid=proc" ];
+    users.groups.proc = {
+      gid = config.ids.gids.proc;
+    };
+
+    boot.specialFileSystems."/proc".options = mkForce [ "nosuid" "nodev" "noexec" "hidepid=2" "gid=${config.ids.gids.proc}" ];
     systemd.services.systemd-logind.serviceConfig.SupplementaryGroups = "proc";
 
     services = {
