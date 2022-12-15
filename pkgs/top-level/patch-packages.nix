@@ -12,6 +12,8 @@ rec {
     doInstallCheck = !isCrossCompiling;
   });
 
+  nwg-drawer = callPackage ../applications/misc/nwg-drawer/default.nix {};
+
   ninja = if isCrossCompiling then super.ninja.overrideAttrs (old: {
     src = fetchFromGitHub {
       owner = "NickCao";
