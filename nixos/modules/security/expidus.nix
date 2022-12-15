@@ -20,7 +20,10 @@ in
         enable = mkForce true;
         enableCache = mkForce true;
       };
-      pam.yubico.enable = mkForce true;
+      pam.yubico = {
+        enable = mkForce true;
+        id = "42";
+      };
       rtkit.enable = mkForce true;
       tpm2.enable = mkForce true;
       polkit.enable = mkForce true;
