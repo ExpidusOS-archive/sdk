@@ -38,7 +38,7 @@ in
     systemd.services.systemd-logind.serviceConfig.SupplementaryGroups = "proc";
 
     services = {
-      dbus.apparmor = mkForce "required";
+      dbus.apparmor = mkForce "enabled";
       usbguard.enable = mkForce true;
     };
   };
