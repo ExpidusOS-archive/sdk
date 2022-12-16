@@ -41,7 +41,7 @@ def system_dir(profile: Optional[str], generation: int, specialisation: Optional
     else:
         return d
 
-BOOT_ENTRY = """title ExpidusOS{profile}{specialisation}
+BOOT_ENTRY = """title {system} {profile}{specialisation}
 version Generation {generation} {description}
 linux {kernel}
 initrd {initrd}
@@ -83,18 +83,18 @@ def copy_from_profile(profile: Optional[str], generation: int, specialisation: O
         copy_if_not_exists(store_file_path, "@efiSysMountPoint@%s" % (efi_file_path))
     return efi_file_path
 
-
-def describe_generation(generation_dir: str) -> str:
+def describe_system(generation_dir: str) -> str:
     try:
         with open("%s/expidus-version" % generation_dir) as f:
             expidus_version = f.read()
+            return "ExpidusOS {}".format(expidus_version)
     except IOError:
-        expidus_version = "Unknown"
-    try:
         with open("%s/nixos-version" % generation_dir) as f:
             nixos_version = f.read()
-    except IOError:
-        nixos_version = "Unknown"
+            return "NixOS {}".format(nixos_version)
+
+def describe_generation(generation_dir: str) -> str:
+    system_name = describe_system(generation_dir)
 
     kernel_dir = os.path.dirname(os.path.realpath("%s/kernel" % generation_dir))
     module_dir = glob.glob("%s/lib/modules/*" % kernel_dir)[0]
@@ -103,14 +103,9 @@ def describe_generation(generation_dir: str) -> str:
     build_time = int(os.path.getctime(generation_dir))
     build_date = datetime.datetime.fromtimestamp(build_time).strftime('%F')
 
-    if expidus_version == "Unknown":
-        description = "ExpidusOS {}, Linux Kernel {}, Built on {}".format(
-            expidus_version, kernel_version, build_date
-        )
-    else:
-        description = "NixOS {}, Linux Kernel {}, Built on {}".format(
-            nixos_version, kernel_version, build_date
-        )
+    description = "{}, Linux Kernel {}, Built on {}".format(
+        system_name, kernel_version, build_date
+    )
 
     return description
 
@@ -138,6 +133,7 @@ def write_entry(profile: Optional[str], generation: int, specialisation: Optiona
                     kernel=kernel,
                     initrd=initrd,
                     kernel_params=kernel_params,
+                    system=describe_system(generation_dir),
                     description=describe_generation(generation_dir)))
         if machine_id is not None:
             f.write("machine-id %s\n" % machine_id)
