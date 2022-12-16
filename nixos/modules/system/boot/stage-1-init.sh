@@ -412,7 +412,7 @@ mountFS() {
     done
 
     [ "$mountPoint" == "/" ] &&
-        [ -f "/mnt-root/etc/NIXOS_LUSTRATE" ] &&
+        [ -f "/mnt-root/etc/EXPIDUS_LUSTRATE" ] &&
         lustrateRoot "/mnt-root"
 
     true
@@ -442,9 +442,9 @@ lustrateRoot () {
     mv -v "$root/old-root.tmp" "$root/old-root"
 
     mkdir -m 0755 -p "$root/etc"
-    touch "$root/etc/NIXOS"
+    touch "$root/etc/EXPIDUS"
 
-    exec 4< "$root/old-root/etc/NIXOS_LUSTRATE"
+    exec 4< "$root/old-root/etc/EXPIDUS_LUSTRATE"
 
     echo
     echo "Restoring selected impurities:"
