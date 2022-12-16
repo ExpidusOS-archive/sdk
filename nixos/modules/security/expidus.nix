@@ -8,7 +8,7 @@ in
     security.expidus = {
       enable = mkOption {
         type = types.bool;
-        default = !pkgs.apparmor-utils.meta.broken;
+        default = true;
         description = "Enable the ExpidusOS System Security profiles";
       };
     };
