@@ -14,6 +14,7 @@
     "misc/documentation.nix"
     "misc/version.nix"
     "misc/assertions.nix"
+    "system/boot/loader/systemd-boot/systemd-boot.nix"
     "system/boot/stage-2.nix"
     "system/boot/stage-1.nix"
     "system/activation/no-clone.nix"
