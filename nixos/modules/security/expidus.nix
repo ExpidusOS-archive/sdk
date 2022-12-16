@@ -39,7 +39,10 @@ in
 
     services = {
       dbus.apparmor = mkForce "enabled";
-      usbguard.enable = mkForce true;
+      usbguard = {
+        enable = mkForce true;
+        implictPolicyTarget = mkDefault "allow";
+      };
     };
   };
 }
