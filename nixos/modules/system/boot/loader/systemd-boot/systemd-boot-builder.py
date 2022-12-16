@@ -90,6 +90,11 @@ def describe_generation(generation_dir: str) -> str:
             expidus_version = f.read()
     except IOError:
         expidus_version = "Unknown"
+    try:
+        with open("%s/nixos-version" % generation_dir) as f:
+            nixos_version = f.read()
+    except IOError:
+        nixos_version = "Unknown"
 
     kernel_dir = os.path.dirname(os.path.realpath("%s/kernel" % generation_dir))
     module_dir = glob.glob("%s/lib/modules/*" % kernel_dir)[0]
@@ -98,9 +103,14 @@ def describe_generation(generation_dir: str) -> str:
     build_time = int(os.path.getctime(generation_dir))
     build_date = datetime.datetime.fromtimestamp(build_time).strftime('%F')
 
-    description = "ExpidusOS {}, Linux Kernel {}, Built on {}".format(
-        expidus_version, kernel_version, build_date
-    )
+    if expidus_version == "Unknown":
+        description = "ExpidusOS {}, Linux Kernel {}, Built on {}".format(
+            expidus_version, kernel_version, build_date
+        )
+    else:
+        description = "NixOS {}, Linux Kernel {}, Built on {}".format(
+            nixos_version, kernel_version, build_date
+        )
 
     return description
 
