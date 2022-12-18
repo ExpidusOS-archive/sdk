@@ -93,7 +93,7 @@ in
         '';
 
         genesis-sway = pkgs.writeShellScriptBin "genesis-sway" ''
-          exec sway "$@" -c ${genesis-sway-cfg}
+          exec ${pkgs.sway}/bin/sway "$@" -c ${genesis-sway-cfg}
         '';
 
         genesis-sway-session = (pkgs.writeTextDir "share/wayland-sessions/genesis-sway.desktop" ''

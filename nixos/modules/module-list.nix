@@ -19,6 +19,7 @@
     "system/boot/stage-1.nix"
     "system/activation/no-clone.nix"
     "system/activation/top-level.nix"
+    "system/etc/etc.nix"
     "tasks/network-interfaces.nix"
     "installer/tools/tools.nix"
     "services/misc/gitit.nix"
@@ -33,7 +34,10 @@
 
   expidusModules = [
     ./programs/expidus-terminal.nix
+    ./security/apparmor/includes.nix
+    ./security/apparmor/profiles.nix
     ./security/expidus.nix
+    ./security/wrappers.nix
     ./services/x11/desktop-managers/genesis.nix
   ];
 
