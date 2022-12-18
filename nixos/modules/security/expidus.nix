@@ -11,10 +11,22 @@ in
         default = true;
         description = "Enable the ExpidusOS System Security profiles";
       };
+      hidepid = mkOption {
+        type = types.numbers.between 0 2;
+        default = 0;
+        description = "Set the hidepid level";
+      };
     };
   };
 
   config = mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = if config.programs.sway.enable then cfg.hidepid == 0 else false;
+        message = "Sway does not work with hidepid being active";
+      }
+    ];
+
     security = {
       apparmor = {
         enable = mkForce true;
@@ -50,7 +62,7 @@ in
       members = [ "polkit" ];
     };
 
-    boot.specialFileSystems."/proc".options = mkForce [ "nosuid" "nodev" "noexec" "hidepid=1" "gid=${toString config.ids.gids.proc}" ];
+    boot.specialFileSystems."/proc".options = mkForce [ "nosuid" "nodev" "noexec" "hidepid=${toString cfg.hidepid}" "gid=${toString config.ids.gids.proc}" ];
     systemd.services.systemd-logind.serviceConfig.SupplementaryGroups = "proc";
 
     services = {
