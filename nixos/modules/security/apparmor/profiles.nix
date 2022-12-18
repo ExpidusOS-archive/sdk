@@ -71,12 +71,15 @@ let
       "pam_binaries".profile = ''
         include <tunables/global>
 
-        ${pkgs.util-linux}/sbin/agetty {
+        ${pkgs.shadow}/bin/login {
           include <abstractions/authentication>
           include <abstractions/base>
+          include <abstractions/consoles>
           include <abstractions/nameservice>
           include <pam/mappings>
           include "${makeAppArmorRulesFromClosure "util-linux" pkgs.util-linux.buildInputs}"
+
+          /dev/tty* rw,
 
           capability chown,
           capability setgid,
