@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   inherit (builtins) attrNames hasAttr isAttrs;
-  inherit (lib) getLib concatMapStringsSep;
+  inherit (lib) getLib concatMapStringsSep isDerivation;
   inherit (config.environment) etc;
 
   etcRule = arg:
@@ -11,6 +11,20 @@ let
     in if isAttrs arg
     then go arg
     else go { path = arg; };
+
+  drvBinRule = arg:
+    let go = { derivation ? null, mode ? "PUxmr" }:
+      "${derivation}/bin/* ${mode},";
+    in if isDerivation arg
+    then go { derivation = arg; }
+    else go arg;
+
+  drvBinRuleProfile = arg:
+    let go = { derivation ? null, mode ? "Px", profile ? "default_user" }:
+      "${derivation}/bin/* ${mode} -> default_user,";
+    in if isDerivation arg
+    then go { derivation = arg; }
+    else go arg;
 
   makeAppArmorRulesFromClosure = name: inputs: pkgs.apparmorRulesFromClosure { inherit name; } inputs;
   makePolicy = name: text: {
@@ -46,13 +60,14 @@ let
           include <abstractions/bash>
           include <abstractions/consoles>
           include <abstractions/nameservice>
+          include "${makeAppArmorRulesFromClosure "default_user" config.environment.systemPackages}"
+          ${concatMapStringsSep "\n" drvBinRule config.environment.systemPackages}
           deny capability sys_ptrace,
           owner /** rkl,
           @{PROC}/** r,
-          /nix/store/*/bin/** Pixmr,
-          /run/current-system/sw/bin/* Pixmr,
           owner @{HOMEDIRS}/ w,
           owner @{HOMEDIRS}/** w,
+          /run/current-system/sw/bin/* Pixmr,
         }
 
         profile confined_user {
@@ -60,62 +75,52 @@ let
           include <abstractions/bash>
           include <abstractions/consoles>
           include <abstractions/nameservice>
+          include "${makeAppArmorRulesFromClosure "confined_user" config.environment.systemPackages}"
+          ${concatMapStringsSep "\n" drvBinRule config.environment.systemPackages}
           deny capability sys_ptrace,
           owner /** rwkl,
           @{PROC}/** r,
-          /nix/store/*/bin/** Pixmr,
           /run/current-system/sw/bin/* Pixmr,
         }
       '';
 
-      "pam_binaries".profile = ''
-        include <tunables/global>
+      "pam_binaries".profile =
+        let
+          commonProfile = pkg: ''
+            include <abstractions/authentication>
+            include <abstractions/base>
+            include <abstractions/nameservice>
+            include <pam/mappings>
+            include "${makeAppArmorRulesFromClosure "su" (pkg.buildInputs ++ (with pkgs; [ libykclient readline81 ]))}"
 
-        ${pkgs.shadow}/bin/login {
-          include <abstractions/authentication>
-          include <abstractions/base>
-          include <abstractions/consoles>
-          include <abstractions/nameservice>
-          include <pam/mappings>
-          include "${makeAppArmorRulesFromClosure "util-linux" pkgs.util-linux.buildInputs}"
+            /dev/tty* rw,
+            /dev/kmsg rw,
 
-          /dev/tty* rw,
+            capability chown,
+            capability setgid,
+            capability setuid,
+            capability audit_write,
+            owner @{HOMEDIRS}/*/.Xauthority rw,
+            owner @{HOMEDIRS}/*/.Xauthority-c w,
+            owner @{HOMEDIRS}/*/.Xauthority-l w,
+            @{HOME}/.xauth* rw,
+            owner @{PROC}/sys/kernel/ngroups_max r,
+            @{PROC}/[0-9]*/loginuid r,
+            @{run}/utmp rwk,
+            /var/run/utmp rwk,
+            /nix/store/*-etc-environment r,
+            ${concatMapStringsSep "\n" etcRule [
+              "shells"
+              "bashrc"
+            ]}
+          '';
+        in ''
+          include <tunables/global>
 
-          capability chown,
-          capability setgid,
-          capability setuid,
-          owner /etc/environment r,
-          owner /etc/shells r,
-          owner /etc/default/locale r,
-          owner @{HOMEDIRS}/*/.Xauthority rw,
-          owner @{HOMEDIRS}/*/.Xauthority-c w,
-          owner @{HOMEDIRS}/*/.Xauthority-l w,
-          @{HOME}/.xauth* rw,
-          owner @{PROC}/sys/kernel/ngroups_max r,
-          owner /var/run/utmp rwk,
-        }
-
-        ${pkgs.shadow.su}/bin/su {
-          include <abstractions/authentication>
-          include <abstractions/base>
-          include <abstractions/nameservice>
-          include <pam/mappings>
-          include "${makeAppArmorRulesFromClosure "su" pkgs.shadow.buildInputs}"
-
-          capability chown,
-          capability setgid,
-          capability setuid,
-          owner /etc/environment r,
-          owner /etc/shells r,
-          owner /etc/default/locale r,
-          owner @{HOMEDIRS}/*/.Xauthority rw,
-          owner @{HOMEDIRS}/*/.Xauthority-c w,
-          owner @{HOMEDIRS}/*/.Xauthority-l w,
-          @{HOME}/.xauth* rw,
-          owner @{PROC}/sys/kernel/ngroups_max r,
-          owner /var/run/utmp rwk,
-        }
-      '';
+          ${pkgs.shadow.su}/bin/su {
+            ${commonProfile pkgs.shadow}
+          }
+        '';
     };
 in
 {
@@ -129,12 +134,23 @@ in
           capability dac_override,
           capability setgid,
           capability setuid,
-          /etc/default/su r,
-          /etc/environment r,
+          /nix/store/*-etc-environment r,
           @{HOMEDIRS}/.xauth* w,
-          /run/current-system/sw/bin/{,b,d,rb}ash Px -> default_user,
-          /run/current-system/sw/bin/{c,k,tc}sh Px -> default_user,
+          ${concatMapStringsSep "\n" drvBinRuleProfile config.environment.systemPackages}
         }
+
+        ${builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: user: ''
+          ^${user.name or name} {
+            include <abstractions/authentication>
+            include <abstractions/nameservice>
+            capability dac_override,
+            capability setgid,
+            capability setuid,
+            /nix/store/*-etc-environment r,
+            @{HOMEDIRS}/.xauth* w,
+            ${concatMapStringsSep "\n" drvBinRuleProfile config.environment.systemPackages}
+          }
+        '') (lib.filterAttrs (name: user: user.isNormalUser) config.users.users)))}
       '';
     };
   };
