@@ -2,15 +2,18 @@
   gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas, expidus-sdk, networkmanager,
   upower, libpulseaudio, ibus, callaudiod, feedbackd, gi-docgen, evolution-data-server }:
 with lib;
+let
+  rev = "070b6c9a99de20a89e63f7d5fcfc88c66f5e9bee";
+in
 stdenv.mkDerivation rec {
   pname = "genesis-shell";
-  version = "0.2.0";
+  version = "0.2.0-${rev}";
 
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "genesis";
-    rev = "0334b07334b8bf7ec004a7a596f5b8a4491ea3bb";
-    sha256 = "MnQnbIZskyklRUJHNyBaJkT3QaHQp5jrobYn3yCsLpU=";
+    inherit rev;
+    sha256 = "sha256-LQlVrzl7GeXoOy83mqL7rf/A2A/ueQRjUyXcam26U/Y=";
     fetchSubmodules = true;
   };
 
