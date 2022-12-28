@@ -161,9 +161,9 @@
         let
           base = sdk-flake.packages.${system};
           releases = release.${system} or {};
-          home-manager = homeManager.packages.${system}.default;
-        in base // releases // {
+          home-manager = if builtins.hasAttr system homeManager.packages then homeManager.packages.${system}.default else null;
+        in base // releases // (lib.optionalAttrs (home-manager != null) {
           inherit home-manager;
-        });
+        }));
     });
 }

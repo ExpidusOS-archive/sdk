@@ -6,13 +6,6 @@ let
     allowUnfreePredicate = _: true;
     allowInsecurePredicate = _: true;
     inHydra = true;
-    permittedInsecurePackages = [
-      "cockroach"
-      "nodejs-12.22.12"
-      "n8n"
-      "solr-8.6.3"
-      "python3.9-flower-1.0.0"
-    ];
   };
 in with lib;
 { nixpkgs ? { outPath = cleanSource ./..; revCount = 130979; shortRev = "gfedcba"; },
@@ -144,12 +137,12 @@ let
     };
 in rec {
   channel = import lib/make-channel.nix { inherit pkgs nixpkgs version versionSuffix; };
-  manualHTML = buildFromConfig ({ ... }: { }) (config: config.system.build.manual.manualHTML);
+  manualHTML = buildFromConfig ({ ... }: { }) (config: config.system.build.expidus-manual.manualHTML);
   manual = manualHTML; # TODO(@oxij): remove eventually
-  manualEpub = (buildFromConfig ({ ... }: { }) (config: config.system.build.manual.manualEpub));
-  manpages = buildFromConfig ({ ... }: { }) (config: config.system.build.manual.manpages);
-  manualGeneratedSources = buildFromConfig ({ ... }: { }) (config: config.system.build.manual.generatedSources);
-  options = (buildFromConfig ({ ... }: { }) (config: config.system.build.manual.optionsJSON)).x86_64-linux;
+  manualEpub = (buildFromConfig ({ ... }: { }) (config: config.system.build.expidus-manual.manualEpub));
+  manpages = buildFromConfig ({ ... }: { }) (config: config.system.build.expidus-manual.manpages);
+  manualGeneratedSources = buildFromConfig ({ ... }: { }) (config: config.system.build.expidus-manual.generatedSources);
+  options = (buildFromConfig ({ ... }: { }) (config: config.system.build.expidus-manual.optionsJSON)).x86_64-linux;
 
   # Build the initial ramdisk so Hydra can keep track of its size over time.
   initialRamdisk = buildFromConfig ({ ... }: { }) (config: config.system.build.initialRamdisk);

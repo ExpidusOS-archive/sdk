@@ -8,10 +8,11 @@
    <contrib>Author</contrib>
   </author>
   <author>
-   <personname><othername>Midstall Software & ExpidusOS contributors</othername></personname>
+   <personname><othername>Midstall Software &amp; ExpidusOS contributors</othername></personname>
    <contrib>Author</contrib>
   </author>
   <copyright><year>2022</year><holder>Tristan Ross, Midstall Software, and ExpidusOS contributors</holder>
   </copyright>
  </info>
+ <xi:include href="./man-configuration.xml" />
 </reference>

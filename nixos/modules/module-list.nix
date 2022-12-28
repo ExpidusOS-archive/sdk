@@ -10,6 +10,7 @@
     disabledModules = [ "${nixos}/modules/${path}" ];
     imports = [ "${sdk}/nixos/modules/${path}" ];
   })) [
+    "misc/documentation.nix"
     "misc/nixpkgs.nix"
     "misc/version.nix"
     "misc/assertions.nix"
@@ -32,7 +33,7 @@
   ];
 
   expidusModules = [
-    ./misc/documentation.nix
+    ./misc/expidus-documentation.nix
     ./programs/expidus-terminal.nix
     ./security/apparmor/includes.nix
     ./security/apparmor/profiles.nix
