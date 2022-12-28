@@ -5,7 +5,7 @@ let
 
   locationsXml = import ./lib-function-locations.nix { inherit pkgs nixpkgs; };
   functionDocs = import ./lib-function-docs.nix { inherit locationsXml pkgs; };
-  version = pkgs.lib.version;
+  version = pkgs.lib.expidus.trivial.version;
 
   epub-xsl = pkgs.writeText "epub.xsl" ''
     <?xml version='1.0'?>
@@ -40,7 +40,7 @@ let
               if hasPrefix (toString ../..) (toString decl)
               then
                 let subpath = removePrefix "/" (removePrefix (toString ../..) (toString decl));
-                in { url = "https://github.com/NixOS/nixpkgs/blob/master/${subpath}"; name = subpath; }
+                in { url = "https://github.com/ExpidusOS/sdk/blob/master/${subpath}"; name = subpath; }
               else decl)
             opt.declarations;
         };

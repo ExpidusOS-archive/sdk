@@ -2,31 +2,17 @@
          xmlns:xlink="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xml:id="sec-functions-library">
- <title>Nixpkgs Library Functions</title>
+ <title>ExpidusOS SDK Library Functions</title>
 
  <para>
-  Nixpkgs provides a standard library at <varname>pkgs.lib</varname>, or through <code>import &lt;nixpkgs/lib&gt;</code>.
+   ExpidusOS SDK provides its own library at <varname>pkgs.lib.expidus</varname>, or through <code>import &lt;nixpkgs/lib&gt;</code> in <varname>expidus</varname>.
  </para>
-
- <xi:include href="./library/asserts.xml" />
-
- <xi:include href="./library/attrsets.xml" />
 
 <!-- These docs are generated via nixdoc. To add another generated
       library function file to this list, the file
       `lib-function-docs.nix` must also be updated. -->
 
- <xi:include href="./library/generated/strings.xml" />
-
+ <xi:include href="./library/generated/flake.xml" />
+ <xi:include href="./library/generated/system.xml" />
  <xi:include href="./library/generated/trivial.xml" />
-
- <xi:include href="./library/generated/lists.xml" />
-
- <xi:include href="./library/generated/debug.xml" />
-
- <xi:include href="./library/generated/options.xml" />
-
- <xi:include href="./library/generated/filesystem.xml" />
-
- <xi:include href="./library/generated/sources.xml" />
 </section>

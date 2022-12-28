@@ -1,5 +1,8 @@
 { lib, expidus }:
 rec {
+  /*
+    An empty packages set for "make"'s packagesFor
+  */
   emptyPackages = { buildInputs = []; nativeBuildInputs = []; propagatedBuildInputs = []; devShell = []; nixosModules = []; };
 
   make = {

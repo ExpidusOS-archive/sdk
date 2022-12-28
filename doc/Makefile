@@ -89,7 +89,7 @@ highlightjs: doc-support/result
 	cp -r doc-support/result/highlightjs/loader.js highlightjs/
 
 
-manual-full.xml: ${MD_TARGETS} .version functions/library/locations.xml functions/library/generated *.xml **/*.xml **/**/*.xml
+manual-full.xml: ${MD_TARGETS} .version functions/library/locations.xml functions/library/generated *.xml **/*.xml
 	xmllint --nonet --xinclude --noxincludenode manual.xml --output manual-full.xml
 
 .version: doc-support/result

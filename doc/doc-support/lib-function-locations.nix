@@ -1,6 +1,6 @@
 { pkgs ? (import ./.. { }), nixpkgs ? { }}:
 let
-  revision = pkgs.lib.trivial.revisionWithDefault (nixpkgs.revision or "master");
+  revision = pkgs.lib.expidus.trivial.revisionWithDefault (nixpkgs.revision or "master");
 
   libDefPos = set:
     builtins.map
@@ -44,7 +44,7 @@ let
     builtins.filter
       (elem: elem.value != null)
       (nixpkgsLib.lists.flatten
-        (locatedlibsets nixpkgsLib));
+        (locatedlibsets nixpkgsLib.expidus));
 
   fnLocationRelative = { name, value }:
     {
@@ -57,7 +57,7 @@ let
     [ "'"      ]
     [ "-prime" ];
 
-  urlPrefix = "https://github.com/NixOS/nixpkgs/blob/${revision}";
+  urlPrefix = "https://github.com/ExpidusOS/sdk/blob/${revision}";
   xmlstrings = (nixpkgsLib.strings.concatMapStrings
       ({ name, value }:
       ''
@@ -66,7 +66,7 @@ let
         Located at
         <link
           xlink:href="${urlPrefix}/${value.file}#L${builtins.toString value.line}">${value.file}:${builtins.toString value.line}</link>
-        in  <literal>&lt;nixpkgs&gt;</literal>.
+        in  <literal>&lt;ExpidusOS SDK&gt;</literal>.
         </para>
         </section>
       '')

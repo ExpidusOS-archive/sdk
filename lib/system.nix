@@ -47,6 +47,9 @@ let
     darwin = defaultDarwin;
   } // args);
 
+  /*
+    Makes a new system support attribute set
+  */
   make = {
     currentSystem ? current,
     supported ? makeSupported {},

@@ -1,5 +1,8 @@
 { lib }:
 let
+  /*
+    Creates a new version
+  */
   makeVersion = self:
     let
       trivial = if self == null then {} else self;

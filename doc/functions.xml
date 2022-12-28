@@ -4,11 +4,7 @@
          xml:id="chap-functions">
  <title>Functions reference</title>
  <para>
-  The nixpkgs repository has several utility functions to manipulate Nix expressions.
+   Utility functions provided by ExpidusOS's SDK.
  </para>
  <xi:include href="functions/library.xml" />
- <xi:include href="functions/generators.section.xml" />
- <xi:include href="functions/debug.section.xml" />
- <xi:include href="functions/prefer-remote-fetch.section.xml" />
- <xi:include href="functions/nix-gitignore.section.xml" />
 </chapter>

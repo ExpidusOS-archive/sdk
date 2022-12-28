@@ -5,7 +5,7 @@
 { pkgs ? import ./.. {}, locationsXml }:
 
 with pkgs; stdenv.mkDerivation {
-  name = "nixpkgs-lib-docs";
+  name = "expidus-lib-docs";
   src = ./../../lib;
 
   buildInputs = [ nixdoc ];
@@ -17,12 +17,8 @@ with pkgs; stdenv.mkDerivation {
     mkdir -p $out
     ln -s ${locationsXml} $out/locations.xml
 
-    docgen strings 'String manipulation functions'
-    docgen trivial 'Miscellaneous functions'
-    docgen lists 'List manipulation functions'
-    docgen debug 'Debugging functions'
-    docgen options 'NixOS / nixpkgs option handling'
-    docgen filesystem 'Filesystem functions'
-    docgen sources 'Source filtering functions'
+    docgen flake 'Flake functions'
+    docgen system 'System functions'
+    docgen trivial 'iscellaneous functions'
   '';
 }
