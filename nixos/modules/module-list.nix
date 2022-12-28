@@ -11,7 +11,6 @@
     imports = [ "${sdk}/nixos/modules/${path}" ];
   })) [
     "misc/nixpkgs.nix"
-    "misc/documentation.nix"
     "misc/version.nix"
     "misc/assertions.nix"
     "system/boot/loader/systemd-boot/systemd-boot.nix"
@@ -33,6 +32,7 @@
   ];
 
   expidusModules = [
+    ./misc/documentation.nix
     ./programs/expidus-terminal.nix
     ./security/apparmor/includes.nix
     ./security/apparmor/profiles.nix

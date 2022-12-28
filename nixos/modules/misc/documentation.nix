@@ -9,7 +9,7 @@ let
       f = import m;
       instance = f (mapAttrs (n: _: abort "evaluating ${n} for `meta` failed") (functionArgs f));
     in
-      cfg.nixos.options.splitBuild
+      cfg.expidus.options.splitBuild
         && builtins.isPath m
         && isFunction f
         && instance ? options
@@ -17,19 +17,19 @@ let
 
   docModules =
     let
-      modules = baseModules ++ cfg.nixos.extraModules;
+      modules = baseModules ++ cfg.expidus.extraModules;
       p = partition canCacheDocs modules;
     in
       {
         lazy = p.right;
-        eager = p.wrong ++ optionals cfg.nixos.includeAllModules modules;
+        eager = p.wrong ++ optionals cfg.expidus.includeAllModules modules;
       };
 
   manual = import ../../doc/manual rec {
     inherit pkgs config;
     version = config.system.expidus.release;
     revision = "release-${version}";
-    extraSources = cfg.nixos.extraModuleSources;
+    extraSources = cfg.expidus.extraModuleSources;
     options =
       let
         scrubbedEval = evalModules {
@@ -83,7 +83,7 @@ let
                   unprefixed = removePrefix channel path;
                   isChanged = path != unprefixed;
                   value = ''"[${name}]${unprefixed}"'';
-                in if isChanged then
+                in if isChanged && channel == "sdk" then
                   value
                 else "") (lib.expidus.channels // { sdk = "${sdkPath}/nixos/modules"; });
               filtered = builtins.filter (value: value != "") (builtins.attrValues paths);
@@ -124,7 +124,7 @@ let
             } >&2
         '';
 
-    inherit (cfg.nixos.options) warningsAreErrors allowDocBook;
+    inherit (cfg.expidus.options) warningsAreErrors allowDocBook;
   };
 
 
@@ -162,97 +162,15 @@ let
         desktopItem
       ];
     };
-
 in
-
 {
-  imports = [
-    "${lib.expidus.channels.nixpkgs}/nixos/modules/misc/man-db.nix"
-    "${lib.expidus.channels.nixpkgs}/nixos/modules/misc/mandoc.nix"
-    "${lib.expidus.channels.nixpkgs}/nixos/modules/misc/assertions.nix"
-    "${lib.expidus.channels.nixpkgs}/nixos/modules/misc/meta.nix"
-    "${lib.expidus.channels.nixpkgs}/nixos/modules/config/system-path.nix"
-    "${lib.expidus.channels.nixpkgs}/nixos/modules/system/etc/etc.nix"
-    (mkRenamedOptionModule [ "programs" "info" "enable" ] [ "documentation" "info" "enable" ])
-    (mkRenamedOptionModule [ "programs" "man"  "enable" ] [ "documentation" "man"  "enable" ])
-    (mkRenamedOptionModule [ "services" "nixosManual" "enable" ] [ "documentation" "nixos" "enable" ])
-  ];
-
   options = {
-
-    documentation = {
-
+    documentation.expidus = {
       enable = mkOption {
         type = types.bool;
         default = true;
         description = lib.mdDoc ''
-          Whether to install documentation of packages from
-          {option}`environment.systemPackages` into the generated system path.
-
-          See "Multiple-output packages" chapter in the nixpkgs manual for more info.
-        '';
-        # which is at ../../../doc/multiple-output.chapter.md
-      };
-
-      man.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = lib.mdDoc ''
-          Whether to install manual pages.
-          This also includes `man` outputs.
-        '';
-      };
-
-      man.generateCaches = mkOption {
-        type = types.bool;
-        default = false;
-        description = mdDoc ''
-          Whether to generate the manual page index caches.
-          This allows searching for a page or
-          keyword using utilities like {manpage}`apropos(1)`
-          and the `-k` option of
-          {manpage}`man(1)`.
-        '';
-      };
-
-      info.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = lib.mdDoc ''
-          Whether to install info pages and the {command}`info` command.
-          This also includes "info" outputs.
-        '';
-      };
-
-      doc.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = lib.mdDoc ''
-          Whether to install documentation distributed in packages' `/share/doc`.
-          Usually plain text and/or HTML.
-          This also includes "doc" outputs.
-        '';
-      };
-
-      dev.enable = mkOption {
-        type = types.bool;
-        default = false;
-        description = mdDoc ''
-          Whether to install documentation targeted at developers.
-          * This includes man pages targeted at developers if {option}`documentation.man.enable` is
-            set (this also includes "devman" outputs).
-          * This includes info pages targeted at developers if {option}`documentation.info.enable`
-            is set (this also includes "devinfo" outputs).
-          * This includes other pages targeted at developers if {option}`documentation.doc.enable`
-            is set (this also includes "devdoc" outputs).
-        '';
-      };
-
-      nixos.enable = mkOption {
-        type = types.bool;
-        default = true;
-        description = lib.mdDoc ''
-          Whether to install NixOS's own documentation.
+          Whether to install ExpidusOS's own documentation.
 
           - This includes man pages like
             {manpage}`configuration.nix(5)` if {option}`documentation.man.enable` is
@@ -262,7 +180,7 @@ in
         '';
       };
 
-      nixos.extraModules = mkOption {
+      extraModules = mkOption {
         type = types.listOf types.raw;
         default = [];
         description = lib.mdDoc ''
@@ -270,7 +188,7 @@ in
         '';
       };
 
-      nixos.options.splitBuild = mkOption {
+      options.splitBuild = mkOption {
         type = types.bool;
         default = true;
         description = lib.mdDoc ''
@@ -280,7 +198,7 @@ in
         '';
       };
 
-      nixos.options.allowDocBook = mkOption {
+      options.allowDocBook = mkOption {
         type = types.bool;
         default = true;
         description = lib.mdDoc ''
@@ -297,7 +215,7 @@ in
         '';
       };
 
-      nixos.options.warningsAreErrors = mkOption {
+      options.warningsAreErrors = mkOption {
         type = types.bool;
         default = true;
         description = lib.mdDoc ''
@@ -306,22 +224,22 @@ in
         '';
       };
 
-      nixos.includeAllModules = mkOption {
+      includeAllModules = mkOption {
         type = types.bool;
         default = false;
         description = lib.mdDoc ''
-          Whether the generated NixOS's documentation should include documentation for all
-          the options from all the NixOS modules included in the current
+          Whether the generated ExpidusOS's documentation should include documentation for all
+          the options from all the ExpidusOS modules included in the current
           `configuration.nix`. Disabling this will make the manual
           generator to ignore options defined outside of `baseModules`.
         '';
       };
 
-      nixos.extraModuleSources = mkOption {
+      extraModuleSources = mkOption {
         type = types.listOf (types.either types.path types.str);
         default = [ ];
         description = lib.mdDoc ''
-          Which extra NixOS module paths the generated NixOS's documentation should strip
+          Which extra ExpidusOS module paths the generated ExpidusOS's documentation should strip
           from options.
         '';
         example = literalExpression ''
@@ -334,52 +252,11 @@ in
 
   };
 
-  config = mkIf cfg.enable (mkMerge [
-    {
-      assertions = [
-        {
-          assertion = !(cfg.man.man-db.enable && cfg.man.mandoc.enable);
-          message = ''
-            man-db and mandoc can't be used as the default man page viewer at the same time!
-          '';
-        }
-      ];
-    }
+  config = (mkIf cfg.expidus.enable {
+    system.build.manual = manual;
 
-    # The actual implementation for this lives in man-db.nix or mandoc.nix,
-    # depending on which backend is active.
-    (mkIf cfg.man.enable {
-      environment.pathsToLink = [ "/share/man" ];
-      environment.extraOutputsToInstall = [ "man" ] ++ optional cfg.dev.enable "devman";
-    })
-
-    (mkIf cfg.info.enable {
-      environment.systemPackages = [ pkgs.texinfoInteractive ];
-      environment.pathsToLink = [ "/share/info" ];
-      environment.extraOutputsToInstall = [ "info" ] ++ optional cfg.dev.enable "devinfo";
-      environment.extraSetup = ''
-        if [ -w $out/share/info ]; then
-          shopt -s nullglob
-          for i in $out/share/info/*.info $out/share/info/*.info.gz; do
-              ${pkgs.buildPackages.texinfo}/bin/install-info $i $out/share/info/dir
-          done
-        fi
-      '';
-    })
-
-    (mkIf cfg.doc.enable {
-      environment.pathsToLink = [ "/share/doc" ];
-      environment.extraOutputsToInstall = [ "doc" ] ++ optional cfg.dev.enable "devdoc";
-    })
-
-    (mkIf cfg.nixos.enable {
-      system.build.manual = manual;
-
-      environment.systemPackages = []
-        ++ optional cfg.man.enable manual.manpages
-        ++ optionals cfg.doc.enable [ manual.manualHTML expidus-help ];
-    })
-
-  ]);
-
+    environment.systemPackages = []
+      ++ optional cfg.man.enable manual.manpages
+      ++ optionals cfg.doc.enable [ manual.manualHTML expidus-help ];
+  });
 }
