@@ -1,14 +1,7 @@
 {
   "nodes": {
     "home-manager": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "utils": [
-          "utils"
-        ]
-      },
+      "flake": false,
       "locked": {
         "lastModified": 1672244468,
         "narHash": "sha256-xaZb8AZqoXRCSqPusCk4ouf+fUNP8UJdafmMTF1Ltlw=",
@@ -41,6 +34,7 @@
       }
     },
     "nixpkgs": {
+      "flake": false,
       "locked": {
         "lastModified": 1671883564,
         "narHash": "sha256-C15oAtyupmLB3coZY7qzEHXjhtUx/+77olVdqVMruAg=",

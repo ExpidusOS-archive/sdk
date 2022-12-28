@@ -2,12 +2,15 @@
   description = "SDK for ExpidusOS";
 
   inputs.utils.url = github:numtide/flake-utils;
-  inputs.nixpkgs.url = github:NixOS/nixpkgs/nixos-22.11;
+
+  inputs.nixpkgs = {
+    url = github:NixOS/nixpkgs/nixos-22.11;
+    flake = false;
+  };
 
   inputs.home-manager = {
     url = github:nix-community/home-manager/release-22.11;
-    inputs.nixpkgs.follows = "nixpkgs";
-    inputs.utils.follows = "utils";
+    flake = false;
   };
 
   inputs.mobile-nixos = {
