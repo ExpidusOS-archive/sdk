@@ -22,7 +22,7 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = if config.programs.sway.enable then cfg.hidepid == 0 else false;
+        assertion = if config.programs.sway.enable then cfg.hidepid == 0 else true;
         message = "Sway does not work with hidepid being active";
       }
     ];
