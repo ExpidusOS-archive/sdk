@@ -1,7 +1,21 @@
 {
   description = "SDK for ExpidusOS";
 
-  outputs = { self }:
+  inputs.utils.url = github:numtide/flake-utils;
+  inputs.nixpkgs.url = github:NixOS/nixpkgs/nixos-22.11;
+
+  inputs.home-manager = {
+    url = github:nix-community/home-manager/release-22.11;
+    inputs.nixpkgs.follows = "nixpkgs";
+    inputs.utils.follows = "utils";
+  };
+
+  inputs.mobile-nixos = {
+    url = github:NixOS/mobile-nixos;
+    flake = false;
+  };
+
+  outputs = { self, utils, home-manager, nixpkgs, mobile-nixos }:
     let
       lib = (import ./lib).extend (final: prev: {
         nixos = import ./nixos/lib { lib = final; };
@@ -14,6 +28,13 @@
           });
 
         expidus = prev.expidus.extend (f: p: {
+          channels = p.channels // {
+            home-manager = home-manager.outPath;
+            nixpkgs = nixpkgs.outPath;
+            mobile-nixos = mobile-nixos.outPath;
+            sdk = self.outPath;
+          };
+
           trivial = p.trivial // (p.trivial.makeVersion {
             revision = self.shortRev or "dirty";
           });
@@ -21,6 +42,12 @@
           flake = import ./lib/flake.nix { inherit lib; expidus = f; };
         });
       });
+
+      homeManager = (import "${lib.expidus.channels.home-manager}/flake.nix").outputs {
+        self = homeManager;
+        nixpkgs = self;
+        inherit utils;
+      };
 
       sdk-flake = lib.expidus.flake.makeOverride { inherit self; name = "expidus-sdk"; };
 
@@ -112,17 +139,31 @@
           forAllSystems = lib.genAttrs systems;
         in forAllSystems (system: release.${system}.${name}));
     in sdk-flake // ({
-      inherit lib;
+      lib = lib.extend (final: prev: {
+        inherit (homeManager.lib) hm homeManagerConfiguration;
+      });
+
       libExpidus = lib.expidus;
       legacyPackages = sdk-flake.metadata.sysconfig.forAllPossible (system: import ./. {
         inherit system;
       });
+
+      darwinModules = {
+        inherit (homeManager.darwinModules) home-manager;
+      };
+
+      nixosModules = {
+        inherit (homeManager.nixosModules) home-manager;
+      };
 
       hydraJobs = sdk-flake.hydraJobs // sdk-hydra;
       packages = sdk-flake.metadata.sysconfig.forAllPossible (system:
         let
           base = sdk-flake.packages.${system};
           releases = release.${system} or {};
-        in base // releases);
+          home-manager = homeManager.packages.${system}.default;
+        in base // releases // {
+          inherit home-manager;
+        });
     });
 }
