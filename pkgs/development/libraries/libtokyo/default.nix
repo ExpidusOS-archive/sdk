@@ -1,6 +1,6 @@
-{ lib, stdenv, fetchFromGitHub, fetchNpmDeps, npmHooks, meson, ninja, pkg-config, vala, gobject-introspection, glib, nodejs, vadi, gtk3, gtk4, libhandy, libadwaita, ntk, expidus-sdk, libical }:
+{ lib, stdenv, fetchFromGitHub, fetchNpmDeps, npmHooks, meson, ninja, pkg-config, vala, gobject-introspection, glib, nodejs, vadi, gtk3, gtk4, libhandy, libadwaita, ntk, expidus-sdk, libical, adwaita-qt }:
 let
-  rev = "87ea309955c28d31b92be2a6be37526e9b44930f";
+  rev = "6b9d76b89db9233cbea7df441d321b76dec6e834";
 
   self = stdenv.mkDerivation {
     pname = "libtokyo";
@@ -24,7 +24,7 @@ let
     doChecks = true;
 
     nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection nodejs expidus-sdk npmHooks.npmConfigHook ];
-    buildInputs = [ vadi gtk3 gtk4 libhandy libadwaita ntk libical ];
+    buildInputs = [ vadi gtk3 gtk4 libhandy libadwaita ntk libical ] ++ (lib.optional !stdenv.isDarwin adwaita-qt);
     propagatedBuildInputs = self.buildInputs;
 
     mesonFlags = [ "-Dntk=enabled" "-Dgtk4=enabled" "-Dgtk3=enabled" "-Dnodejs=enabled" ];
