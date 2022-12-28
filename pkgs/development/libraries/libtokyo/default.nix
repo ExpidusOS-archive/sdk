@@ -24,7 +24,7 @@ let
     doChecks = true;
 
     nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection nodejs expidus-sdk npmHooks.npmConfigHook ];
-    buildInputs = [ vadi gtk3 gtk4 libhandy libadwaita ntk libical ] ++ (lib.optional !stdenv.isDarwin adwaita-qt);
+    buildInputs = [ vadi gtk3 gtk4 libhandy libadwaita ntk libical ] ++ (lib.optional (stdenv.isDarwin == false) adwaita-qt);
     propagatedBuildInputs = self.buildInputs;
 
     mesonFlags = [ "-Dntk=enabled" "-Dgtk4=enabled" "-Dgtk3=enabled" "-Dnodejs=enabled" ];
