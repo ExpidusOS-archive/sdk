@@ -533,8 +533,7 @@ emacsclient --create-frame --tty  # opens a new frame on the current terminal
     <link
       xlink:href="https://www.gnu.org/software/emacs/manual/html_node/nxml-mode/Introduction.html">nXML</link>,
     a major-mode for validating and editing XML documents. When editing DocBook
-    5.0 documents, such as <link linkend="book-expidus-manual">this one</link>,
-    nXML needs to be configured with the relevant schema, which is not
+    5.0 documents, nXML needs to be configured with the relevant schema, which is not
     included.
    </para>
 
