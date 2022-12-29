@@ -32,6 +32,7 @@ let
       # default to the argument. That way this new default could propagate all
       # they way through, but has the last priority behind everything else.
       nixpkgs.system = lib.mkDefault system;
+      nixpkgs.pkgs = pkgs;
 
       # Stash the value of the `system` argument. When using `nesting.children`
       # we want to have the same default value behavior (immediately above)
