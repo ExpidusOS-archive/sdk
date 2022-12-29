@@ -8,8 +8,6 @@ let
     let
       endian = if platform.isLittleEndian then "little" else "big";
     in platform.system + "-" + endian;
-
-  channelPath = "${pkgs.expidus-sdk}/lib/expidus-sdk/latest/${platformString pkgs.hostPlatform}/${platformString pkgs.targetPlatform}/nix/channel";
 in
 {
   imports = [
@@ -27,15 +25,10 @@ in
   programs.xwayland.enable = true;
   hardware.opengl.enable = true;
 
+  system.defaultChannel = "${pkgs.expidus-sdk}/lib/expidus-sdk/latest/${platformString pkgs.hostPlatform}/${platformString pkgs.targetPlatform}/nix/channel";
+
   environment.enableDebugInfo = true;
   environment.systemPackages = with pkgs; [ expidus-sdk xorg.xinit git gdb ];
-
-  nix.nixPath = [
-    "nixpkgs=${channelPath}"
-    "nixos=${channelPath}"
-  ];
-
-  system.defaultChannel = channelPath;
 
   system.activationScripts.nix = stringAfter [ "etc" "users" ] ''
     install -m 0755 -d /nix/var/nix/{gcroots,profiles}/per-user
