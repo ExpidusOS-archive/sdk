@@ -92,6 +92,38 @@
         };
       };
 
+      manuals = lib.expidus.system.forAll (system:
+        let
+          pkgs = import ./pkgs/top-level/default.nix {
+            system = lib.expidus.system.current;
+            crossSystem = { inherit system; };
+          };
+
+          nixosSystem = if pkgs.targetPlatform.isLinux then
+            (import ./nixos/lib/eval-config.nix {
+              inherit system pkgs;
+              modules = [];
+            })
+          else null;
+
+          getManual = name: kind: nixosSystem.config.system.build.${name}.${kind};
+
+          getManualSet = name:
+            let
+              getManual' = getManual name;
+            in {
+              "${name}-manual" = getManual' "manualHTML";
+              "${name}-manual-html" = getManual' "manualHTML";
+              "${name}-manual-epub" = getManual' "manualEpub";
+              "${name}-manpages" = getManual' "manpages";
+            };
+        in {
+          pkgs-manual = import ./doc {
+            inherit pkgs;
+            nixpkgs = self;
+          };
+        } // lib.optionalAttrs (nixosSystem != null) (getManualSet "nixos" // getManualSet "expidus"));
+
       release-base = lib.expidus.system.forAll (system:
         let
           pkgs = import ./pkgs/top-level/default.nix {
@@ -129,7 +161,8 @@
         let
           unique = release-unique.${system} or {};
           base = release-base.${system} or {};
-        in base // unique);
+          manualSets = manuals.${system} or {};
+        in base // unique // manualSets);
 
       forReleaseJobs = lib.genAttrs (lib.lists.unique (lib.lists.flatten (builtins.attrValues (builtins.mapAttrs (name: value: builtins.attrNames value) release))));
 
@@ -164,8 +197,9 @@
         let
           base = sdk-flake.packages.${system};
           releases = release.${system} or {};
+          manualSets = manuals.${system} or {};
           home-manager = if builtins.hasAttr system homeManager.packages then homeManager.packages.${system}.default else null;
-        in base // releases // (lib.optionalAttrs (home-manager != null) {
+        in base // releases // manualSets // (lib.optionalAttrs (home-manager != null) {
           inherit home-manager;
         }));
     });
