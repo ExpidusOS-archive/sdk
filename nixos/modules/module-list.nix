@@ -40,6 +40,7 @@
     ./security/expidus.nix
     ./security/wrappers.nix
     ./services/x11/desktop-managers/genesis.nix
+    ./system/expidus.nix
   ];
 
   by-channel = {

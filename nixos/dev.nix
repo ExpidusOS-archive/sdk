@@ -19,6 +19,14 @@ in
   virtualisation = {
     memorySize = 2048;
     cores = 2;
+    qemu.options = [
+      "--enable-kvm"
+      "-m 8G"
+      "-device intel-hda"
+      "-usb"
+      "-device virtio-vga-gl"
+      "-display gtk,gl=on"
+    ];
   };
 
   networking.hostName = "expidus-devvm";
@@ -35,12 +43,12 @@ in
 
     # Subscribe the root user to the NixOS channel by default.
     if [ ! -e "/root/.nix-channels" ]; then
-      echo "file://${channelPath} nixos" > "/root/.nix-channels"
+      echo "file://${config.system.defaultChannel} nixos" > "/root/.nix-channels"
     fi
 
     # Add the channel to
     if [ ! -e "/home/expidus-devel/.nix-channels" ]; then
-      echo "file://${channelPath} nixos" > "/root/.nix-channels"
+      echo "file://${config.system.defaultChannel} nixos" > "/root/.nix-channels"
     fi
   '';
 
