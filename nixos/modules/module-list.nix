@@ -6,7 +6,7 @@
 }: rec {
   nixpkgsModules = import "${nixpkgs}/nixos/modules/module-list.nix";
 
-  replacesModules = builtins.map (path: ({ config, lib, pkgs, ... }: {
+  replacesModules = builtins.map (path: ({
     disabledModules = [ "${nixos}/modules/${path}" ];
     imports = [ "${sdk}/nixos/modules/${path}" ];
   })) [
