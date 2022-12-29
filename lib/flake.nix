@@ -60,23 +60,23 @@ rec {
 
           nixosSystem = if builtins.hasAttr "nixosSystem" lib then lib.nixosSystem
           else import ../nixos/lib/eval-config.nix;
+
+          realPkgs = base-pkgs.appendOverlays ([
+            packageOverlay
+          ]);
         in nixosSystem {
           inherit system;
-
+          pkgs = realPkgs;
           lib = lib.extend (self: prev: {
             inherit expidus;
           });
-
-          pkgs = base-pkgs.appendOverlays ([
-            packageOverlay
-          ]);
 
           modules = [
             ../nixos/dev.nix
             {
               environment.systemPackages = [ pkg ];
               virtualisation.sharedDirectories.source-code = {
-                source = if builtins.isFunction self then self pkgs else self;
+                source = if builtins.isFunction self then self realPkgs else self;
                 target = "/home/expidus-devel/source";
                 options = [ "uname=developer" ];
               };
