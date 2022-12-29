@@ -108,9 +108,9 @@
 
           getManual = name: kind: nixosSystem.config.system.build.${name}.${kind};
 
-          getManualSet = name:
+          getManualSet = name: attr:
             let
-              getManual' = getManual name;
+              getManual' = getManual attr;
             in {
               "${name}-manual" = getManual' "manualHTML";
               "${name}-manual-html" = getManual' "manualHTML";
@@ -122,7 +122,7 @@
             inherit pkgs;
             nixpkgs = self;
           };
-        } // lib.optionalAttrs (nixosSystem != null) (getManualSet "nixos" // getManualSet "expidus"));
+        } // lib.optionalAttrs (nixosSystem != null) (getManualSet "nixos" "manual" // getManualSet "expidus" "expidus-manual"));
 
       release-base = lib.expidus.system.forAll (system:
         let
