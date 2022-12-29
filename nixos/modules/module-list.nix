@@ -4,33 +4,38 @@
   sdk ? (import ../../lib/channels/sdk.nix),
   nixos ? "${nixpkgs}/nixos",
 }: rec {
-  nixpkgsModules = import "${nixpkgs}/nixos/modules/module-list.nix";
+  replaces = [
+    "misc/documentation.nix"
+    "misc/nixpkgs.nix"
+    "misc/version.nix"
+    "misc/assertions.nix"
+    "system/boot/loader/systemd-boot/systemd-boot.nix"
+    "system/boot/stage-2.nix"
+    "system/boot/stage-1.nix"
+    "system/activation/no-clone.nix"
+    "system/activation/top-level.nix"
+    "system/etc/etc.nix"
+    "tasks/network-interfaces.nix"
+    "installer/tools/tools.nix"
+    "services/misc/gitit.nix"
+    "services/misc/nix-daemon.nix"
+    "services/editors/emacs.nix"
+    "services/ttys/getty.nix"
+  ];
+
+  nixpkgsModules =
+    let
+      list = import "${nixpkgs}/nixos/modules/module-list.nix";
+      lib = import "${sdk}/lib/overlay.nix" {
+        inherit nixpkgs home-manager sdk;
+      };
+    in lib.lists.remove (builtins.map (path: "${nixos}/modules/${path}") replaces) list;
 
   replacesModules = [
-    ({ ... }:
-      let
-        list = [
-          "misc/documentation.nix"
-          "misc/nixpkgs.nix"
-          "misc/version.nix"
-          "misc/assertions.nix"
-          "system/boot/loader/systemd-boot/systemd-boot.nix"
-          "system/boot/stage-2.nix"
-          "system/boot/stage-1.nix"
-          "system/activation/no-clone.nix"
-          "system/activation/top-level.nix"
-          "system/etc/etc.nix"
-          "tasks/network-interfaces.nix"
-          "installer/tools/tools.nix"
-          "services/misc/gitit.nix"
-          "services/misc/nix-daemon.nix"
-          "services/editors/emacs.nix"
-          "services/ttys/getty.nix"
-        ];
-      in {
-        imports = builtins.map (path: "${sdk}/nixos/modules/${path}") list;
-        disabledModules = builtins.map (path: "${nixos}/modules/${path}") list;
-      })
+    ({ ... }: {
+      imports = builtins.map (path: "${sdk}/nixos/modules/${path}") replaces;
+      disabledModules = builtins.map (path: "${nixos}/modules/${path}") replaces;
+    })
   ];
 
   extendModules = [
