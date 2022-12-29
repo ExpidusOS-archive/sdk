@@ -77,7 +77,7 @@ in {
     defaultChannel = mkOption {
       internal = true;
       type = types.str;
-      default = lib.expidus.channels.sdk;
+      default = "https://github.com/ExpidusOS/sdk/archive/master.tar.gz";
       description = "Default NixOS channel to which the root user is subscribed.";
     };
 
