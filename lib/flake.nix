@@ -76,7 +76,7 @@ rec {
             {
               environment.systemPackages = [ pkg ];
               virtualisation.sharedDirectories.source-code = {
-                source = self.outPath;
+                source = if builtins.isFunction self then self pkgs else self;
                 target = "/home/expidus-devel/source";
                 options = [ "uname=developer" ];
               };
