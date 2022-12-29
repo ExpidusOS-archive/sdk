@@ -1,7 +1,7 @@
 evalConfigArgs@
 {
-  system ? builtins.currentSystem,
-  pkgs ? (import ../../. { system = builtins.currentSystem; crossSystem = { inherit system; }; }),
+  system ? lib.expidus.system.current,
+  pkgs ? (import ../../. { system = lib.expidus.system.current; crossSystem = { inherit system; }; }),
   baseModules ? (import ../modules/module-list.nix {
       inherit (lib.expidus.channels) nixpkgs home-manager sdk;
     }).allModules,
