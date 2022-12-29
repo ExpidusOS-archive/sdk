@@ -7,7 +7,7 @@
   nixpkgsModules = import "${nixpkgs}/nixos/modules/module-list.nix";
 
   replacesModules = builtins.map (path: ({ config, lib, pkgs, ... }: {
-    disabledModules = [ "${nixos}/modules/${path}" ];
+    disabledModules = builtins.trace "Replace ${nixos}/modules/${path} with ${sdk}/nixos/modules/${path}" [ "${nixos}/modules/${path}" ];
     imports = [ "${sdk}/nixos/modules/${path}" ];
   })) [
     "misc/documentation.nix"
