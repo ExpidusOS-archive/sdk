@@ -6,26 +6,31 @@
 }: rec {
   nixpkgsModules = import "${nixpkgs}/nixos/modules/module-list.nix";
 
-  replacesModules = builtins.map (path: ({ config, lib, pkgs, ... }: {
-    disabledModules = builtins.trace "Replace ${nixos}/modules/${path} with ${sdk}/nixos/modules/${path}" [ "${nixos}/modules/${path}" ];
-    imports = [ "${sdk}/nixos/modules/${path}" ];
-  })) [
-    "misc/documentation.nix"
-    "misc/nixpkgs.nix"
-    "misc/version.nix"
-    "misc/assertions.nix"
-    "system/boot/loader/systemd-boot/systemd-boot.nix"
-    "system/boot/stage-2.nix"
-    "system/boot/stage-1.nix"
-    "system/activation/no-clone.nix"
-    "system/activation/top-level.nix"
-    "system/etc/etc.nix"
-    "tasks/network-interfaces.nix"
-    "installer/tools/tools.nix"
-    "services/misc/gitit.nix"
-    "services/misc/nix-daemon.nix"
-    "services/editors/emacs.nix"
-    "services/ttys/getty.nix"
+  replacesModules = [
+    ({ ... }:
+      let
+        list = [
+          "misc/documentation.nix"
+          "misc/nixpkgs.nix"
+          "misc/version.nix"
+          "misc/assertions.nix"
+          "system/boot/loader/systemd-boot/systemd-boot.nix"
+          "system/boot/stage-2.nix"
+          "system/boot/stage-1.nix"
+          "system/activation/no-clone.nix"
+          "system/activation/top-level.nix"
+          "system/etc/etc.nix"
+          "tasks/network-interfaces.nix"
+          "installer/tools/tools.nix"
+          "services/misc/gitit.nix"
+          "services/misc/nix-daemon.nix"
+          "services/editors/emacs.nix"
+          "services/ttys/getty.nix"
+        ];
+      in {
+        imports = builtins.map (path: "${sdk}/nixos/modules/${path}") list;
+        disabledModules = builtins.map (path: "${nixos}/modules/${path}") list;
+      })
   ];
 
   extendModules = [
