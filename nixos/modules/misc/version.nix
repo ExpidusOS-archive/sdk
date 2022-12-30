@@ -3,6 +3,8 @@ with lib;
 let
   cfg = config.system.expidus;
   opt = options.system.expidus;
+
+  warnOption = name: lib.warn "system.nixos.${name} is not recommended, please use system.expidus.${name}";
 in {
   disabledModules = [
     "${lib.expidus.channels.nixpkgs}/nixos/modules/misc/label.nix"
@@ -10,19 +12,50 @@ in {
 
   imports = [
     ./label.nix
-    (mkRenamedOptionModule [ "system" "nixos" "version" ] [ "system" "expidus" "version" ])
-    (mkRenamedOptionModule [ "system" "nixos" "release" ] [ "system" "expidus" "release" ])
-    (mkRenamedOptionModule [ "system" "nixos" "versionSuffix" ] [ "system" "expidus" "versionSuffix" ])
-    (mkRenamedOptionModule [ "system" "nixos" "revision" ] [ "system" "expidus" "revision" ])
-    (mkRenamedOptionModule [ "system" "nixos" "codeName" ] [ "system" "expidus" "codeName" ])
   ];
 
   options.system = {
+    nixos.version = mkOption {
+      internal = true;
+      readOnly = true;
+      type = types.str;
+      description = lib.mdDoc "The full NixOS version (e.g. `16.03.1160.f2d4ee1`).";
+      default = warnOption "version" (trivial.release + trivial.versionSuffix);
+    };
+
+    nixos.release = mkOption {
+      readOnly = true;
+      type = types.str;
+      default = warnOption "release" trivial.release;
+      description = lib.mdDoc "The NixOS release (e.g. `16.03`).";
+    };
+
+    nixos.versionSuffix = mkOption {
+      internal = true;
+      type = types.str;
+      default = warnOption "versionSuffix" trivial.versionSuffix;
+      description = lib.mdDoc "The NixOS version suffix (e.g. `1160.f2d4ee1`).";
+    };
+
+    nixos.revision = mkOption {
+      internal = true;
+      type = types.nullOr types.str;
+      default = warnOption "revision" (trivial.revisionWithDefault null);
+      description = lib.mdDoc "The Git revision from which this NixOS configuration was built.";
+    };
+
+    nixos.codeName = mkOption {
+      readOnly = true;
+      type = types.str;
+      default = warnOption "codeName" trivial.codeName;
+      description = lib.mdDoc "The NixOS release code name (e.g. `Emu`).";
+    };
+
     expidus.version = mkOption {
       internal = true;
       type = types.str;
       default = expidus.trivial.version;
-      description = "The full ExpidusOS version (e.g. <literal>16.03.1160.f2d4ee1</literal>).";
+      description = "The full ExpidusOS version (e.g. <literal>0.2.0.f2d4ee1</literal>).";
     };
 
     expidus.release = mkOption {
@@ -89,7 +122,7 @@ in {
   };
 
   config = {
-    system.stateVersion = lib.version;
+    system.stateVersion = config.system.nixos.version;
 
     environment.etc = {
       "lsb-release".source = "${pkgs.expidus-sdk.sys}/etc/lsb-release";

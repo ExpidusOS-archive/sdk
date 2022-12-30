@@ -12,6 +12,16 @@ in {
 
     boot.plymouth.enable = mkDefault true;
 
+    services.hercules-ci-agent.settings.labels.expidus =
+      let
+        mkIfNotNull = x: mkIf (x != null) x;
+      in {
+        configurationRevision = mkIfNotNull config.system.configurationRevision;
+        inherit (config.system.expidus) release codeName tags;
+        label = mkIfNotNull config.system.expidus.label;
+        systemName = mkIfNotNull config.system.name;
+      };
+
     services.upower = {
       enable = mkDefault true;
       criticalPowerAction = mkDefault "PowerOff";
