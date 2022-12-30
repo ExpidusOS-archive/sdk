@@ -5,7 +5,11 @@ let
   opts = options.expidus;
 in {
   config = {
-    boot.binfmt.emulatedSystems = lib.lists.subtractLists lib.platforms.cygwin (lib.filter (sys: sys != pkgs.system) lib.expidus.system.supported);
+    boot.binfmt.emulatedSystems = lib.lists.subtractLists lib.platforms.cygwin (lib.filter (sys: sys != pkgs.system) (lib.expidus.system.supported ++ [
+      "i686-windows"
+      "x86_64-windows"
+    ]));
+
     boot.plymouth.enable = mkDefault true;
 
     services.upower = {
