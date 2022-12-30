@@ -1,4 +1,4 @@
-{ config, lib, options, ... }:
+{ config, lib, options, pkgs, ... }:
 with lib;
 let
   cfg = config.expidus;
