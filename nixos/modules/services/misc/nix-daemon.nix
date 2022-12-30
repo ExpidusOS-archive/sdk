@@ -805,6 +805,7 @@ in
       {
         trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" "expidus.cachix.org-1:FqN7MESRYSme6SlwHl+WqLMdoBicJosn+gVTOvBRQWI=" ];
         substituters = mkAfter [ "https://cache.nixos.org/" "https://expidus.cachix.org" ];
+        trusted-substituters = mkAfter [ "https://cache.nixos.org/" "https://expidus.cachix.org" ];
 
         system-features = mkDefault (
           [ "nixos-test" "benchmark" "big-parallel" "kvm" ] ++
