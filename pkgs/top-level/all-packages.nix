@@ -8,6 +8,8 @@ rec {
   stdenvExpidus = pkgs.callPackage ../stdenv/expidus/default.nix {};
   mkShell = pkgs.callPackage ../build-support/mkshell/default.nix {};
 
+  darling = pkgs.callPackage ../applications/emulators/darling/default.nix {};
+
   firefoxPackages = pkgs.callPackage ../applications/networking/browsers/firefox/default.nix { inherit (super) firefoxPackages; };
 
   firefox-unwrapped = firefoxPackages.firefox;
