@@ -22,6 +22,11 @@ in {
         systemName = mkIfNotNull config.system.name;
       };
 
+    qt5 = {
+      style = mkDefault "adwaita-dark";
+      platformTheme = mkDefault "gtk";
+    };
+
     services.upower = {
       enable = mkDefault true;
       criticalPowerAction = mkDefault "PowerOff";
