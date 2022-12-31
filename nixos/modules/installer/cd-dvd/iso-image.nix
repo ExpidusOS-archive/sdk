@@ -680,6 +680,8 @@ in
       }
     ];
 
+    expidus.fs.enable = false;
+
     boot.loader.grub.version = 2;
 
     # Don't build the GRUB menu builder script, since we don't need it

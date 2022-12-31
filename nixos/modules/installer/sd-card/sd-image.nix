@@ -168,6 +168,8 @@ in
       };
     };
 
+    expidus.fs.enable = false;
+
     sdImage.storePaths = [ config.system.build.toplevel ];
 
     system.build.sdImage = pkgs.callPackage ({ stdenv, dosfstools, e2fsprogs,

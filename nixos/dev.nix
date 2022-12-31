@@ -16,6 +16,8 @@ in
     (nixpkgs + "/nixos/modules/profiles/qemu-guest.nix")
   ];
 
+  expidus.fs.enable = false;
+
   virtualisation = {
     memorySize = 2048;
     cores = 2;
