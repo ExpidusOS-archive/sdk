@@ -52,6 +52,7 @@
     ./security/expidus.nix
     ./security/wrappers.nix
     ./services/x11/desktop-managers/genesis.nix
+    ./system/boot/loader/efi.nix
     ./system/expidus.nix
   ];
 
