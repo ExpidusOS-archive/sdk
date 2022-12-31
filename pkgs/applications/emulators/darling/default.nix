@@ -1,4 +1,6 @@
-{ lib, stdenv, fetchFromGitHub, cmake, xz, bison, flex }:
+{ lib, stdenv, fetchFromGitHub, pkg-config, cmake, xz, bison, flex,
+  libcap, ffmpeg, libpulseaudio, libX11, fuse, freetype, libtiff,
+  giflib, fontconfig, expat }:
 stdenv.mkDerivation rec {
   pname = "darling";
   version = "0.1.20220704";
@@ -11,13 +13,13 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  nativeBuildInputs = [ cmake xz bison flex ];
-  buildInputs = [];
+  nativeBuildInputs = [ pkg-config cmake xz bison flex libcap ];
+  buildInputs = [ ffmpeg libpulseaudio libX11 fuse freetype libtiff giflib fontconfig expat ];
 
   meta = with lib; {
     homepage = "https://www.darlinghq.org/";
     description = "Darwin/macOS emulation layer for Linux";
-    platforms = platforms.unix;
+    platforms = platforms.linux;
     license = licenses.gpl3Only;
   };
 }

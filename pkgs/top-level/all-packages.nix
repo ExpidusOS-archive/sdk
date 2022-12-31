@@ -5,6 +5,10 @@ let
 in
 with pkgs;
 rec {
+  flatpakBuildSupport = pkgs.callPackage ../build-support/flatpak/default.nix {
+    flatpakDir = "/var/lib/flatpak";
+  };
+
   stdenvExpidus = pkgs.callPackage ../stdenv/expidus/default.nix {};
   mkShell = pkgs.callPackage ../build-support/mkshell/default.nix {};
 

@@ -47,6 +47,7 @@
   expidusModules = [
     ./misc/expidus-documentation.nix
     ./programs/expidus-terminal.nix
+    ./programs/flatpak/default.nix
     ./security/apparmor/includes.nix
     ./security/apparmor/profiles.nix
     ./security/expidus.nix

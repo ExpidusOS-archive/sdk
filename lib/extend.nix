@@ -15,4 +15,5 @@ in makeExtendible "expidus" ({ call, self, expidus }: rec {
   trivial = import ./trivial.nix { inherit lib; };
   system = import ./system.nix { inherit lib expidus; };
   flake = import ./flake.nix { inherit lib expidus; };
+  types = import ./types.nix { inherit lib expidus; };
 })
