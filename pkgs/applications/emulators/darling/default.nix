@@ -1,7 +1,7 @@
-{ lib, stdenv, fetchFromGitHub, pkg-config, cmake, xz, bison, flex,
-  libcap, ffmpeg, libpulseaudio, libX11, fuse, freetype, libtiff,
-  giflib, fontconfig, expat }:
-stdenv.mkDerivation rec {
+{ lib, clangStdenv, fetchFromGitHub, pkg-config, cmake, xz, bison, flex,
+  libcap, ffmpeg, libpulseaudio, libX11, fuse, freetype, libtiff, libbsd,
+  giflib, fontconfig, expat, xorg, libGLU, cairo, dbus, pcre2, openssl }:
+clangStdenv.mkDerivation rec {
   pname = "darling";
   version = "0.1.20220704";
 
@@ -13,8 +13,11 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  nativeBuildInputs = [ pkg-config cmake xz bison flex libcap ];
-  buildInputs = [ ffmpeg libpulseaudio libX11 fuse freetype libtiff giflib fontconfig expat ];
+  nativeBuildInputs = [ pkg-config cmake xz bison flex libcap openssl ];
+  buildInputs = [ ffmpeg libpulseaudio libX11 fuse freetype
+    libtiff giflib fontconfig expat xorg.libXrandr xorg.libXcursor
+    xorg.libXext xorg.libxkbfile xorg.libXdmcp libGLU cairo
+    dbus pcre2 libbsd ];
 
   meta = with lib; {
     homepage = "https://www.darlinghq.org/";
