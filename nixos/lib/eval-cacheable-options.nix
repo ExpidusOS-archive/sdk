@@ -3,6 +3,8 @@
 , nixosPath
 , nixpkgsPath
 , homeManagerPath
+, mobileNixosPath
+, diskoPath
 , sdkPath
 , modulesPath
 , modules
@@ -14,6 +16,8 @@ let
     nixpkgs = nixpkgsPath;
     home-manager = homeManagerPath;
     sdk = modulesPath;
+    mobile-nixos = mobileNixosPath;
+    disko = diskoPath;
   };
   channelNames = builtins.attrNames channels;
 

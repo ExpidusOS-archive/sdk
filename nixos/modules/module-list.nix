@@ -2,6 +2,7 @@
   nixpkgs ? (import ../../lib/channels/nixpkgs.nix),
   home-manager ? (import ../../lib/channels/home-manager.nix),
   sdk ? (import ../../lib/channels/sdk.nix),
+  disko ? (import ../../lib/channels/disko.nix),
   nixos ? "${nixpkgs}/nixos",
 }: rec {
   replaces = [
@@ -39,7 +40,8 @@
   ];
 
   extendModules = [
-    ("${home-manager}/nixos")
+    "${home-manager}/nixos"
+    "${disko}/module.nix"
   ];
 
   expidusModules = [

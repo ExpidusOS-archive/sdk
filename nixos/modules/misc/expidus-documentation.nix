@@ -73,6 +73,8 @@ let
           nixosPath = filter "${toString lib.expidus.channels.nixpkgs}/nixos";
           nixpkgsPath = filter "${toString lib.expidus.channels.nixpkgs}";
           homeManagerPath = filter "${toString lib.expidus.channels.home-manager}";
+          mobileNixosPath = filter "${toString lib.expidus.channels.mobile-nixos}";
+          diskoPath = filter "${toString lib.expidus.channels.disko}";
           sdkPath = filter "${sdkPath}";
           modulesPath = filter "${toString sdkPath}/nixos/modules";
           modules = lib.flatten (map (p:
@@ -94,6 +96,8 @@ let
           export EXPIDUS_SDK_CHANNEL_nixpkgs_PATH=$nixpkgsPath
           export EXPIDUS_SDK_CHANNEL_sdk_PATH=$sdkPath
           export EXPIDUS_SDK_CHANNEL_home_manager_PATH=$homeManagerPath
+          export EXPIDUS_SDK_CHANNEL_mobile_nixos_PATH=$mobileNixosPath
+          export EXPIDUS_SDK_CHANNEL_disko_PATH=$diskoPath
           ${pkgs.buildPackages.nix}/bin/nix-instantiate \
             --show-trace \
             --eval --json --strict \
@@ -102,6 +106,8 @@ let
             --argstr nixosPath "$nixosPath" \
             --argstr nixpkgsPath "$nixpkgsPath" \
             --argstr homeManagerPath "$homeManagerPath" \
+            --argstr mobileNixosPath "$mobileNixosPath" \
+            --argstr diskoPath "$diskoPath" \
             --argstr modulesPath "$modulesPath" \
             --argstr sdkPath "$sdkPath" \
             --arg modules "[ $modules ]" \

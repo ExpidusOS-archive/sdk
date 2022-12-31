@@ -3,6 +3,11 @@
 
   inputs.utils.url = github:numtide/flake-utils;
 
+  inputs.disko = {
+    url = github:nix-community/disko;
+    flake = false;
+  };
+
   inputs.nixpkgs = {
     url = github:NixOS/nixpkgs/nixos-22.11;
     flake = false;
@@ -18,7 +23,7 @@
     flake = false;
   };
 
-  outputs = { self, utils, home-manager, nixpkgs, mobile-nixos }:
+  outputs = { self, utils, home-manager, nixpkgs, mobile-nixos, disko }:
     let
       lib = (import ./lib).extend (final: prev: {
         nixos = import ./nixos/lib { lib = final; };
@@ -35,6 +40,7 @@
             home-manager = home-manager.outPath;
             nixpkgs = nixpkgs.outPath;
             mobile-nixos = mobile-nixos.outPath;
+            disko = disko.outPath;
             sdk = self.outPath;
           };
 
