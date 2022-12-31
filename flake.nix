@@ -58,6 +58,11 @@
         inherit utils;
       };
 
+      diskoFlake = (import "${lib.expidus.channels.disko}/flake.nix").outputs {
+        self = diskoFlake;
+        nixpkgs = self;
+      };
+
       sdk-flake = lib.expidus.flake.makeOverride { inherit self; name = "expidus-sdk"; };
 
       release-lib = import "${lib.expidus.channels.nixpkgs}/pkgs/top-level/release-lib.nix" {
@@ -196,6 +201,7 @@
 
       nixosModules = {
         inherit (homeManager.nixosModules) home-manager;
+        inherit (diskoFlake.nixosModules) disko;
       };
 
       hydraJobs = sdk-flake.hydraJobs // sdk-hydra;
