@@ -6,8 +6,7 @@ rec {
     let
       c = import ../../nixos/lib/eval-config.nix {
         inherit (stdenv.hostPlatform) system;
-        pkgs = pkgs;
-        inherit lib;
+        inherit lib pkgs;
         modules = [({ lib, ... }: {
           config.nixpkgs.pkgs = lib.mkDefault pkgs;
         })] ++ (if builtins.isList configuration then

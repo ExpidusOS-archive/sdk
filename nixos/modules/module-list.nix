@@ -1,8 +1,9 @@
 {
-  nixpkgs ? (import ../../lib/channels/nixpkgs.nix),
-  home-manager ? (import ../../lib/channels/home-manager.nix),
-  sdk ? (import ../../lib/channels/sdk.nix),
-  disko ? (import ../../lib/channels/disko.nix),
+  nixpkgs ? import ../../lib/channels/nixpkgs.nix,
+  home-manager ? import ../../lib/channels/home-manager.nix,
+  sdk ? import ../../lib/channels/sdk.nix,
+  disko ? import ../../lib/channels/disko.nix,
+  mobile-nixos ? import ../../lib/channels/mobile-nixos.nix,
   nixos ? "${nixpkgs}/nixos",
 }: rec {
   replaces = [

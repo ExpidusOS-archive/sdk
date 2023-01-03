@@ -35,7 +35,7 @@ in
       nixos-install that you would otherwise only find on a NixOS system, such
       as an installer image.
 
-      This way, you can install NixOS using a machine that only has Nix.
+      This way, you can install ExpidusOS using a machine that only has Nix.
     '';
     license = lib.licenses.mit;
     homepage = "https://expidusos.com";

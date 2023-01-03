@@ -3,7 +3,7 @@ evalConfigArgs@
   system ? lib.expidus.system.current,
   pkgs ? (import ../../. { system = lib.expidus.system.current; crossSystem = { inherit system; }; }),
   baseModules ? (import ../modules/module-list.nix {
-      inherit (lib.expidus.channels) nixpkgs home-manager sdk;
+      inherit (lib.expidus.channels) nixpkgs home-manager sdk disko mobile-nixos;
     }).allModules,
   extraArgs ? {},
   specialArgs ? {},
