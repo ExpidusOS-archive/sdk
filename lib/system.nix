@@ -9,7 +9,7 @@ let
 
   current = if currentEnv == null then (if currentBultin == null then "x86_64-linux" else currentBultin) else currentEnv;
 
-  defaultCygwin = lib.platforms.cygwin;
+  defaultCygwin = [];
   defaultDarwin = builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ];
   defaultLinux = lib.lists.subtractLists [
     "s390x-linux"
