@@ -1,6 +1,6 @@
 { lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo,
   gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas, expidus-sdk, networkmanager,
-  upower, libpulseaudio, ibus, callaudiod, feedbackd, gi-docgen, evolution-data-server }:
+  upower, libpulseaudio, ibus, callaudiod, feedbackd, gi-docgen, evolution-data-server, git }:
 with lib;
 let
   rev = "070b6c9a99de20a89e63f7d5fcfc88c66f5e9bee";
@@ -15,11 +15,12 @@ stdenv.mkDerivation rec {
     inherit rev;
     sha256 = "sha256-LQlVrzl7GeXoOy83mqL7rf/A2A/ueQRjUyXcam26U/Y=";
     fetchSubmodules = true;
+    leaveDotGit = true;
   };
 
   outputs = [ "out" "dev" "devdoc" ];
 
-  nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection wrapGAppsHook expidus-sdk ]
+  nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection wrapGAppsHook expidus-sdk git ]
     ++ optionals stdenv.isLinux [ gi-docgen ];
   buildInputs = [ vadi libdevident libtokyo libpeas dbus gsettings-desktop-schemas ]
     ++ optionals stdenv.isLinux [ gtk-layer-shell networkmanager upower libpulseaudio ibus callaudiod feedbackd evolution-data-server ];

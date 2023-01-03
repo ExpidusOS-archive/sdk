@@ -1,4 +1,7 @@
-{ lib, stdenv, fetchFromGitHub, fetchNpmDeps, npmHooks, meson, ninja, pkg-config, vala, gobject-introspection, glib, nodejs, vadi, gtk3, gtk4, libhandy, libadwaita, ntk, expidus-sdk, libical, adwaita-qt }:
+{ lib, stdenv, fetchFromGitHub, fetchNpmDeps, npmHooks, meson,
+  ninja, pkg-config, vala, gobject-introspection, glib, nodejs,
+  vadi, gtk3, gtk4, libhandy, libadwaita, ntk, expidus-sdk, libical,
+  adwaita-qt, git }:
 let
   rev = "6b9d76b89db9233cbea7df441d321b76dec6e834";
 
@@ -12,6 +15,7 @@ let
       inherit rev;
       sha256 = "sha256-gaV48CCuA+hma6MSeGIZn0ooJ9WC4gOaBsqqOOX1r7E=";
       fetchSubmodules = true;
+      leaveDotGit = true;
     };
 
     npmDeps = fetchNpmDeps {
@@ -23,7 +27,7 @@ let
     outputs = [ "out" "dev" "devdoc" ];
     doChecks = true;
 
-    nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection nodejs expidus-sdk npmHooks.npmConfigHook ];
+    nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection nodejs expidus-sdk npmHooks.npmConfigHook git ];
     buildInputs = [ vadi gtk3 gtk4 libhandy libadwaita ntk libical ] ++ (lib.optional (stdenv.isDarwin == false) adwaita-qt);
     propagatedBuildInputs = self.buildInputs;
 

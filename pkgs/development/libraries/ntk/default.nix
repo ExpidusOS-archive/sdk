@@ -1,20 +1,24 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, vala, pkg-config, gobject-introspection, cairo, gtk4, mesa, libglvnd, cssparser, libdrm, expidus-sdk }:
+{ lib, stdenv, fetchFromGitHub, meson, ninja, vala, pkg-config, gobject-introspection,
+  cairo, gtk4, mesa, libglvnd, cssparser, libdrm, expidus-sdk, git }:
 with lib;
-stdenv.mkDerivation rec {
+let
+  rev = "0229e10a2d84060d218d2e1e49e72f10b2e640cc";
+in stdenv.mkDerivation rec {
   pname = "ntk";
-  version = "0.1.0";
+  version = "0.1.0-${rev}";
 
   outputs = [ "out" "dev" ];
 
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "ntk";
-    rev = "0229e10a2d84060d218d2e1e49e72f10b2e640cc";
+    inherit rev;
     sha256 = "SuO+2ObN4YZndkacIrkJIbaEWi9/lVcxAXhdearJ/LY=";
     fetchSubmodules = true;
+    leaveDotGit = true;
   };
 
-  nativeBuildInputs = [ meson ninja vala pkg-config gobject-introspection expidus-sdk ];
+  nativeBuildInputs = [ meson ninja vala pkg-config gobject-introspection expidus-sdk git ];
   buildInputs = [ cairo gtk4 libglvnd cssparser ] ++ optionals stdenv.isLinux [ mesa libdrm ];
   propagatedBuildInputs = buildInputs;
 

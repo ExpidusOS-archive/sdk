@@ -1,20 +1,25 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, vala, gxml, vadi, glib, libpeas, expidus-sdk, darwin, windows, upower }:
-stdenv.mkDerivation rec {
+{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection,
+  vala, gxml, vadi, glib, libpeas, expidus-sdk, darwin, windows, upower, git }:
+with lib;
+let
+  rev = "2e0fdd759d42c6e0fb946d6bea1d61f8cdf01269";
+in stdenv.mkDerivation rec {
   pname = "neutron";
-  version = "2e0fdd759d42c6e0fb946d6bea1d61f8cdf01269";
+  version = "0.1.0-${rev}";
 
   outputs = [ "out" "dev" "devdoc" "viewer" ];
 
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "neutron";
-    rev = version;
+    inherit rev;
     sha256 = "+YlcVmDfxvD9afnbVmXOrtJF28JDqQAHStCdZqEWxEY=";
+    leaveDotGit = true;
   };
 
   doChecks = true;
 
-  nativeBuildInputs = [ meson ninja pkg-config gobject-introspection vala expidus-sdk ];
+  nativeBuildInputs = [ meson ninja pkg-config gobject-introspection vala expidus-sdk git ];
   buildInputs = [ vadi glib libpeas ]
     ++ (lib.optionals stdenv.isLinux [ upower ])
     ++ (lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [ IOKit ]))
