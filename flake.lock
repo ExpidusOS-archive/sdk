@@ -3,15 +3,16 @@
     "disko": {
       "flake": false,
       "locked": {
-        "lastModified": 1672526278,
-        "narHash": "sha256-QpebSMK5vrA5tE4xT0WpcP84MRETydL6NCotIXPVvGw=",
-        "owner": "nix-community",
+        "lastModified": 1672771977,
+        "narHash": "sha256-FUW8dJahMxDkMlxhbZFq6V/w89B53EVJX7/vlSBYTR0=",
+        "owner": "RossComputerGuy",
         "repo": "disko",
-        "rev": "981160e9cfb73a9fc9f7eddfe193953fc784cdfb",
+        "rev": "809f92cd25ed4e9e024a7488a936157ab64e9729",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
+        "owner": "RossComputerGuy",
+        "ref": "fix/option-descriptions",
         "repo": "disko",
         "type": "github"
       }
@@ -52,11 +53,11 @@
     "nixpkgs": {
       "flake": false,
       "locked": {
-        "lastModified": 1672441588,
-        "narHash": "sha256-jx5kxOyeObnVD44HRebKYL3cjWrcKhhcDmEYm0/naDY=",
+        "lastModified": 1672616430,
+        "narHash": "sha256-e18rRwDUaW/Uw1tBmtsVueJ2SVI5DLhrEGwhkIo+c50=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "6a0d2701705c3cf6f42c15aa92b7885f1f8a477f",
+        "rev": "0bf3109eeb61780965c27f4a0a4affdcd0cd4d3d",
         "type": "github"
       },
       "original": {

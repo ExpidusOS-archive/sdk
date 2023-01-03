@@ -4,7 +4,7 @@
   inputs.utils.url = github:numtide/flake-utils;
 
   inputs.disko = {
-    url = github:nix-community/disko;
+    url = github:RossComputerGuy/disko/fix/option-descriptions;
     flake = false;
   };
 
