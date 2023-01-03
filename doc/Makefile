@@ -55,7 +55,7 @@ out/html/index.html: doc-support/result manual-full.xml style.css highlightjs
 	mkdir -p out/html/highlightjs/
 	cp -r highlightjs out/html/
 
-	cp -r $(pandoc_media_dir) out/html/
+# FIXME: cp -r $(pandoc_media_dir) out/html/
 	cp ./overrides.css out/html/
 	cp ./style.css out/html/style.css
 
@@ -70,7 +70,7 @@ out/epub/manual.epub: manual-full.xml
 		doc-support/result/epub.xsl \
 		./manual-full.xml
 
-	cp -r $(pandoc_media_dir) out/epub/scratch/OEBPS
+# FIXME: cp -r $(pandoc_media_dir) out/epub/scratch/OEBPS
 	cp ./overrides.css out/epub/scratch/OEBPS
 	cp ./style.css out/epub/scratch/OEBPS
 	mkdir -p out/epub/scratch/OEBPS/images/callouts/
@@ -89,7 +89,7 @@ highlightjs: doc-support/result
 	cp -r doc-support/result/highlightjs/loader.js highlightjs/
 
 
-manual-full.xml: ${MD_TARGETS} .version functions/library/locations.xml functions/library/generated *.xml **/*.xml
+manual-full.xml: ${MD_TARGETS} .version functions/library/locations.xml functions/library/generated *.xml **/*.xml **/*.xml
 	xmllint --nonet --xinclude --noxincludenode manual.xml --output manual-full.xml
 
 .version: doc-support/result
