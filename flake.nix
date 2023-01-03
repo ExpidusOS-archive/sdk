@@ -93,7 +93,8 @@
         }).config.system.build.sdImage;
 
       release-unique = pkgs: {
-        raspberry-pi = makeSdImage pkgs.pkgsCross.raspberryPi "aarch64-installer";
+        raspberry-pi = makeSdImage pkgs.pkgsCross.raspberryPi "raspberrypi-installer";
+        raspberry-pi64 = makeSdImage pkgs.pkgsCross.aarch64-multiplatform "aarch64-installer";
       };
 
       manuals = lib.expidus.system.forAll (system:
