@@ -1,5 +1,5 @@
 { lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14,
-  vala, nix, glib, git, zsh, path, git, variant ? "desktop" }:
+  vala, nix, glib, zsh, path, git, variant ? "desktop" }:
 with lib;
 stdenv.mkDerivation rec {
   name = "expidus-sdk";
