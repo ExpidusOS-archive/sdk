@@ -217,8 +217,11 @@
           releases = release.${system} or {};
           manualSets = manuals.${system} or {};
           home-manager = if builtins.hasAttr system homeManager.packages then homeManager.packages.${system}.default else null;
+          disko = if builtins.hasAttr system diskoFlake.packages then diskoFlake.packages.${system}.default else null;
         in base // releases // manualSets // (lib.optionalAttrs (home-manager != null) {
           inherit home-manager;
+        }) // (lib.optionalAttrs (disko != null) {
+          inherit disko;
         }));
     });
 }
