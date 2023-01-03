@@ -3,11 +3,11 @@
     "disko": {
       "flake": false,
       "locked": {
-        "lastModified": 1672771977,
-        "narHash": "sha256-FUW8dJahMxDkMlxhbZFq6V/w89B53EVJX7/vlSBYTR0=",
+        "lastModified": 1672774957,
+        "narHash": "sha256-/R12pgiPd06G4RPjkyi2LfQmwAM4OJCGZqFLTe69Xxg=",
         "owner": "RossComputerGuy",
         "repo": "disko",
-        "rev": "809f92cd25ed4e9e024a7488a936157ab64e9729",
+        "rev": "ab33709297267ff18502f7fd3de3bccb807cc43a",
         "type": "github"
       },
       "original": {
