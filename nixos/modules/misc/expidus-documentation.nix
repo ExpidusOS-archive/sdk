@@ -223,7 +223,7 @@ in
 
       options.warningsAreErrors = mkOption {
         type = types.bool;
-        default = true;
+        default = false; # https://github.com/nix-community/disko/pull/103
         description = lib.mdDoc ''
           Treat warning emitted during the option documentation build (eg for missing option
           descriptions) as errors.
