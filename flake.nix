@@ -31,7 +31,13 @@
 
   outputs = { self, utils, home-manager, nixpkgs, mobile-nixos, disko }:
     let
-      lib = (import ./lib).extend (final: prev: {
+      lib = (import ./lib/overlay.nix {
+        home-manager = home-manager.outPath;
+        nixpkgs = nixpkgs.outPath;
+        mobile-nixos = mobile-nixos.outPath;
+        disko = disko.outPath;
+        sdk = self.outPath;
+      }).extend (final: prev: {
         nixos = import ./nixos/lib { lib = final; };
         nixosSystem = args:
           import ./nixos/lib/eval-config.nix (args // {
@@ -42,14 +48,6 @@
           });
 
         expidus = prev.expidus.extend (f: p: {
-          channels = p.channels // {
-            home-manager = home-manager.outPath;
-            nixpkgs = nixpkgs.outPath;
-            mobile-nixos = mobile-nixos.outPath;
-            disko = disko.outPath;
-            sdk = self.outPath;
-          };
-
           trivial = p.trivial // (p.trivial.makeVersion {
             revision = self.shortRev or "dirty";
           });
