@@ -8,7 +8,7 @@ in
     security.expidus = {
       enable = mkOption {
         type = types.bool;
-        default = pkgs.apparmor-utils.meta.available;
+        default = if builtins.hasAttr "apparmor-utils" pkgs then pkgs.apparmor-utils.meta.available else false;
         description = "Enable the ExpidusOS System Security profiles";
       };
       hidepid = mkOption {
