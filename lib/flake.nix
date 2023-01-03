@@ -99,7 +99,7 @@ rec {
             name = "default-${system}";
             inherit value;
           }) crossPackages));
-          filteredWrappedCrossPackages = lib.filterAttrs (system: pkg: (builtins.tryEval pkg).success) wrappedCrossPackages;
+          filteredWrappedCrossPackages = lib.filterAttrs (system: pkg: (builtins.tryEval pkg).success && pkg.meta.available) wrappedCrossPackages;
         in {
           ${target} = (packageOverlay pkgs pkgs).${name};
         } // filteredWrappedCrossPackages // {

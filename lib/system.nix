@@ -2,12 +2,13 @@
 let
   host = builtins.filter builtins.isString (builtins.split "-" (builtins.getEnv "EXPIDUS_SDK_HOST"));
   currentBultin = if builtins.hasAttr "currentSystem" builtins then builtins.toString builtins.currentSystem else null;
+  currentActivationSystem = if builtins.pathExists "/run/current-system/system" then (builtins.readFile "/run/current-system/system") else "x86_64-linux";
   currentEnv =
     if builtins.length host == 3 then
       "${builtins.elemAt host 0}-${builtins.elemAt host 1}"
     else null;
 
-  current = if currentEnv == null then (if currentBultin == null then "x86_64-linux" else currentBultin) else currentEnv;
+  current = if currentEnv == null then (if currentBultin == null then currentActivationSystem else currentBultin) else currentEnv;
 
   defaultCygwin = [];
   defaultDarwin = builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ];
