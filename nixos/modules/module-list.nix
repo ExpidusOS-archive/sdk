@@ -19,8 +19,6 @@
     "system/etc/etc.nix"
     "tasks/network-interfaces.nix"
     "installer/tools/tools.nix"
-    "services/misc/gitit.nix"
-    "services/misc/nix-daemon.nix"
     "services/editors/emacs.nix"
     "services/ttys/getty.nix"
   ];
@@ -53,6 +51,7 @@
     ./security/apparmor/profiles.nix
     ./security/expidus.nix
     ./security/wrappers.nix
+    ./services/misc/nix-daemon.nix
     ./services/x11/desktop-managers/genesis.nix
     ./system/boot/loader/efi.nix
     ./system/expidus.nix
