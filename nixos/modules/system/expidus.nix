@@ -37,8 +37,8 @@ in {
         };
 
       qt5 = {
-        style = mkDefault "adwaita-dark";
-        platformTheme = mkDefault "gtk2";
+        style = mkForce "adwaita-dark";
+        platformTheme = mkForce "gtk2";
       };
 
       services.upower = {
