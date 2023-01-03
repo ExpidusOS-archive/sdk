@@ -38,7 +38,7 @@ in {
 
       qt5 = {
         style = mkForce "adwaita-dark";
-        platformTheme = mkForce "gtk2";
+        platformTheme = mkForce "gnome";
       };
 
       services.upower = {
@@ -61,7 +61,7 @@ in {
         "x86_64-windows"
       ]));
     })
-    /*(mkIf cfg.fs.enable {
+    (mkIf cfg.fs.enable {
       assertions = [{
         assertion = cfg.fs.drive != "" && cfg.fs.drive != null;
         message = "Filesystem drive path cannot be empty";
@@ -153,6 +153,6 @@ in {
             in builtins.listToAttrs users);
         };
       };
-    })*/
+    })
   ];
 }
