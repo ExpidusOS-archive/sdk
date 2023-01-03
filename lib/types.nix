@@ -1,12 +1,13 @@
 { lib, expidus }:
 with lib;
 {
-  flatpak = {
+  flatpak = rec {
     runtime = types.submodule ({ config, ... }: {
       options = {
         name = mkOption {
           type = types.str;
           default = config._module.args.name;
+          description = "Name of the runtime";
         };
         branch = mkOption {
           type = types.str;
@@ -27,6 +28,7 @@ with lib;
         name = mkOption {
           type = types.str;
           default = config._module.args.name;
+          description = "Name of the application";
         };
         commit = mkOption {
           type = types.str;
@@ -39,7 +41,7 @@ with lib;
         runtime = mkOption {
           type = types.oneOf [
             types.str
-            flatpak.runtime
+            runtime
           ];
           description = "Name of a runtime or a runtime definition";
         };
