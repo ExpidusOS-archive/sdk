@@ -14,7 +14,7 @@ in stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "libdevident";
     inherit rev;
-    sha256 = "+YlcVmDfxvD9afnbVmXOrtJF28JDqQAHStCdZqEWxEY=";
+    sha256 = "sha256-5R7IU7QkH9lJt4RyLR/MxdDCiGnU7vaNuwM0x0mj8xc=";
     leaveDotGit = true;
   };
 
