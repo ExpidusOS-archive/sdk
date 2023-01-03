@@ -74,44 +74,32 @@
         packageSet = import ./.;
       };
 
-      makeIso = system: type:
-        let pkgs = import ./pkgs/top-level/default.nix {
-          system = lib.expidus.system.current;
-          crossSystem = { inherit system; };
-        };
-        in with pkgs;
+      makeIso = pkgs: type:
+        with pkgs;
         (import ./nixos/lib/eval-config.nix {
-          inherit system pkgs;
+          inherit pkgs;
+          inherit (pkgs) system;
           modules = ["${toString ./nixos/modules/installer/cd-dvd}/installation-cd-${type}.nix" ({
             isoImage.isoBaseName = "expidus-${type}";
           })];
         }).config.system.build.isoImage;
 
-      makeSdImage = system: type:
-        let pkgs = import ./pkgs/top-level/default.nix {
-          system = lib.expidus.system.current;
-          crossSystem = { inherit system; };
-        };
-        in with pkgs;
+      makeSdImage = pkgs: type:
+        with pkgs;
         (import ./nixos/lib/eval-config.nix {
-          inherit system pkgs;
+          inherit pkgs;
+          inherit (pkgs) system;
           modules = ["${toString ./nixos/modules/installer/sd-card}/sd-image-${type}.nix"];
         }).config.system.build.sdImage;
 
-      release-unique = {
-        aarch64-linux = {
-          raspberry-pi = makeSdImage "aarch64-linux" "aarch64-installer";
-        };
-        armv6l-linux = {
-          raspberry-pi = makeSdImage "armv6l-linux" "raspberrypi-installer";
-        };
+      release-unique = pkgs: {
+        raspberry-pi = makeSdImage pkgs.pkgsCross.raspberryPi "aarch64-installer";
       };
 
       manuals = lib.expidus.system.forAll (system:
         let
           pkgs = import ./pkgs/top-level/default.nix {
-            system = lib.expidus.system.current;
-            crossSystem = { inherit system; };
+            inherit system;
           };
 
           nixosSystem = if pkgs.targetPlatform.isLinux then
@@ -142,8 +130,7 @@
       release-base = lib.expidus.system.forAll (system:
         let
           pkgs = import ./pkgs/top-level/default.nix {
-            system = lib.expidus.system.current;
-            crossSystem = { inherit system; };
+            inherit system;
           };
           sysconfig = lib.expidus.system.make {
             currentSystem = system;
@@ -152,29 +139,25 @@
         with lib; lib.mergeAttrs
           {
             channel = import ./nixos/lib/make-channel.nix {
-              pkgs = import ./pkgs/top-level/default.nix {
-                system = lib.expidus.system.current;
-                crossSystem = { inherit system; };
-              };
-              nixpkgs = {
-                outPath = lib.cleanSource ./.;
-                revCount = 130979;
-                shortRev = lib.expidus.trivial.revision or "gfedcba";
-              };
+              inherit pkgs;
+              nixpkgs = self;
               inherit (lib.expidus.trivial) version versionSuffix;
             };
           }
           (if (builtins.tryEval grub2_efi).success && sysconfig.isLinux then {
-            iso-minimal = makeIso system "minimal";
-            iso-plasma5 = makeIso system "graphical-calamares-plasma5";
-            iso-gnome = makeIso system "graphical-calamares-gnome";
-            iso-genesis = makeIso system "graphical-calamares-genesis";
+            iso-minimal = makeIso pkgs "minimal";
+            iso-plasma5 = makeIso pkgs "graphical-calamares-plasma5";
+            iso-gnome = makeIso pkgs "graphical-calamares-gnome";
+            iso-genesis = makeIso pkgs "graphical-calamares-genesis";
           } else {})
         );
 
       release = lib.expidus.system.forAllLinux (system:
         let
-          unique = release-unique.${system} or {};
+          pkgs = import ./pkgs/top-level/default.nix {
+            inherit system;
+          };
+          unique = release-unique pkgs;
           base = release-base.${system} or {};
           manualSets = manuals.${system} or {};
         in base // unique // manualSets);

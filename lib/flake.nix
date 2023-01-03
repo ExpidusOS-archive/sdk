@@ -13,13 +13,9 @@ rec {
     packagesFor ? ({ final, prev, old }: emptyPackages)
   }@flake:
     let
-      nixpkgsFor = sysconfig.forAllPossible (host:
-        sysconfig.forAllPossible (target: import ../pkgs/top-level/default.nix {
-          system = host;
-          crossSystem = {
-            system = target;
-          };
-        }));
+      nixpkgsFor = sysconfig.forAllPossible (system: import ../pkgs/top-level/default.nix {
+        inherit system;
+      });
       wrapped = name + (if target == "default" then "" else "-${target}");
       makeWrapped = key: if target == "default" then key else target + "-${key}";
 
@@ -48,7 +44,7 @@ rec {
 
       nixosSystems = sysconfig.forAllLinux (system:
         let
-          base-pkgs = nixpkgsFor.${system}.${system};
+          base-pkgs = nixpkgsFor.${system};
           pkgs = packageOverlay base-pkgs base-pkgs;
 
           pkg = pkgs.${name};
@@ -92,27 +88,24 @@ rec {
 
       legacyPackages = sysconfig.forAllPossible (system:
         let
-          pkgs = nixpkgsFor.${system}.${system};
+          pkgs = nixpkgsFor.${system};
         in (packageOverlay pkgs pkgs));
 
       packages = sysconfig.forAllPossible (system:
         let
-          nixpkgsTarget = nixpkgsFor.${system};
-          syshost = expidus.system.make {
-            currentSystem = system;
-            supported = sysconfig.possible;
-          };
-          pkgs = nixpkgsTarget.${system};
-          forAllSystems = lib.genAttrs (builtins.map makeWrapped syshost.supported);
-        in ({
+          pkgs = nixpkgsFor.${system};
+          crossPackages = builtins.mapAttrs (system: pkgsCross: (packageOverlay pkgsCross pkgsCross).${name}) pkgs.pkgsCross;
+          wrappedCrossPackages = builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (system: value: {
+            name = "default-${system}";
+            inherit value;
+          }) crossPackages));
+          filteredWrappedCrossPackages = lib.filterAttrs (system: pkg: (builtins.tryEval pkg).success) wrappedCrossPackages;
+        in {
           ${target} = (packageOverlay pkgs pkgs).${name};
-        }) // forAllSystems (system:
-          let
-            pkgs = nixpkgsTarget.${system};
-          in (packageOverlay pkgs pkgs).${name}
-        ) // (if builtins.hasAttr system nixosSystems then {
+        } // filteredWrappedCrossPackages // {
+        } // lib.optionalAttrs (builtins.hasAttr system nixosSystems) {
           ${makeWrapped "vm"} = nixosSystems.${system}.config.system.build.vm;
-        } else {}));
+        });
 
       nixosConfigurations = (nixosSystems // {
         ${target} = if builtins.hasAttr expidus.system.current nixosSystems then nixosSystems.${expidus.system.current} else null;
@@ -121,14 +114,14 @@ rec {
       hydraJobs = {
         ${target} = sysconfig.forAllLinux (system:
           let
-            pkgs = nixpkgsFor.${system}.${system};
+            pkgs = nixpkgsFor.${system};
           in (packageOverlay pkgs pkgs).${name});
         ${makeWrapped "vm"} = sysconfig.forAllLinux (system: nixosSystems.${system}.config.system.build.vm);
       };
 
       devShells = sysconfig.forAllPossible (system:
         let
-          pkgs = nixpkgsFor.${system}.${system};
+          pkgs = nixpkgsFor.${system};
           pkg = (packageOverlay pkgs pkgs).${name};
           packages = emptyPackages // (packagesFor { final = pkgs; prev = packages; old = pkg; });
           wrappedTarget = if target == "default" then "wrapped" else target + "-wrapped";
