@@ -30,4 +30,9 @@ rec {
   graphite2 = super.graphite2.overrideAttrs (old: {
     buildInputs = [ freetype ];
   });
+
+  elfutils = super.elfutils.overrideAttrs (old: {
+    buildInputs = old.buildInputs
+      ++ lib.optionals (with stdenv; !cc.isGNU && !(isDarwin && isAarch64)) [ libgcc ];
+  });
 }
