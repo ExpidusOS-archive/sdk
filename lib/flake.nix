@@ -63,7 +63,7 @@ rec {
               packageOverlay
             ]);
           in nixosSystem {
-            system = target;
+            inherit (expidus.system.supportedSystems.${target}) system;
             pkgs = realPkgs;
             lib = lib.extend (self: prev: {
               inherit expidus;
