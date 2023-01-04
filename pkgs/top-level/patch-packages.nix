@@ -26,4 +26,27 @@ rec {
   grim = super.grim.overrideAttrs (old: {
     nativeBuildInputs = old.nativeBuildInputs ++ [ wayland-scanner ];
   });
+
+  mesa = super.mesa.overrideAttrs (old:
+    with lib; let
+      version = "22.2.5";
+      branch = versions.major version;
+    in {
+      inherit version;
+
+      src = fetchurl {
+        urls = [
+          "https://archive.mesa3d.org/mesa-${version}.tar.xz"
+          "https://mesa.freedesktop.org/archive/mesa-${version}.tar.xz"
+          "ftp://ftp.freedesktop.org/pub/mesa/mesa-${version}.tar.xz"
+          "ftp://ftp.freedesktop.org/pub/mesa/${version}/mesa-${version}.tar.xz"
+          "ftp://ftp.freedesktop.org/pub/mesa/older-versions/${branch}.x/${version}/mesa-${version}.tar.xz"
+        ];
+        sha256 = "sha256-hQ8GMUb467JirsBPZmwsHlYj8qGYfdok5DYbF7kSxzs=";
+      };
+
+      meta = old.meta // {
+        changelog = "https://www.mesa3d.org/relnotes/${version}.html";
+      };
+    });
 }
