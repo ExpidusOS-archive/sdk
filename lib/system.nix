@@ -10,6 +10,8 @@ let
 
   current = if currentEnv == null then (if currentBultin == null then currentActivationSystem else currentBultin) else currentEnv;
 
+  libPlatforms = import "${expidus.channels.nixpkgs}/lib/systems/platforms.nix" { inherit lib; };
+
   defaultCygwin = [];
   defaultDarwin = builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ];
   defaultLinux = lib.lists.subtractLists [
@@ -31,6 +33,18 @@ let
       value = {
         config = "wasm32-unknown-wasi";
         useLLVM = true;
+      };
+    }
+    {
+      name = "raspberry-pi";
+      value = {
+        config = "armv6l-unknown-linux-gnueabihf";
+      } // libPlatforms.raspberrypi;
+    }
+    {
+      name = "aarch64-multiplatform";
+      value = {
+        config = "aarch64-unknown-linux-gnu";
       };
     }
   ];
