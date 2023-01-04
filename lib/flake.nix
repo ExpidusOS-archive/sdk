@@ -88,12 +88,12 @@ rec {
         inherit target name sysconfig nixpkgsFor;
       };
 
-      legacyPackages = sysconfig.mapPossible (system: value:
-        let
-          pkgs = nixpkgsFor.${system};
-        in (packageOverlay pkgs pkgs));
+      legacyPackages = builtins.listToAttrs (builtins.attrValues (sysconfig.mapPossible (system: value: {
+        name = value.system;
+        value = nixpkgsFor.${system};
+      })));
 
-      packages = sysconfig.mapPossible (system: value:
+      packages = sysconfig.mapPossibleSystems (system:
         let
           pkgs = nixpkgsFor.${system};
           crossPackages = builtins.mapAttrs (system: pkgsCross: (packageOverlay pkgsCross pkgsCross).${name}) pkgs.pkgsCross;
@@ -119,14 +119,17 @@ rec {
       });
 
       hydraJobs = {
-        ${target} = sysconfig.mapPossible (system: value:
+        ${target} = builtins.listToAttrs (builtins.attrValues (sysconfig.mapPossibleSystems (system:
           let
             pkgs = nixpkgsFor.${system};
-          in (packageOverlay pkgs pkgs).${name});
-        ${makeWrapped "vm"} = sysconfig.forAllLinux (system: nixosSystems.${system}.${system}.config.system.build.vm);
+          in {
+            name = system;
+            value = (packageOverlay pkgs pkgs).${name};
+          })));
+        ${makeWrapped "vm"} = builtins.mapAttrs (system: nixosSet: nixosSet.${system}.config.system.build.vm) nixosSystems;
       };
 
-      devShells = sysconfig.mapPossible (system: value:
+      devShells = sysconfig.mapPossibleSystems (system:
         let
           pkgs = nixpkgsFor.${system};
           pkg = (packageOverlay pkgs pkgs).${name};

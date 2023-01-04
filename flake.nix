@@ -179,9 +179,12 @@
       });
 
       libExpidus = lib.expidus;
-      legacyPackages = sdk-flake.metadata.sysconfig.mapPossible (system: value: import ./. {
-        localSystem = value;
-      });
+      legacyPackages = builtins.listToAttrs (builtins.attrValues (sdk-flake.metadata.sysconfig.mapPossible (system: value: {
+        name = value.system;
+        value = import ./. {
+          localSystem = value;
+        };
+      })));
 
       darwinModules = {
         inherit (homeManager.darwinModules) home-manager;
@@ -193,9 +196,8 @@
       };
 
       hydraJobs = sdk-flake.hydraJobs // sdk-hydra;
-      packages = sdk-flake.metadata.sysconfig.mapPossible (system: value:
+      packages = builtins.mapAttrs (system: base:
         let
-          base = sdk-flake.packages.${system};
           releases = release.${system} or {};
           manualSets = manuals.${system} or {};
           home-manager = if builtins.hasAttr system homeManager.packages then homeManager.packages.${system}.default else null;
@@ -204,6 +206,6 @@
           inherit home-manager;
         }) // (lib.optionalAttrs (disko != null) {
           inherit disko;
-        }));
+        })) sdk-flake.packages;
     });
 }

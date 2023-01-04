@@ -12,18 +12,44 @@ let
 
   libPlatforms = import "${expidus.channels.nixpkgs}/lib/systems/platforms.nix" { inherit lib; };
 
+  mapSystemToAttrs = builtins.map (system: {
+    name = system;
+    value = {
+      inherit system;
+    };
+  });
+
   defaultCygwin = [];
-  defaultDarwin = builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ];
-  defaultLinux = lib.lists.subtractLists [
-    "m68k-linux"
-    "microblaze-linux"
-    "microblazeel-linux"
-    "mipsel-linux"
-    "powerpc64-linux"
-    "riscv32-linux"
-    "s390-linux"
-    "s390x-linux"
-  ] lib.platforms.linux;
+  defaultDarwin = mapSystemToAttrs (builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ]);
+  defaultLinux =
+    (mapSystemToAttrs (lib.lists.subtractLists [
+      "armv5tel-linux"
+      "armv7a-linux"
+      "m68k-linux"
+      "microblaze-linux"
+      "microblazeel-linux"
+      "mipsel-linux"
+      "mips64el-linux"
+      "powerpc64-linux"
+      "riscv32-linux"
+      "s390-linux"
+      "s390x-linux"
+    ] lib.platforms.linux) ++ [
+      {
+        name = "raspberry-pi";
+        value = {
+          config = "armv6l-unknown-linux-gnueabihf";
+          system = "armv6l-linux";
+        } // libPlatforms.raspberrypi;
+      }
+      {
+        name = "aarch64-multiplatform";
+        value = {
+          config = "aarch64-unknown-linux-gnu";
+          system = "aarch64-linux";
+        };
+      }
+    ]);
   defaultExtra = [
     {
       name = "wasi32";
@@ -41,27 +67,13 @@ let
         system = "wasm64-wasi";
       };
     }
-    {
-      name = "raspberry-pi";
-      value = {
-        config = "armv6l-unknown-linux-gnueabihf";
-        system = "armv6l-linux";
-      } // libPlatforms.raspberrypi;
-    }
-    {
-      name = "aarch64-multiplatform";
-      value = {
-        config = "aarch64-unknown-linux-gnu";
-        system = "aarch64-linux";
-      };
-    }
   ];
 
   makeSystemSet = systems:
     let
       systemFilter = name: builtins.filter (str:
         let
-          system = lib.systems.parse.mkSystemFromString str;
+          system = lib.systems.parse.mkSystemFromString str.system;
         in system.kernel.name == name) systems;
     in {
       linux = systemFilter "linux";
@@ -98,30 +110,23 @@ let
       isDarwin = isSupported currentSystem _supported.darwin;
       canDarwin = isDarwin || allowDarwin;
       extraSupported = builtins.map (nv: nv.name) _supported.extra;
-      supportedList = _supported.linux ++ _supported.cygwin ++ (if canDarwin then _supported.darwin else []);
-      possibleList = _supported.linux ++ _supported.cygwin ++ _supported.darwin;
+      supportedList = _supported.linux ++ _supported.cygwin ++ (if canDarwin then _supported.darwin else []) ++ _supported.extra;
+      possibleList = _supported.linux ++ _supported.cygwin ++ _supported.darwin ++ _supported.extra;
 
-      supportedSystems =
-        let
-          base = builtins.listToAttrs (builtins.map (system: {
-            name = system;
-            value = {
-              inherit system;
-            };
-          }) supportedList);
-        in (base // builtins.listToAttrs _supported.extra);
+      genAttrs = list: func: builtins.listToAttrs (builtins.map ({ name, value }: {
+        inherit name;
+        value = func name;
+      }) list);
 
-      possibleSystems =
-        let
-          base = builtins.listToAttrs (builtins.map (system: {
-            name = system;
-            value = {
-              inherit system;
-            };
-          }) possibleList);
-        in (base // builtins.listToAttrs _supported.extra);
+      genAttrs' = list: func: builtins.listToAttrs (builtins.map ({ name, value }: {
+        name = value.system;
+        value = func name;
+      }) list);
+
+      supportedSystems = builtins.listToAttrs supportedList;
+      possibleSystems = builtins.listToAttrs possibleList;
     in (rec {
-      inherit isToplevel isDarwin canDarwin makeSupported make supportedSystems possibleSystems;
+      inherit isToplevel isDarwin canDarwin makeSupported make supportedSystems possibleSystems _supported;
 
       current = currentSystem;
       isCygwin = isSupported currentSystem _supported.cygwin;
@@ -132,8 +137,10 @@ let
 
       mapSupported = func: builtins.mapAttrs func supportedSystems;
       mapPossible = func: builtins.mapAttrs func possibleSystems;
+      mapSupportedSystems = genAttrs' supportedList;
+      mapPossibleSystems = genAttrs' possibleList;
 
-      linuxMatrix = builtins.map ({ a, b }: "${a}/${b}") (lib.cartesianProductOfSets { a = _supported.linux; b = _supported.linux; });
+      linuxMatrix = builtins.map ({ a, b }: "${a.system}/${b.system}") (lib.cartesianProductOfSets { a = _supported.linux; b = _supported.linux; });
 
       mapLinuxMatrix = func:
         let
@@ -143,11 +150,11 @@ let
           target = lib.lists.head (lib.lists.tail (lib.splitString "/" str));
         }));
 
-      forAllCygwin = lib.genAttrs _supported.cygwin;
-      forAllDarwin = lib.genAttrs _supported.darwin;
-      forAllLinux = lib.genAttrs _supported.linux;
-      forAll = lib.genAttrs supportedList;
-      forAllPossible = lib.genAttrs possibleList;
+      forAllCygwin = genAttrs _supported.cygwin;
+      forAllDarwin = genAttrs _supported.darwin;
+      forAllLinux = genAttrs _supported.linux;
+      forAll = genAttrs supportedList;
+      forAllPossible = genAttrs possibleList;
     }) // (if isToplevel then {
       inherit getSupported isSupported;
 
@@ -155,6 +162,7 @@ let
         darwin = defaultDarwin;
         cygwin = defaultCygwin;
         linux = defaultLinux;
+        extra = defaultExtra;
       };
     } else {
       getSupported = getSupported currentSystem;
