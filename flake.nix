@@ -97,10 +97,10 @@
         aarch64-installer = makeSdImage pkgs.pkgsCross.aarch64-linux "aarch64-installer";
       };
 
-      manuals = lib.expidus.system.forAll (system:
+      manuals = lib.expidus.system.mapPossible (system: value:
         let
           pkgs = import ./pkgs/top-level/default.nix {
-            inherit system;
+            localSystem = value;
           };
 
           nixosSystem = if pkgs.targetPlatform.isLinux then
@@ -128,10 +128,10 @@
           };
         } // lib.optionalAttrs (nixosSystem != null) (getManualSet "nixos" "manual" // getManualSet "expidus" "expidus-manual"));
 
-      release-base = lib.expidus.system.forAll (system:
+      release-base = lib.expidus.system.mapPossible (system: value:
         let
           pkgs = import ./pkgs/top-level/default.nix {
-            inherit system;
+            localSystem = value;
           };
           sysconfig = lib.expidus.system.make {
             currentSystem = system;
@@ -153,10 +153,10 @@
           } else {})
         );
 
-      release = lib.expidus.system.forAllLinux (system:
+      release = lib.expidus.system.mapPossible (system: value:
         let
           pkgs = import ./pkgs/top-level/default.nix {
-            inherit system;
+            localSystem = value;
           };
           unique = release-unique pkgs;
           base = release-base.${system} or {};
@@ -179,8 +179,8 @@
       });
 
       libExpidus = lib.expidus;
-      legacyPackages = sdk-flake.metadata.sysconfig.forAllPossible (system: import ./. {
-        inherit system;
+      legacyPackages = sdk-flake.metadata.sysconfig.mapPossible (system: value: import ./. {
+        localSystem = value;
       });
 
       darwinModules = {
@@ -193,7 +193,7 @@
       };
 
       hydraJobs = sdk-flake.hydraJobs // sdk-hydra;
-      packages = sdk-flake.metadata.sysconfig.forAllPossible (system:
+      packages = sdk-flake.metadata.sysconfig.mapPossible (system: value:
         let
           base = sdk-flake.packages.${system};
           releases = release.${system} or {};

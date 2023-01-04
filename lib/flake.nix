@@ -13,8 +13,8 @@ rec {
     packagesFor ? ({ final, prev, old }: emptyPackages)
   }@flake:
     let
-      nixpkgsFor = sysconfig.forAllPossible (system: import ../pkgs/top-level/default.nix {
-        inherit system;
+      nixpkgsFor = sysconfig.mapPossible (system: value: import ../pkgs/top-level/default.nix {
+        localSystem = value;
       });
       wrapped = name + (if target == "default" then "" else "-${target}");
       makeWrapped = key: if target == "default" then key else target + "-${key}";
@@ -86,12 +86,12 @@ rec {
         inherit target name sysconfig nixpkgsFor;
       };
 
-      legacyPackages = sysconfig.forAllPossible (system:
+      legacyPackages = sysconfig.mapPossible (system: value:
         let
           pkgs = nixpkgsFor.${system};
         in (packageOverlay pkgs pkgs));
 
-      packages = sysconfig.forAllPossible (system:
+      packages = sysconfig.mapPossible (system: value:
         let
           pkgs = nixpkgsFor.${system};
           crossPackages = builtins.mapAttrs (system: pkgsCross: (packageOverlay pkgsCross pkgsCross).${name}) pkgs.pkgsCross;
@@ -112,14 +112,14 @@ rec {
       });
 
       hydraJobs = {
-        ${target} = sysconfig.forAllLinux (system:
+        ${target} = sysconfig.mapPossible (system: value:
           let
             pkgs = nixpkgsFor.${system};
           in (packageOverlay pkgs pkgs).${name});
         ${makeWrapped "vm"} = sysconfig.forAllLinux (system: nixosSystems.${system}.config.system.build.vm);
       };
 
-      devShells = sysconfig.forAllPossible (system:
+      devShells = sysconfig.mapPossible (system: value:
         let
           pkgs = nixpkgsFor.${system};
           pkg = (packageOverlay pkgs pkgs).${name};

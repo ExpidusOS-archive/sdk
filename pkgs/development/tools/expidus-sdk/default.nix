@@ -30,6 +30,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/ExpidusOS/sdk";
     license = licenses.gpl3Only;
     maintainers = with expidus.maintainers; [ TheComputerGuy ];
-    platforms = lists.flatten (builtins.attrValues expidus.system.defaultSupported);
+    inherit (glib.meta) platforms;
   };
 }

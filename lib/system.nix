@@ -25,6 +25,15 @@ let
     "armv7a-linux"
     "armv5tel-linux"
   ] lib.platforms.linux;
+  defaultExtra = [
+    {
+      name = "wasm32-wasi";
+      value = {
+        config = "wasm32-unknown-wasi";
+        useLLVM = true;
+      };
+    }
+  ];
 
   makeSystemSet = systems:
     let
@@ -41,11 +50,13 @@ let
   makeSupported = {
     cygwin ? defaultCygwin,
     linux ? defaultLinux,
-    darwin ? defaultDarwin
+    darwin ? defaultDarwin,
+    extra ? defaultExtra
   }@args: ({
     cygwin = defaultCygwin;
     linux = defaultLinux;
     darwin = defaultDarwin;
+    extra = defaultExtra;
   } // args);
 
   /*
@@ -64,18 +75,41 @@ let
 
       isDarwin = isSupported currentSystem _supported.darwin;
       canDarwin = isDarwin || allowDarwin;
+      extraSupported = builtins.map (nv: nv.name) _supported.extra;
       supportedList = _supported.linux ++ _supported.cygwin ++ (if canDarwin then _supported.darwin else []);
       possibleList = _supported.linux ++ _supported.cygwin ++ _supported.darwin;
+
+      supportedSystems =
+        let
+          base = builtins.listToAttrs (builtins.map (system: {
+            name = system;
+            value = {
+              inherit system;
+            };
+          }) supportedList);
+        in (base // builtins.listToAttrs _supported.extra);
+
+      possibleSystems =
+        let
+          base = builtins.listToAttrs (builtins.map (system: {
+            name = system;
+            value = {
+              inherit system;
+            };
+          }) possibleList);
+        in (base // builtins.listToAttrs _supported.extra);
     in (rec {
-      inherit isToplevel makeSupported make;
+      inherit isToplevel isDarwin canDarwin makeSupported make supportedSystems possibleSystems;
 
       current = currentSystem;
       isCygwin = isSupported currentSystem _supported.cygwin;
       isLinux = isSupported currentSystem _supported.linux;
-      inherit isDarwin canDarwin;
 
       supported = supportedList;
       possible = possibleList;
+
+      mapSupported = func: builtins.mapAttrs func supportedSystems;
+      mapPossible = func: builtins.mapAttrs func possibleSystems;
 
       forAllCygwin = lib.genAttrs _supported.cygwin;
       forAllDarwin = lib.genAttrs _supported.darwin;
