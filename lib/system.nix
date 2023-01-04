@@ -29,7 +29,7 @@ let
   ] lib.platforms.linux;
   defaultExtra = [
     {
-      name = "wasm32-wasi";
+      name = "wasm32";
       value = {
         config = "wasm32-unknown-wasi";
         useLLVM = true;
