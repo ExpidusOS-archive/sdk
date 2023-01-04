@@ -1,4 +1,4 @@
-{ pkgs ? (import ./.. { }), nixpkgs ? { }}:
+{ pkgs ? (import ./../.. { }), nixpkgs ? { }}:
 let
   revision = pkgs.lib.expidus.trivial.revisionWithDefault (nixpkgs.revision or "master");
 
@@ -25,7 +25,7 @@ let
   flattenedLibSubset = { subsetname, functions }:
   builtins.map
     (fn: {
-      name = "lib.${subsetname}.${fn.name}";
+      name = "lib.expidus.${subsetname}.${fn.name}";
       value = fn.location;
     })
     functions;

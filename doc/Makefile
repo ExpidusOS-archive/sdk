@@ -90,6 +90,7 @@ highlightjs: doc-support/result
 
 
 manual-full.xml: ${MD_TARGETS} .version functions/library/locations.xml functions/library/generated *.xml **/*.xml **/*.xml
+	find functions/library/generated/
 	xmllint --nonet --xinclude --noxincludenode manual.xml --output manual-full.xml
 
 .version: doc-support/result

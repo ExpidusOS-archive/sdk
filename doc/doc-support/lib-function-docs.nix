@@ -2,7 +2,7 @@
 # another library function file to this list, the include list in the
 # file `doc/functions/library.xml` must also be updated.
 
-{ pkgs ? import ./.. {}, locationsXml }:
+{ pkgs ? import ./../.. {}, locationsXml ? import ./lib-function-locations.nix { inherit pkgs; } }:
 
 with pkgs; stdenv.mkDerivation {
   name = "expidus-lib-docs";
@@ -11,7 +11,7 @@ with pkgs; stdenv.mkDerivation {
   buildInputs = [ nixdoc ];
   installPhase = ''
     function docgen {
-      nixdoc -c "$1" -d "$2" -f "../lib/$1.nix"  > "$out/$1.xml"
+      nixdoc -c "expidus.$1" -d "$2" -f "../lib/$1.nix"  > "$out/$1.xml"
     }
 
     mkdir -p $out
