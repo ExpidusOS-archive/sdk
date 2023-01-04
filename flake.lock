@@ -3,16 +3,15 @@
     "disko": {
       "flake": false,
       "locked": {
-        "lastModified": 1672788942,
-        "narHash": "sha256-z997uHEnGE0kuIdo/hJcmf2xIF28QNTwLMHGqj66b7Y=",
-        "owner": "RossComputerGuy",
+        "lastModified": 1672841174,
+        "narHash": "sha256-E4t0BnQdbvfbpd9uJnQen5Gsu3LreHoZff7c9Z0wr+Y=",
+        "owner": "nix-community",
         "repo": "disko",
-        "rev": "d4874c22a0320ab0890d286e88a5e2eddbd5d649",
+        "rev": "dd025155fb0f5d36afd6719e358e7cf99a47644e",
         "type": "github"
       },
       "original": {
-        "owner": "RossComputerGuy",
-        "ref": "fix/option-descriptions",
+        "owner": "nix-community",
         "repo": "disko",
         "type": "github"
       }

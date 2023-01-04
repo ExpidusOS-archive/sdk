@@ -1,4 +1,4 @@
 fetchTarball {
-  url = "https://github.com/nix-community/disko/archive/981160e9cfb73a9fc9f7eddfe193953fc784cdfb.tar.gz";
-  sha256 = "0v5wsmrj2b9a6kxd5j8k24qkizvhm52lycafnhwv1gmrq949p5s2";
+  url = "https://github.com/nix-community/disko/archive/dd025155fb0f5d36afd6719e358e7cf99a47644e.tar.gz";
+  sha256 = "1rmg62fzbp7yglcply7bfaxsr4cz3rs2cvnzlpdzfvhxfh3792qk";
 }

@@ -10,7 +10,7 @@
   inputs.utils.url = github:numtide/flake-utils;
 
   inputs.disko = {
-    url = github:RossComputerGuy/disko/fix/option-descriptions;
+    url = github:nix-community/disko;
     flake = false;
   };
 
