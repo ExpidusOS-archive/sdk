@@ -104,6 +104,8 @@ rec {
           filteredWrappedCrossPackages = lib.filterAttrs (_system: pkg: (builtins.tryEval pkg).success && pkg.meta.available && system != _system) wrappedCrossPackages;
         in {
           ${target} = (packageOverlay pkgs pkgs).${name};
+        } // lib.optionalAttrs (builtins.hasAttr system (nixosSystems.${system} or {})) {
+          ${makeWrapped "vm"} = nixosSystems.${system}.${system}.config.system.build.vm;
         } // filteredWrappedCrossPackages // (builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (sys: value: {
           name = makeWrapped "vm-${sys}";
           value = value.config.system.build.vm;
