@@ -19,6 +19,6 @@ with pkgs; stdenv.mkDerivation {
 
     docgen flake 'Flake functions'
     docgen system 'System functions'
-    docgen trivial 'iscellaneous functions'
+    docgen trivial 'Miscellaneous functions'
   '';
 }

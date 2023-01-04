@@ -5,7 +5,7 @@
  <title>ExpidusOS SDK Library Functions</title>
 
  <para>
-   ExpidusOS SDK provides its own library at <varname>pkgs.lib.expidus</varname>, or through <code>import &lt;nixpkgs/lib&gt;</code> in <varname>expidus</varname>.
+  ExpidusOS SDK provides its own library at <varname>pkgs.lib.expidus</varname>, or through <code>import &lt;nixpkgs/lib&gt;</code> in <varname>expidus</varname>.
  </para>
 
 <!-- These docs are generated via nixdoc. To add another generated
@@ -13,6 +13,8 @@
       `lib-function-docs.nix` must also be updated. -->
 
  <xi:include href="./library/generated/flake.xml" />
+
  <xi:include href="./library/generated/system.xml" />
+
  <xi:include href="./library/generated/trivial.xml" />
 </section>

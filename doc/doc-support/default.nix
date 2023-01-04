@@ -5,7 +5,7 @@ let
 
   locationsXml = import ./lib-function-locations.nix { inherit pkgs nixpkgs; };
   functionDocs = import ./lib-function-docs.nix { inherit locationsXml pkgs; };
-  version = pkgs.lib.expidus.trivial.version;
+  version = lib.expidus.trivial.version;
 
   epub-xsl = pkgs.writeText "epub.xsl" ''
     <?xml version='1.0'?>

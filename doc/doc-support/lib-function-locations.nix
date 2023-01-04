@@ -38,7 +38,11 @@ let
       substr = builtins.substring prefixLen filenameLen filename;
       in substr;
 
-  removeNixpkgs = removeFilenamePrefix (builtins.toString pkgs.path);
+  removeNixpkgs = filename:
+    let
+      withoutStore = removeFilenamePrefix (builtins.toString builtins.storeDir) filename;
+      storeHash = builtins.head (nixpkgsLib.splitString "/" withoutStore);
+    in removeFilenamePrefix "${builtins.toString builtins.storeDir}/${storeHash}" filename;
 
   liblocations =
     builtins.filter
@@ -66,7 +70,7 @@ let
         Located at
         <link
           xlink:href="${urlPrefix}/${value.file}#L${builtins.toString value.line}">${value.file}:${builtins.toString value.line}</link>
-        in  <literal>&lt;ExpidusOS SDK&gt;</literal>.
+        in  <literal>&lt;nixpkgs/lib&gt;</literal>.
         </para>
         </section>
       '')

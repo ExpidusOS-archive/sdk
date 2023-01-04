@@ -4,7 +4,7 @@
          xml:id="chap-functions">
  <title>Functions reference</title>
  <para>
-   Utility functions provided by ExpidusOS's SDK.
+  Utility functions provided by ExpidusOS's SDK.
  </para>
  <xi:include href="functions/library.xml" />
 </chapter>

@@ -7,7 +7,7 @@
  </info>
  <xi:include href="preface.chapter.xml" />
  <part>
-   <title>Using ExpidusOS SDK</title>
-   <xi:include href="functions.xml" />
+  <title>Using ExpidusOS SDK</title>
+  <xi:include href="functions.xml" />
  </part>
 </book>
