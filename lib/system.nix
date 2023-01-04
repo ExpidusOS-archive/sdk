@@ -15,17 +15,14 @@ let
   defaultCygwin = [];
   defaultDarwin = builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ];
   defaultLinux = lib.lists.subtractLists [
-    "s390x-linux"
-    "s390-linux"
-    "riscv32-linux"
-    "powerpc64-linux"
-    "mips64el-linux"
-    "mipsel-linux"
-    "microblazeel-linux"
-    "microblaze-linux"
     "m68k-linux"
-    "armv7a-linux"
-    "armv5tel-linux"
+    "microblaze-linux"
+    "microblazeel-linux"
+    "mipsel-linux"
+    "powerpc64-linux"
+    "riscv32-linux"
+    "s390-linux"
+    "s390x-linux"
   ] lib.platforms.linux;
   defaultExtra = [
     {
