@@ -1,7 +1,7 @@
-{ lib, stdenv, meson, ninja, pkg-config, uncrustify, clang_14,
+{ lib, clangStdenv, meson, ninja, pkg-config, uncrustify,
   vala, nix, glib, zsh, path, git, variant ? "desktop" }:
 with lib;
-stdenv.mkDerivation rec {
+clangStdenv.mkDerivation rec {
   name = "expidus-sdk";
   src = ../../../../.;
   inherit (lib.expidus.trivial) version;
@@ -14,7 +14,7 @@ stdenv.mkDerivation rec {
   setupHooks = [ ./setup-hook.sh ];
   enableParallelBuilding = true;
 
-  nativeBuildInputs = [ meson ninja pkg-config uncrustify clang_14 vala nix zsh git ];
+  nativeBuildInputs = [ meson ninja pkg-config uncrustify vala nix zsh git ];
   buildInputs = [ glib ];
 
   postInstall = ''
