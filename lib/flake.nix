@@ -42,43 +42,44 @@ rec {
               };
             })) packages.overlay;
 
-      nixosSystems = sysconfig.mapLinuxMatrix ({ host, target }:
-        let
-          base-pkgs = nixpkgsFor.${host}.pkgsCross.${target};
-          pkgs = packageOverlay base-pkgs base-pkgs;
+      nixosSystems = sysconfig.forAllLinux (host:
+        sysconfig.forAllLinux (target:
+          let
+            base-pkgs = nixpkgsFor.${host}.pkgsCross.${target};
+            pkgs = packageOverlay base-pkgs base-pkgs;
 
-          pkg = pkgs.${name};
-          packages = emptyPackages // (packagesFor {
-            final = pkgs;
-            prev = packages;
-            old = pkg;
-          });
+            pkg = pkgs.${name};
+            packages = emptyPackages // (packagesFor {
+              final = pkgs;
+              prev = packages;
+              old = pkg;
+            });
 
-          nixosSystem = if builtins.hasAttr "nixosSystem" lib then lib.nixosSystem
-          else import ../nixos/lib/eval-config.nix;
+            nixosSystem = if builtins.hasAttr "nixosSystem" lib then lib.nixosSystem
+            else import ../nixos/lib/eval-config.nix;
 
-          realPkgs = base-pkgs.appendOverlays ([
-            packageOverlay
-          ]);
-        in nixosSystem {
-          system = target;
-          pkgs = realPkgs;
-          lib = lib.extend (self: prev: {
-            inherit expidus;
-          });
+            realPkgs = base-pkgs.appendOverlays ([
+              packageOverlay
+            ]);
+          in nixosSystem {
+            system = target;
+            pkgs = realPkgs;
+            lib = lib.extend (self: prev: {
+              inherit expidus;
+            });
 
-          modules = [
-            ../nixos/dev.nix
-            {
-              environment.systemPackages = [ pkg ];
-              virtualisation.sharedDirectories.source-code = {
-                source = builtins.toString (if builtins.isFunction self then self realPkgs else self);
-                target = "/home/expidus-devel/source";
-                options = [ "uname=developer" ];
-              };
-            }
-          ];
-        });
+            modules = [
+              ../nixos/dev.nix
+              {
+                environment.systemPackages = [ pkg ];
+                virtualisation.sharedDirectories.source-code = {
+                  source = builtins.toString (if builtins.isFunction self then self realPkgs else self);
+                  target = "/home/expidus-devel/source";
+                  options = [ "uname=developer" ];
+                };
+              }
+            ];
+          }));
     in {
       overlays.${target} = packageOverlay;
 
@@ -96,19 +97,22 @@ rec {
           pkgs = nixpkgsFor.${system};
           crossPackages = builtins.mapAttrs (system: pkgsCross: (packageOverlay pkgsCross pkgsCross).${name}) pkgs.pkgsCross;
           wrappedCrossPackages = builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (system: value: {
-            name = "default-${system}";
+            name = makeWrapped system;
             inherit value;
           }) crossPackages));
           filteredWrappedCrossPackages = lib.filterAttrs (system: pkg: (builtins.tryEval pkg).success && pkg.meta.available) wrappedCrossPackages;
         in {
           ${target} = (packageOverlay pkgs pkgs).${name};
-        } // filteredWrappedCrossPackages // {
-        } // lib.optionalAttrs (builtins.hasAttr system nixosSystems) {
-          ${makeWrapped "vm"} = nixosSystems.${system}.config.system.build.vm;
-        });
+        } // filteredWrappedCrossPackages // (builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (sys: value: {
+          name = makeWrapped "vm-${sys}";
+          value = value.config.system.build.vm;
+        }) (nixosSystems.${system} or {})))));
 
       nixosConfigurations = (nixosSystems // {
-        ${target} = if builtins.hasAttr "${expidus.system.current}/${expidus.system.current}" nixosSystems then nixosSystems."${expidus.system.current}/${expidus.system.current}" else null;
+        ${target} = if (builtins.hasAttr expidus.system.current nixosSystems)
+          && (builtins.hasAttr expidus.system.current nixosSystems.${expidus.system.current}) then
+            nixosSystems.${expidus.system.current}.${expidus.system.current}
+          else null;
       });
 
       hydraJobs = {
@@ -116,7 +120,7 @@ rec {
           let
             pkgs = nixpkgsFor.${system};
           in (packageOverlay pkgs pkgs).${name});
-        ${makeWrapped "vm"} = sysconfig.forAllLinux (system: nixosSystems."${system}/${system}".config.system.build.vm);
+        ${makeWrapped "vm"} = sysconfig.forAllLinux (system: nixosSystems.${system}.${system}.config.system.build.vm);
       };
 
       devShells = sysconfig.mapPossible (system: value:
