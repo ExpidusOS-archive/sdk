@@ -13,7 +13,7 @@ stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "genesis";
     inherit rev;
-    sha256 = "sha256-LQlVrzl7GeXoOy83mqL7rf/A2A/ueQRjUyXcam26U/Y=";
+    sha256 = "sha256-zHnYUcHg7Tat+WONS/aktXDXFYa/rPbPgQc/b8VrVGE=";
     fetchSubmodules = true;
     leaveDotGit = true;
   };
