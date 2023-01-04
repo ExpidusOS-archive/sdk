@@ -17,7 +17,8 @@ rec {
         localSystem = value;
       });
       wrapped = name + (if target == "default" then "" else "-${target}");
-      makeWrapped = key: if target == "default" then key else target + "-${key}";
+      makeWrappedPrefixed = px: key: if target == "default" then "${px}-${key}" else "${target}-${key}";
+      makeWrapped = key: if target == "default" then key else "${target}-${key}";
 
       packageOverlay = final: prev:
         let
@@ -97,16 +98,16 @@ rec {
           pkgs = nixpkgsFor.${system};
           crossPackages = builtins.mapAttrs (system: pkgsCross: (packageOverlay pkgsCross pkgsCross).${name}) pkgs.pkgsCross;
           wrappedCrossPackages = builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (system: value: {
-            name = makeWrapped system;
+            name = makeWrappedPrefixed "default" system;
             inherit value;
           }) crossPackages));
-          filteredWrappedCrossPackages = lib.filterAttrs (system: pkg: (builtins.tryEval pkg).success && pkg.meta.available) wrappedCrossPackages;
+          filteredWrappedCrossPackages = lib.filterAttrs (_system: pkg: (builtins.tryEval pkg).success && pkg.meta.available && system != _system) wrappedCrossPackages;
         in {
           ${target} = (packageOverlay pkgs pkgs).${name};
         } // filteredWrappedCrossPackages // (builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (sys: value: {
           name = makeWrapped "vm-${sys}";
           value = value.config.system.build.vm;
-        }) (nixosSystems.${system} or {})))));
+        }) (lib.filterAttrs (_system: nixos: system != _system) (nixosSystems.${system} or {}))))));
 
       nixosConfigurations = (nixosSystems // {
         ${target} = if (builtins.hasAttr expidus.system.current nixosSystems)
