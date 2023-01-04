@@ -125,6 +125,16 @@ let
       mapSupported = func: builtins.mapAttrs func supportedSystems;
       mapPossible = func: builtins.mapAttrs func possibleSystems;
 
+      linuxMatrix = builtins.map ({ a, b }: "${a}/${b}") (lib.cartesianProductOfSets { a = _supported.linux; b = _supported.linux; });
+
+      mapLinuxMatrix = func:
+        let
+          doMap = lib.genAttrs linuxMatrix;
+        in builtins.mapAttrs (_: func) (doMap (str: {
+          host = lib.lists.head (lib.splitString "/" str);
+          target = lib.lists.head (lib.lists.tail (lib.splitString "/" str));
+        }));
+
       forAllCygwin = lib.genAttrs _supported.cygwin;
       forAllDarwin = lib.genAttrs _supported.darwin;
       forAllLinux = lib.genAttrs _supported.linux;

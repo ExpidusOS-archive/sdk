@@ -42,9 +42,9 @@ rec {
               };
             })) packages.overlay;
 
-      nixosSystems = sysconfig.forAllLinux (system:
+      nixosSystems = sysconfig.mapLinuxMatrix ({ host, target }:
         let
-          base-pkgs = nixpkgsFor.${system};
+          base-pkgs = nixpkgsFor.${host}.pkgsCross.${target};
           pkgs = packageOverlay base-pkgs base-pkgs;
 
           pkg = pkgs.${name};
@@ -61,7 +61,7 @@ rec {
             packageOverlay
           ]);
         in nixosSystem {
-          inherit system;
+          system = target;
           pkgs = realPkgs;
           lib = lib.extend (self: prev: {
             inherit expidus;
@@ -108,7 +108,7 @@ rec {
         });
 
       nixosConfigurations = (nixosSystems // {
-        ${target} = if builtins.hasAttr expidus.system.current nixosSystems then nixosSystems.${expidus.system.current} else null;
+        ${target} = if builtins.hasAttr "${expidus.system.current}/${expidus.system.current}" nixosSystems then nixosSystems."${expidus.system.current}/${expidus.system.current}" else null;
       });
 
       hydraJobs = {
@@ -116,7 +116,7 @@ rec {
           let
             pkgs = nixpkgsFor.${system};
           in (packageOverlay pkgs pkgs).${name});
-        ${makeWrapped "vm"} = sysconfig.forAllLinux (system: nixosSystems.${system}.config.system.build.vm);
+        ${makeWrapped "vm"} = sysconfig.forAllLinux (system: nixosSystems."${system}/${system}".config.system.build.vm);
       };
 
       devShells = sysconfig.mapPossible (system: value:
