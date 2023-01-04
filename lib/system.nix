@@ -23,6 +23,7 @@ let
   defaultDarwin = mapSystemToAttrs (builtins.map (name: "${name}-darwin") [ "aarch64" "x86_64" ]);
   defaultLinux =
     (mapSystemToAttrs (lib.lists.subtractLists [
+      "aarch64-linux"
       "armv5tel-linux"
       "armv7a-linux"
       "m68k-linux"
@@ -30,8 +31,10 @@ let
       "microblazeel-linux"
       "mipsel-linux"
       "mips64el-linux"
+      "powerpc64le-linux"
       "powerpc64-linux"
       "riscv32-linux"
+      "riscv64-linux"
       "s390-linux"
       "s390x-linux"
     ] lib.platforms.linux) ++ [
@@ -47,6 +50,27 @@ let
         value = {
           config = "aarch64-unknown-linux-gnu";
           system = "aarch64-linux";
+        };
+      }
+      {
+        name = "powerpc64le-linux";
+        value = {
+          config = "powerpc64le-unknown-linux-gnuabielfv2";
+          system = "powerpc64le-linux";
+        };
+      }
+      {
+        name = "aarch64-linux";
+        value = {
+          config = "aarch64-unknown-linux-gnu";
+          system = "aarch64-linux";
+        };
+      }
+      {
+        name = "riscv64-linux";
+        value = {
+          config = "riscv64-unknown-linux-gnu";
+          system = "riscv64-linux";
         };
       }
     ]);
