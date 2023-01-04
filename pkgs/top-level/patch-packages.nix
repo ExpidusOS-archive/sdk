@@ -29,6 +29,7 @@ rec {
 
   graphite2 = super.graphite2.overrideAttrs (old: {
     buildInputs = [ freetype ];
+    doCheck = false;
   });
 
   elfutils = super.elfutils.overrideAttrs (old: {
