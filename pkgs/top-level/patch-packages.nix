@@ -22,4 +22,8 @@ rec {
       sha256 = "G5mIIHET2Wi6RANqAyIiY+APgz7nASYOkNrkjVK14AA=";
     };
   }) else super.ninja;
+
+  grim = super.grim.overrideAttrs (old: {
+    nativeBuildInputs = old.nativeBuildInputs ++ [ wayland-scanner ];
+  });
 }

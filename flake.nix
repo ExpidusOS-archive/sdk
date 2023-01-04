@@ -92,7 +92,7 @@
           modules = ["${toString ./nixos/modules/installer/sd-card}/sd-image-${type}.nix"];
         }).config.system.build.sdImage;
 
-      release-unique = pkgs: {
+      release-unique = pkgs: lib.optionalAttrs (!pkgs.hostPlatform.isDarwin) {
         installer-raspberry-pi = makeSdImage pkgs.pkgsCross.raspberry-pi "raspberrypi-installer";
         installer-aarch64 = makeSdImage pkgs.pkgsCross.aarch64-multiplatform "aarch64-installer";
       };
