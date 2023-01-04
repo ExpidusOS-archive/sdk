@@ -46,7 +46,7 @@ rec {
       nixosSystems = sysconfig.forAllLinux (host:
         sysconfig.forAllLinux (target:
           let
-            base-pkgs = nixpkgsFor.${host}.pkgsCross.${target};
+            base-pkgs = if host == target then nixpkgsFor.${host} else nixpkgsFor.${host}.pkgsCross.${target};
             pkgs = packageOverlay base-pkgs base-pkgs;
 
             pkg = pkgs.${name};
