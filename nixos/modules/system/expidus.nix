@@ -4,7 +4,7 @@ let
   cfg = config.expidus;
   opts = options.expidus;
 
-  systems = lib.expidus.system.supported
+  systems = builtins.attrValues (builtins.mapAttrs (key: config: config.system) lib.expidus.system.supportedSystems)
     ++ lib.optional (pkgs.stdenv.hostPlatform.isx86 && pkgs.wine.meta.available) "i686-windows"
     ++ lib.optional pkgs.wine64.meta.available "x86_64-windows";
 in {
@@ -60,7 +60,10 @@ in {
       };
     }
     (mkIf cfg.binfmt {
-      boot.binfmt.emulatedSystems = lib.lists.subtractLists lib.platforms.cygwin (lib.filter (sys: sys != pkgs.system) (systems));
+      boot.binfmt.emulatedSystems = lib.lists.subtractLists (lib.platforms.cygwin ++ [
+        "armv5tel-linux"
+        "armv7a-linux"
+      ]) (lib.filter (sys: sys != pkgs.system) (systems));
     })
     /*(mkIf cfg.fs.enable {
       assertions = [{

@@ -30,18 +30,29 @@ let
       value = {
         config = "wasm32-unknown-wasi";
         useLLVM = true;
+        system = "wasm32-wasi";
+      };
+    }
+    {
+      name = "wasi64";
+      value = {
+        config = "wasm64-unknown-wasi";
+        useLLVM = true;
+        system = "wasm64-wasi";
       };
     }
     {
       name = "raspberry-pi";
       value = {
         config = "armv6l-unknown-linux-gnueabihf";
+        system = "armv6l-linux";
       } // libPlatforms.raspberrypi;
     }
     {
       name = "aarch64-multiplatform";
       value = {
         config = "aarch64-unknown-linux-gnu";
+        system = "aarch64-linux";
       };
     }
   ];
