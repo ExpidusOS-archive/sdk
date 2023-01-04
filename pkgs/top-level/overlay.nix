@@ -10,8 +10,8 @@ in
   ...
 }@args:
 let
-  config = builtins.removeAttrs args [ "overlays" ];
-  pkgs = import ("${nixpkgs}/default.nix") config;
+  config = builtins.removeAttrs args [ "overlays" "lib" ] // { inherit lib; };
+  pkgs = import ./nixpkgs/impure.nix config;
 in pkgs.appendOverlays ([
     (import ./patch-packages.nix { inherit lib config; })
     (import ./nix-packages.nix { inherit lib config; })
