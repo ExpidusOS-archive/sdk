@@ -27,11 +27,6 @@ rec {
     nativeBuildInputs = old.nativeBuildInputs ++ [ wayland-scanner ];
   });
 
-  graphite2 = super.graphite2.overrideAttrs (old: {
-    buildInputs = [ freetype ];
-    doCheck = false;
-  });
-
   elfutils = super.elfutils.overrideAttrs (old: {
     buildInputs = old.buildInputs
       ++ lib.optionals (with stdenv; !cc.isGNU && !(isDarwin && isAarch64)) [ libgcc ];
