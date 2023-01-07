@@ -97,7 +97,7 @@ let
     let
       systemFilter = name: builtins.filter (str:
         let
-          system = lib.systems.parse.mkSystemFromString str.system;
+          system = lib.systems.parse.mkSystemFromString str.value.system;
         in system.kernel.name == name) systems;
     in {
       linux = systemFilter "linux";
