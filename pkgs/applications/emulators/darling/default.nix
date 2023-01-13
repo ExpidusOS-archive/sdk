@@ -1,6 +1,6 @@
 { lib, clangStdenv, fetchFromGitHub, pkg-config, cmake, xz, bison, flex,
   libcap, ffmpeg, libpulseaudio, libX11, fuse, freetype, libtiff, libbsd,
-  giflib, fontconfig, expat, xorg, libGLU, cairo, dbus, pcre2, openssl }:
+  giflib, fontconfig, expat, xorg, libGLU, cairo, dbus, pcre2, openssl, llvm }:
 clangStdenv.mkDerivation rec {
   pname = "darling";
   version = "0.1.20220704";
@@ -13,7 +13,7 @@ clangStdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  nativeBuildInputs = [ pkg-config cmake xz bison flex libcap openssl ];
+  nativeBuildInputs = [ pkg-config cmake xz bison flex libcap openssl llvm ];
   buildInputs = [ ffmpeg libpulseaudio libX11 fuse freetype
     libtiff giflib fontconfig expat xorg.libXrandr xorg.libXcursor
     xorg.libXext xorg.libxkbfile xorg.libXdmcp libGLU cairo
