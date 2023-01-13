@@ -25,6 +25,8 @@ let
     (mapSystemToAttrs (lib.lists.subtractLists [
       "aarch64-linux"
       "armv5tel-linux"
+      "armv6l-linux"
+      "armv7l-linux"
       "armv7a-linux"
       "m68k-linux"
       "microblaze-linux"
@@ -38,6 +40,20 @@ let
       "s390-linux"
       "s390x-linux"
     ] lib.platforms.linux) ++ [
+      {
+        name = "armv6l-linux";
+        value = {
+          config = "armv6l-unknown-linux-gnueabihf";
+          system = "armv6l-linux";
+        };
+      }
+      {
+        name = "armv7l-linux";
+        value = {
+          config = "armv7l-unknown-linux-gnueabihf";
+          system = "armv7l-linux";
+        };
+      }
       {
         name = "raspberry-pi";
         value = {
