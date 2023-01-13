@@ -9,6 +9,8 @@ rec {
     flatpakDir = "/var/lib/flatpak";
   };
 
+  clang14Stdenv = pkgs.llvmPackages_14.stdenv;
+
   stdenvExpidus = pkgs.callPackage ../stdenv/expidus/default.nix {};
   mkShell = pkgs.callPackage ../build-support/mkshell/default.nix {};
 
