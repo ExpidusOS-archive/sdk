@@ -7,7 +7,7 @@ in stdenv.mkDerivation rec {
   pname = "neutron";
   version = "0.1.0-${rev}";
 
-  outputs = [ "out" "dev" "devdoc" "viewer" ];
+  outputs = [ "out" "dev" "devdoc" ];
 
   src = fetchFromGitHub {
     owner = "ExpidusOS";
