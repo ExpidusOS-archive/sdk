@@ -13,6 +13,7 @@ rec {
   });
 
   nwg-drawer = callPackage ../applications/misc/nwg-drawer/default.nix {};
+  libvpx = callPackage ../development/libraries/libvpx/default.nix {};
 
   ninja = super.ninja.overrideAttrs (old: {
     depsBuildBuild = [ buildPackages.stdenv.cc ];
