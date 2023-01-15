@@ -1,19 +1,14 @@
-{ nixpkgs, ... }@channels:
+{ channels, lib, prev }:
+with lib;
+fixedPoints.makeExtensible (self:
 let
-  lib = import (nixpkgs + "/lib/default.nix");
-  makeExtendible = name: base:
-    let
-      self = (import "${nixpkgs}/lib/fixed-points.nix" { inherit lib; }).makeExtensible (self:
-        let
-          call = file: import file { ${name} = self; };
-        in base { inherit call self; ${name} = self; });
-    in self;
-in makeExtendible "expidus" ({ call, self, expidus }: rec {
-  inherit makeExtendible channels;
+  callPackage = callPackageWith {
+    inherit lib prev channels;
+  };
+in {
+  inherit channels;
 
-  maintainers = import ./maintainers.nix;
-  trivial = import ./trivial.nix { inherit lib; };
-  system = import ./system.nix { inherit lib expidus; };
-  flake = import ./flake.nix { inherit lib expidus; };
-  types = import ./types.nix { inherit lib expidus; };
+  trivial = callPackage ./trivial.nix {};
+  system = callPackage ./system.nix {};
+  types = callPackage ./types.nix {};
 })

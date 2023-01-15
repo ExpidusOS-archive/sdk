@@ -1,4 +1,4 @@
-{ lib, expidus }:
+{ lib }:
 with lib;
 {
   flatpak = rec {

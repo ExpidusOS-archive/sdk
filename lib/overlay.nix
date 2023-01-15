@@ -1,12 +1,14 @@
-{ nixpkgs, ... }@channels: (import (nixpkgs + "/lib/")).extend (final: prev: {
-  expidus = import ./extend.nix channels;
-  attrsets = prev.attrsets // {
-    mapRename = func: attrs: builtins.listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
-      name = func name value;
-      inherit value;
-    }) attrs));
-  };
-  systems = prev.systems // {
-    examples = final.expidus.system.supportedSystems;
-  };
-})
+{ nixpkgs, home-manager, flake-utils, ... }@channels:
+  (import "${nixpkgs}/lib").extend (final: prev: {
+    expidus = import ./extend.nix {
+      inherit channels prev;
+      lib = final;
+    };
+
+    systems = prev.systems // {
+      examples = final.expidus.system.default.all-configs;
+    };
+
+    hm = (import "${home-manager}/modules/lib/stdlib-extended.nix" final).hm;
+    flake-utils = import flake-utils;
+  })
