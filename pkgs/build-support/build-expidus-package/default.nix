@@ -2,7 +2,7 @@
 { exec,
   src,
   postUnpack ? "",
-  runtime ? expidus.runtimes,
+  runtime ? expidus.runtime,
   plugins ? {},
   nativeBuildInputs ? [],
   buildInputs ? [],
