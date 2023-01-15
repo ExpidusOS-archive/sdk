@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform, meson, git, vala, unzip }:
+{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform, meson, git, vala, unzip, flutter }:
 {
   rev,
   sha256,
@@ -37,22 +37,26 @@
     '';
   };
 in clang14Stdenv.mkDerivation {
-  pname = "expidus-runtimes";
+  pname = "expidus-runtime";
   version = "git+${rev}";
 
   src = fetchFromGitHub {
     owner = "ExpidusOS";
-    repo = "runtimes";
+    repo = "runtime";
     inherit rev sha256;
     leaveDotGit = true;
   };
 
-  nativeBuildInputs = [ meson git vala ];
+  nativeBuildInputs = [ flutter ];
   buildInputs = [ flutter-engine ];
 
   passthru = {
     inherit flutter-engine;
   };
+
+  installPhase = ''
+    cp -r -P --no-preserve=mode,ownership $src $out
+  '';
 
   meta = with lib; {
     description = "Various runtime environments for applications on ExpidusOS";
