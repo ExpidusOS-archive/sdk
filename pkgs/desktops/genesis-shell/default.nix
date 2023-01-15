@@ -1,6 +1,6 @@
 { lib, buildExpidusPackage, fetchFromGitHub }:
 let
-  rev = "";
+  rev = "0bd5e19cedd8f7a2601d019150c928057c48bc43";
 in buildExpidusPackage {
   pname = "genesis-shell";
   version = "git+${rev}";
