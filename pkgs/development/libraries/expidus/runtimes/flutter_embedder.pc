@@ -1,0 +1,8 @@
+prefix=@out@
+includedir=@dev@/include
+libdir=${prefix}/lib
+
+Name: flutter_embedder
+Description: Embedded Flutter
+Libs: -L${libdir} -lflutter_engine
+Cflags: -I${includedir}
