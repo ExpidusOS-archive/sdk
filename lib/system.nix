@@ -17,7 +17,7 @@ fixedPoints.makeExtensible (self:
       };
       android = {
         aarch64 = {
-          system = "aarch64-android";
+          system = "aarch64-linux-android";
           config = "aarch64-unknown-linux-android";
           sdkVer = "30";
           ndkVer = "24";
@@ -46,6 +46,7 @@ fixedPoints.makeExtensible (self:
         forAll = func: builtins.mapAttrs func all-configs;
         forAllSystems = func: builtins.mapAttrs (name: value: func value.system value) (filterAttrs (name: value: value.system == name) all-configs);
 
+        forAllAndroid = forAllPlatform "android";
         forAllLinux = forAllPlatform "linux";
         forAllEmbedded = forAllPlatform "embedded";
       };

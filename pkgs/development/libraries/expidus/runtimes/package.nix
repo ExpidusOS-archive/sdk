@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, meson, git, targetPlatform, unzip }:
+{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform, meson, git, vala, unzip }:
 {
   rev,
   sha256,
@@ -47,12 +47,7 @@ in clang14Stdenv.mkDerivation {
     leaveDotGit = true;
   };
 
-  mesonFlags = [
-    "-Dflutter_engine_libdir=${flutter-engine.out}/lib"
-    "-Dflutter_engine_includedir=${flutter-engine.dev}/include"
-  ];
-
-  nativeBuildInputs = [ meson git ];
+  nativeBuildInputs = [ meson git vala ];
   buildInputs = [ flutter-engine ];
 
   passthru = {
@@ -64,5 +59,6 @@ in clang14Stdenv.mkDerivation {
     homepage = "https://github.com/ExpidusOS/runtimes";
     license = licenses.gpl3Only;
     maintainers = with maintainers; [ RossComputerGuy ];
+    platforms = builtins.attrValues (lib.expidus.system.default.forAllSystems (system: _: system));
   };
 }
