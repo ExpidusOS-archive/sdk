@@ -28,6 +28,8 @@ let
 
       json2yaml -i $out/pubspec.json -o $out/pubspec.yaml
       rm $out/pubspec.json
+
+      mkdir -p $out/.packages
     '';
 
     dontInstall = true;
