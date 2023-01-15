@@ -7,7 +7,8 @@
   nativeBuildInputs ? [],
   buildInputs ? [],
   passthru ? {},
-  meta ? {}
+  meta ? {},
+  ...
 }@args:
 with lib;
 let
