@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform, meson, git, vala, unzip, flutter }:
+{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform, cmake, ninja, unzip, flutter, llvmPackages_14, pkg-config }:
 {
   rev,
   sha256,
@@ -47,8 +47,11 @@ in clang14Stdenv.mkDerivation {
     leaveDotGit = true;
   };
 
-  nativeBuildInputs = [ flutter ];
+  nativeBuildInputs = [ flutter cmake ninja pkg-config llvmPackages_14.clang llvmPackages_14.llvm ];
   buildInputs = [ flutter-engine ];
+
+  dontConfigure = true;
+  dontBuild = true;
 
   passthru = {
     inherit flutter-engine;

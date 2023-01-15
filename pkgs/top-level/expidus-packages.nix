@@ -6,8 +6,6 @@ rec {
   runtime-example = buildPackage {
     pname = "expidus-runtime-example";
     inherit (runtime) version;
-    exec = "expidus_runtime_example";
-
-    src = "${runtime.src}/example";
+    src = "${runtime}/example";
   };
 }
