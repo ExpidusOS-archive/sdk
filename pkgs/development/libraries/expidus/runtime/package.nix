@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform, cmake, ninja, unzip, flutter, llvmPackages_14, pkg-config }:
+{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform, cmake, ninja, unzip, flutter, xcb, wlroots, llvmPackages_14, pkg-config }:
 {
   rev,
   sha256,
@@ -48,7 +48,8 @@ in clang14Stdenv.mkDerivation {
   };
 
   nativeBuildInputs = [ flutter cmake ninja pkg-config llvmPackages_14.clang llvmPackages_14.llvm ];
-  buildInputs = [ flutter-engine ];
+  buildInputs = [ flutter-engine ]
+    ++ (lib.optionals (clang14Stdenv.isLinux) [ wlroots xcb ]);
 
   dontConfigure = true;
   dontBuild = true;
