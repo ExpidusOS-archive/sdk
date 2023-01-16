@@ -59,6 +59,7 @@ in clang14Stdenv.mkDerivation {
 
   installPhase = ''
     cp -r -P --no-preserve=mode,ownership $src $out
+    rm -rf $out/example $out/flake.nix $out/flake.lock
   '';
 
   meta = with lib; {
