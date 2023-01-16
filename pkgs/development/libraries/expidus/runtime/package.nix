@@ -49,7 +49,7 @@ in clang14Stdenv.mkDerivation {
 
   nativeBuildInputs = [ flutter cmake ninja pkg-config llvmPackages_14.clang llvmPackages_14.llvm ];
   buildInputs = [ flutter-engine ]
-    ++ (lib.optionals (clang14Stdenv.isLinux) [ wlroots xorg.xcb ]);
+    ++ (lib.optionals (clang14Stdenv.isLinux) [ wlroots xorg.libxcb ]);
 
   dontConfigure = true;
   dontBuild = true;
