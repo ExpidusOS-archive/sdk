@@ -44,5 +44,12 @@
       legacyPackages = lib.expidus.system.default.forAllSystems (system: localSystem: importPackage {
         inherit localSystem;
       });
+
+      packages = lib.expidus.system.default.forAllSystems (system: localSystem:
+        let
+          pkgs = importPackage {
+            inherit localSystem;
+          };
+        in with lib; filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg) pkgs.expidus);
     };
 }
