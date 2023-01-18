@@ -3,8 +3,8 @@
   rev,
   sha256,
   engine ? {
-    rev = "78a68b9dfe11b68df06b06d88ccd4021368325bc";
-    sha256 = "sha256-VHV8FF94WaK/wePlKHc7NalWXm4++k9WoyH7WwFu69s=";
+    rev = "857bd6b74c5eb56151bfafe91e7fa6a82b6fee25";
+    sha256 = "sha256-rpxp0rVv17ObYECx0W0SH7Ai8le869of/dLMT88wh74=";
   }
 }: let
   flutterArch = if targetPlatform.isx86_64 then "x64"
