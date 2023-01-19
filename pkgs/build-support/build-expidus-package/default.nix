@@ -44,7 +44,7 @@ in flutter.mkFlutterApp ({
   inherit src;
 
   nativeBuildInputs = runtime.nativeBuildInputs ++ nativeBuildInputs;
-  buildInputs = [ runtime ] ++ buildInputs;
+  buildInputs = [ runtime runtime.flutter-engine ] ++ buildInputs;
 
   passthru = passthru // {
     expidus-runtime = runtime;
