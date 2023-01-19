@@ -1,4 +1,6 @@
-{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform, cmake, ninja, unzip, flutter, xorg, wlroots, llvmPackages_14, pkg-config }:
+{ lib, stdenvNoCC, fetchurl, fetchFromGitHub, clang14Stdenv, targetPlatform,
+  cmake, ninja, unzip, flutter, xorg, wlroots, llvmPackages_14, pkg-config,
+  libdrm, udev, vulkan-loader, mesa }:
 {
   rev,
   sha256,
@@ -49,7 +51,7 @@ in clang14Stdenv.mkDerivation {
 
   nativeBuildInputs = [ flutter cmake ninja pkg-config llvmPackages_14.clang llvmPackages_14.llvm ];
   buildInputs = [ flutter-engine ]
-    ++ (lib.optionals (clang14Stdenv.isLinux) [ wlroots xorg.libxcb ]);
+    ++ (lib.optionals (clang14Stdenv.isLinux) [ wlroots xorg.libxcb libdrm udev vulkan-loader mesa ] ++ libdrm.buildInputs);
 
   dontConfigure = true;
   dontBuild = true;
