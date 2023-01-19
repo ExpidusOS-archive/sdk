@@ -1,16 +1,14 @@
 { lib }:
 with lib;
 fixedPoints.makeExtensible (self: rec {
-  release = self.release or strings.fileContents ../.version;
+  release = strings.fileContents ../.version;
 
-  versionSuffix = self.versionSuffix or
-    (let suffixFile = ../.version-suffix;
+  versionSuffix = (let suffixFile = ../.version-suffix;
       in if builtins.pathExists suffixFile
       then "-${strings.fileContents suffixFile}"
       else "-alpha");
 
-  revisionWithDefault = self.revisionWithDefault or
-    (default:
+  revisionWithDefault = (default:
       let
         revisionFile = "${toString ./..}/.git-revision";
         gitRepo      = "${toString ./..}/.git";
@@ -19,9 +17,9 @@ fixedPoints.makeExtensible (self: rec {
         else if pathExists revisionFile then fileContents revisionFile
         else default);
 
-  revision = self.revision or (revisionWithDefault "unknown");
-  revisionTag = self.revisionTag or (if revision != "unknown" then ".${revision}" else "");
+  revision = self.revisionWithDefault "unknown";
+  revisionTag = if self.revision != "unknown" then ".${self.revision}" else "";
 
-  version = self.version or (release + versionSuffix + revisionTag);
+  version = self.release + self.versionSuffix + self.revisionTag;
   codeName = self.codeName or "Willamette";
 })

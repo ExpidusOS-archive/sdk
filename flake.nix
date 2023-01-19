@@ -41,6 +41,19 @@
     in {
       inherit lib;
 
+      devShells = lib.expidus.system.default.forAllSystems (system: localSystem:
+        let
+          pkgs = importPackage {
+            inherit localSystem;
+          };
+        in {
+          default = pkgs.mkShell {
+            name = "expidus-sdk";
+            inherit (pkgs.expidus.sdk) mesonFlags;
+            packages = pkgs.expidus.sdk.nativeBuildInputs;
+          };
+        });
+
       legacyPackages = lib.expidus.system.default.forAllSystems (system: localSystem: importPackage {
         inherit localSystem;
       });

@@ -1,5 +1,6 @@
 { callPackage }:
 rec {
+  sdk = callPackage ../development/misc/expidus/sdk/default.nix {};
   buildPackage = callPackage ../build-support/build-expidus-package/default.nix {};
   runtime = callPackage ../development/libraries/expidus/runtime/default.nix {};
 
