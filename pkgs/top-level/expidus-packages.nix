@@ -7,6 +7,6 @@ rec {
     pname = "expidus-runtime-example";
     inherit (runtime) version;
     src = "${runtime.src}/example";
-    vendorSha256 = "sha256-V0TV6oTkZ/DMFiE7fifHOQ0Vm68J9Dw6D2KEdixsH9E=";
+    vendorSha256 = "sha256-FxJmIoycLUQPlR2qV9vue2NKq3eNW6Tq4awSGqbwsis=";
   };
 }
