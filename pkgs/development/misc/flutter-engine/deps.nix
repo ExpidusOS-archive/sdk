@@ -515,7 +515,7 @@ in {
     owner = "erikdoe";
     repo = "ocmock";
     rev = "c4ec0e3a7a9f56cfdbd0aa01f4f97bb4b75c5ef8";
-    sha256 = "sha256-XBqoamRCiAuOSdhv93kAbLMZXjrmYN9HWdnZ5uzenic=";
+    sha256 = "sha256-CQ2qJEH3R9Hp9dXyWz3REerxOa6yoIlpQnQ0d7g4kNw=";
     leaveDotGit = true;
   };
   "src/third_party/pyyaml" = fetchFromGoogle {
