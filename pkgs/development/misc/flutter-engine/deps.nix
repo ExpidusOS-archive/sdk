@@ -654,7 +654,7 @@ in {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/SPIRV-Cross";
     rev = "50b4d5389b6a06f86fb63a2848e1a7da6d9755ca";
-    sha256 = "sha256-7Ob508DDrHX1sebtwQB/aY1Ghn0ZNUkGwHdycfQl9tg=";
+    sha256 = "sha256-0XgIUGq7R/PnesQ0e7Uky9MpOPp6eKwpyCcJWFOx1Hc=";
   };
   "src/third_party/vulkan-deps/spirv-headers/src" = fetchFromGoogle {
     owner = "chromium";
