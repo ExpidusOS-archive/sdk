@@ -11,7 +11,7 @@ in {
     owner = "flutter";
     repo = "buildroot";
     rev = "6af51ff4b86270cc61517bff3fff5c3bb11492e1";
-    sha256 = "sha256-z7Kc1kUR/IUX8/wh+o1yGC05qQ3uMqxDg1w3csjSC+o=";
+    sha256 = "sha256-77QseVLpSaJf3OaeJsOVzGwDjkQSpcbmZ2qUnhxz1l4=";
     leaveDotGit = true;
   };
   "src/third_party/abseil-cpp" = fetchFromGoogle {
