@@ -254,7 +254,7 @@ in {
     owner = "dart";
     repo = "protobuf";
     rev = "2d6c6037cee6c5f683e8f38e598443f9bec74b94";
-    sha256 = "sha256-Vb0JZgGywMZeuZy28PWc6Z54Z+ylQZwUoWO3j2CuhOE=";
+    sha256 = "sha256-+ssxEmdo13S3m/8TRK8YZcy6/zq15tpBA4BvVq70qDU=";
   };
   "src/third_party/dart/third_party/pkg/pub" = fetchFromGoogle {
     owner = "dart";
