@@ -170,7 +170,7 @@ in {
     owner = "dart";
     repo = "http";
     rev = "843c5ecb1ea2233ba7b7049833b5801b149fba86";
-    sha256 = "sha256-WgdwJ2GiWATzJWQ1WzYxzqj5dfZv6r9fbVNUbBemsZU=";
+    sha256 = "sha256-2Z4n2LhUEzrJ2a8N5AnPCDctvgfIgnMsqdjKpMZLtvE=";
   };
   "src/third_party/dart/third_party/pkg/http_multi_server" = fetchFromGoogle {
     owner = "dart";
