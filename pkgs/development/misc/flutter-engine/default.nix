@@ -71,10 +71,6 @@ let
 
       sed -i '1 s|^.*$|#!${gnumake}/bin/make -f|' src/third_party/harfbuzz/src/update-unicode-tables.make
 
-      python3 src/third_party/dart/tools/generate_package_config.py
-      python3 src/third_party/dart/tools/generate_sdk_version_file.py
-      python3 src/tools/remove_stale_pyc_files.py src/tools
-
       mkdir -p src/build/linux/debian_sid_${toolchainArch}-sysroot
       tar -xf $toolchain -C src/build/linux/debian_sid_${toolchainArch}-sysroot
 
@@ -85,4 +81,7 @@ let
     outputHashMode = "recursive";
     outputHash = "sha256-1KlU28IdxkuZv3uyw1rlR2NNBO3W7WSnq/DKV4s6eiU=";
   };
+  # python3 src/third_party/dart/tools/generate_package_config.py
+  # python3 src/third_party/dart/tools/generate_sdk_version_file.py
+  # python3 src/tools/remove_stale_pyc_files.py src/tools
 in src

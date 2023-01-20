@@ -398,7 +398,7 @@ in {
     owner = "chromium";
     repo = "external/fontconfig";
     rev = "c336b8471877371f0190ba06f7547c54e2b890ba";
-    sha256 = "sha256-129CQ2X+wvgCd39Cjo9GQvA5z8sPDtGvIhPbwDdhbWc=";
+    sha256 = "sha256-AOWpx2plU4CdaJUsXvJHzmbBlfZENXFonW2iVaq10k4=";
   };
   "src/third_party/flatbuffers" = fetchFromGitHub {
     owner = "google";
