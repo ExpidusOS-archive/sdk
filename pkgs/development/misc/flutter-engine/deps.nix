@@ -684,7 +684,7 @@ in {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/Vulkan-Tools";
     rev = "dd7e8d2fbbdaca099e9ada77fec178e12a6b37d5";
-    sha256 = "sha256-4uJJJ9lycjHKC0WQ8TNaMBSxDTH8S6p9r5oABb2ZYmY=";
+    sha256 = "sha256-zu3XxnwxmawJl1XAELKtfG7cvUTjHSm/J5l1JJzHsc4=";
   };
   "src/third_party/vulkan-deps/vulkan-validation-layers/src" = fetchFromGoogle {
     owner = "chromium";
