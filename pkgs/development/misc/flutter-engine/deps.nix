@@ -260,7 +260,7 @@ in {
     owner = "dart";
     repo = "pub";
     rev = "9bf4289d6fd5d6872a8929d6312bbd7098f3ea9c";
-    sha256 = "sha256-+fm2TB4Mz06LcdZr9AlABV1rcd/Ng7RpIg+Lnkxmtn8=";
+    sha256 = "sha256-16wX8xlPijoc4iqXwiDJgsHsWR94dhr8pIZmt6Fxft8=";
   };
   "src/third_party/dart/third_party/pkg/pub_semver" = fetchFromGoogle {
     owner = "dart";
