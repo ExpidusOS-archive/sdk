@@ -134,7 +134,7 @@ in {
     owner = "dart";
     repo = "dartdoc";
     rev = "adc5a45ddafb57e3a600ee7d9e88dc81061d1410";
-    sha256 = "sha256-QIR+Jx5m2zWXobmbVZUGfb8DEYHJ6N1HlNJ8F0h+riM=";
+    sha256 = "sha256-c00MWskBZCcve3icMkzn2f8Zbd80+XkVYVVMaGKrnx4=";
   };
   "src/third_party/dart/third_party/pkg/ffi" = fetchFromGoogle {
     owner = "dart";
