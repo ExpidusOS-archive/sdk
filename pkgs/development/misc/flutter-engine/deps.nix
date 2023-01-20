@@ -30,7 +30,7 @@ in {
     owner = "google";
     repo = "benchmark";
     rev = "431abd149fd76a072f821913c0340137cc755f36";
-    sha256 = "sha256-77QseVLpSaJf3OaeJsOVzGwDjkQSpcbmZ2qUnhxz1l4=";
+    sha256 = "sha256-mPB+Yo8TGwwsg4NiiKDlvWDCO9aye03D81VQ6zK+E68=";
     leaveDotGit = true;
   };
   "src/third_party/boringssl" = fetchFromGitHub {
@@ -44,7 +44,7 @@ in {
     owner = "boringssl";
     repo = "boringssl";
     rev = "87f316d7748268eb56f2dc147bd593254ae93198";
-    sha256 = "sha256-PFM6m0ZtKWg8ofGKY9UC9e3CtdiYUPE0MMI3vVy/MfE=";
+    sha256 = "sha256-/aOCl2URPJt2IenEavxM0mk0fI2Y9oXTXpx1VqZg2sc=";
   };
   "src/third_party/colorama/src" = fetchFromGoogle {
     owner = "chromium";
@@ -56,7 +56,7 @@ in {
     owner = "dart";
     repo = "sdk";
     rev = "b6592742d9f1a82af319f46eda3d59a61e89b91b";
-    sha256 = "sha256-/2TazV/C93fnkgpIKvPcxPW6gLgQCh1KH2I5ee7FbXk=";
+    sha256 = "sha256-L9C+oIQ8iHK+GTqy1b6kJEO4LHFWaNQA9Ahu/Y0fBms=";
   };
   "src/third_party/dart/third_party/pkg/args" = fetchFromGoogle {
     owner = "dart";
@@ -134,7 +134,7 @@ in {
     owner = "dart";
     repo = "dartdoc";
     rev = "adc5a45ddafb57e3a600ee7d9e88dc81061d1410";
-    sha256 = "sha256-21ii9Usl+DFTRs059Gv1JW6D32kXhWdiKwYNs5FgGr4=";
+    sha256 = "sha256-QIR+Jx5m2zWXobmbVZUGfb8DEYHJ6N1HlNJ8F0h+riM=";
   };
   "src/third_party/dart/third_party/pkg/ffi" = fetchFromGoogle {
     owner = "dart";
@@ -398,20 +398,20 @@ in {
     owner = "chromium";
     repo = "external/fontconfig";
     rev = "c336b8471877371f0190ba06f7547c54e2b890ba";
-    sha256 = "sha256-AOWpx2plU4CdaJUsXvJHzmbBlfZENXFonW2iVaq10k4=";
+    sha256 = "sha256-129CQ2X+wvgCd39Cjo9GQvA5z8sPDtGvIhPbwDdhbWc=";
   };
   "src/third_party/flatbuffers" = fetchFromGitHub {
     owner = "google";
     repo = "flatbuffers";
     rev = "0a80646371179f8a7a5c1f42c31ee1d44dcf6709";
-    sha256 = "sha256-n2KPJRah+knfiWP+rBmx37ES3NvA7SK8+dBSYBFTwm0=";
+    sha256 = "sha256-6t3bn5SpDh9y5c6ziWKXBPI8UhQWLDMcX66zjBLA+Gs=";
     leaveDotGit = true;
   };
   "src/third_party/freetype2" = fetchFromGoogle {
     owner = "flutter";
     repo = "third_party/freetype2";
     rev = "3bea2761290a1cbe7d8f75c1c5a7ad727f826a66";
-    sha256 = "sha256-3CsMjuU2S9qGHL5XYYgtapMbfA3xOaSXz5c30HQ1ep0=";
+    sha256 = "sha256-7fnfOXg+pY8lnJ1CMc5XPdt/Dt5G3lW43Z2VR4hJq2o=";
   };
   "src/third_party/fuchsia-vulkan" = fetchFromGoogle {
     owner = "fuchsia";
@@ -448,13 +448,13 @@ in {
     owner = "chromium";
     repo = "chromium/deps/icu";
     rev = "12de966fcbe1d1a48dba310aee63807856ffeee8";
-    sha256 = "sha256-mAGAbyKeCIGVI55IIMOhhomWtHoX098mkscEgJgeANQ=";
+    sha256 = "sha256-3cOC2uKUimVE+qgFFN/71qUF/LYyNogYECE+506HqVc=";
   };
   "src/third_party/imgui" = fetchFromGitHub {
     owner = "ocornut";
     repo = "imgui";
     rev = "29d462ebce0275345a6ce4621d8fff0ded57c9e5";
-    sha256 = "sha256-8m4tgnvLmQJ/39tf+1AoZT3awyXv6oxhuXYqaqVz4Y0=";
+    sha256 = "sha256-KqtVInZCO3vjnStavaZEhDUwGfa4EVGF+VeMjUuPixI=";
     leaveDotGit = true;
   };
   "src/third_party/inja" = fetchFromGoogle {
@@ -503,7 +503,7 @@ in {
     owner = "chromium";
     repo = "webm/libwebp";
     rev = "7dfde712a477e420968732161539011e0fd446cf";
-    sha256 = "sha256-86b9tGE9JZayfBBuf7QoR6rEylXsnAM1eqSOYRjJQvE=";
+    sha256 = "sha256-h6TUnAuPImSQmTuooqIh/TU/ky7b4WubnczJb+gvE7g=";
   };
   "src/third_party/libxml" = fetchFromGoogle {
     owner = "flutter";
@@ -563,7 +563,7 @@ in {
     owner = "google";
     repo = "googleapis.dart";
     rev = "07f01b7aa6985e4cafd0fd4b98724841bc9e85a1";
-    sha256 = "sha256-7ChL5gmSFDBEt5ucSMTKlzvetlAuNiFeaUgF0wtp6KM=";
+    sha256 = "sha256-pglQY6C0pT80jzWoDeWMvEjI1DTiQ9nLR7n4BvIfLrc=";
     leaveDotGit = true;
   };
   "src/third_party/pkg/platform" = fetchFromGitHub {
@@ -605,7 +605,7 @@ in {
     owner = "fuchsia";
     repo = "third_party/rapidjson";
     rev = "ef3564c5c8824989393b87df25355baf35ff544b";
-    sha256 = "sha256-QkELi5+FRxaXKqOfJferiN0jiWCrP5wkwFT6rRme+Gs=";
+    sha256 = "sha256-FX3GDyXWB2ZpPDLzD+SkiAjSYxoIWp4VtXdVUahiv3c=";
   };
   "src/third_party/root_certificates" = fetchFromGoogle {
     owner = "dart";
@@ -617,14 +617,14 @@ in {
     owner = "google";
     repo = "shaderc";
     rev = "948660cccfbbc303d2590c7f44a4cee40b66fdd6";
-    sha256 = "sha256-yhmuz3K2zqwVchebG+jtchYjyCuhBKwe6dDJFDGlnf8=";
+    sha256 = "sha256-uhdN0QgzFsYlwbbgYOSMztyfYI8u8QbQYXwJA/jysEA=";
     leaveDotGit = true;
   };
   "src/third_party/skia" = fetchFromGoogle {
     owner = "skia";
     repo = "skia";
     rev = "936433124f938c06d5b1609d534cd9b693edd71c";
-    sha256 = "sha256-U/8dTdhnb7HWBbT7VjYKiI0uUQA9xbOfYL0yx/R5Tts=";
+    sha256 = "sha256-2aDPXJ2Egnj2S28GOSIYTCfjeHPQWed1U9jeZmJYJmE=";
   };
   "src/third_party/sqlite" = fetchFromGoogle {
     owner = "flutter";
@@ -636,7 +636,7 @@ in {
     owner = "swiftshader";
     repo = "SwiftShader";
     rev = "bea8d2471bd912220ba59032e0738f3364632657";
-    sha256 = "sha256-5Lpf6IusW+OJ4jJssB7q7niilojYTkzFA1Q4IKtyu3I=";
+    sha256 = "sha256-FqeEcyLBkqiN+cBqUVvdERshMaK4LleovIFYPo/dWjs=";
   };
   "src/third_party/vulkan-deps" = fetchFromGoogle {
     owner = "chromium";

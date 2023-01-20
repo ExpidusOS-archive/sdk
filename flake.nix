@@ -50,7 +50,7 @@
           default = pkgs.mkShell {
             name = "expidus-sdk";
             inherit (pkgs.flutter-engine) gclientFile;
-            packages = with pkgs; [ gclient-wrapped ];
+            packages = with pkgs; [ gclient-wrapped python3 pkg-config ninja ];
           };
         });
 
@@ -63,6 +63,7 @@
           pkgs = importPackage {
             inherit localSystem;
           };
-        in with lib; filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg) pkgs.expidus);
+        in (with lib; filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg) pkgs.expidus)
+          ++ (with pkgs; [ flutter-engine ]));
     };
 }
