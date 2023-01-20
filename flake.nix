@@ -49,8 +49,8 @@
         in {
           default = pkgs.mkShell {
             name = "expidus-sdk";
-            inherit (pkgs.expidus.sdk) mesonFlags;
-            packages = pkgs.expidus.sdk.nativeBuildInputs;
+            inherit (pkgs.flutter-engine) gclientFile;
+            packages = with pkgs; [ gclient-wrapped ];
           };
         });
 

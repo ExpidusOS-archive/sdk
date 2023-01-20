@@ -9,4 +9,4 @@ localstatedir = get_option('localstatedir')
 sysconfdir = get_option('sysconfdir')
 
 flutter_engine = get_option('flutter-engine')
-cipd = find_program('cipd', dirs: [get_option('cipd')], required: true)
+gclient = find_program('gclient', required: true)

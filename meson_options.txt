@@ -1,3 +1,1 @@
 option('flutter-engine', type: 'string', value: 'subprojects/flutter-engine', description: 'Path to the Flutter Engine source code')
-option('depot_tools', type: 'string', value: 'subprojects/depot_tools', description: 'Path to Chromium\'s depot_tools')
-option('cipd', type: 'string', value: 'subprojects/cipd', description: 'Path to the binary for Chromium\'s cipd')
