@@ -5,6 +5,7 @@ let
     url = "https://${owner}.googlesource.com/${repo}.git";
     inherit rev sha256 fetchSubmodules;
     leaveDotGit = true;
+    deepClone = true;
   };
 in {
   src = fetchFromGitHub {
@@ -13,6 +14,7 @@ in {
     rev = "6af51ff4b86270cc61517bff3fff5c3bb11492e1";
     sha256 = "sha256-77QseVLpSaJf3OaeJsOVzGwDjkQSpcbmZ2qUnhxz1l4=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/abseil-cpp" = fetchFromGoogle {
     owner = "chromium";
@@ -32,6 +34,7 @@ in {
     rev = "431abd149fd76a072f821913c0340137cc755f36";
     sha256 = "sha256-mPB+Yo8TGwwsg4NiiKDlvWDCO9aye03D81VQ6zK+E68=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/boringssl" = fetchFromGitHub {
     owner = "dart-lang";
@@ -39,6 +42,7 @@ in {
     rev = "ced85ef0a00bbca77ce5a91261a5f2ae61b1e62f";
     sha256 = "sha256-0lnGkWZyq1iyl4AP4NTTwjBvr3mxk322FOTd4prSEpo=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/boringssl/src" = fetchFromGoogle {
     owner = "boringssl";
@@ -406,6 +410,7 @@ in {
     rev = "0a80646371179f8a7a5c1f42c31ee1d44dcf6709";
     sha256 = "sha256-6t3bn5SpDh9y5c6ziWKXBPI8UhQWLDMcX66zjBLA+Gs=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/freetype2" = fetchFromGoogle {
     owner = "flutter";
@@ -431,6 +436,7 @@ in {
     rev = "054a986a8513149e8374fc669a5fe40117ca6b41";
     sha256 = "sha256-y+BbjhvxJzTBG4UdFYFtXbiHbDudlrrUVnkBJhOtu18=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/gtest-parallel" = fetchFromGoogle {
     owner = "chromium";
@@ -456,6 +462,7 @@ in {
     rev = "29d462ebce0275345a6ce4621d8fff0ded57c9e5";
     sha256 = "sha256-KqtVInZCO3vjnStavaZEhDUwGfa4EVGF+VeMjUuPixI=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/inja" = fetchFromGoogle {
     owner = "flutter";
@@ -517,6 +524,7 @@ in {
     rev = "c4ec0e3a7a9f56cfdbd0aa01f4f97bb4b75c5ef8";
     sha256 = "sha256-CQ2qJEH3R9Hp9dXyWz3REerxOa6yoIlpQnQ0d7g4kNw=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pyyaml" = fetchFromGoogle {
     owner = "fuchsia";
@@ -530,6 +538,7 @@ in {
     rev = "9de7a0544457c6aba755ccb65abb41b0dc1db70d";
     sha256 = "sha256-+Be9X/TUj157eKG6DtZ4SC2tR4CuEWkB3BsTdNzEcDU=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/equatable" = fetchFromGitHub {
     owner = "felangel";
@@ -537,6 +546,7 @@ in {
     rev = "0ba67c72db8bed75877fc1caafa74112ee0bd921";
     sha256 = "sha256-A4qLZHMglprPnsAh11iM5r9B5A7phF5Z2OKtmCVN9hY=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/file" = fetchFromGitHub {
     owner = "google";
@@ -544,6 +554,7 @@ in {
     rev = "427bb20ccc852425d67f2880da2a9b4707c266b4";
     sha256 = "sha256-U3Db3BuYmAeLUtT8spymbvAjNFEGCkwTMpu4QzicsKw=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/flutter_packages" = fetchFromGitHub {
     owner = "flutter";
@@ -551,6 +562,7 @@ in {
     rev = "a19eca7fe2660c71acf5928a275deda1da318c50";
     sha256 = "sha256-2KrDOBlxzztv2IKDirzliz5E//fpNxMXsZJ1eGYh8aM=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/gcloud" = fetchFromGitHub {
     owner = "dart-lang";
@@ -558,6 +570,7 @@ in {
     rev = "92a33a9d95ea94a4354b052a28b98088d660e0e7";
     sha256 = "sha256-OpPtkEzfCQD0nGnz0wvkppskTLrpzfpAwswXl+Y8Aws=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/googleapis" = fetchFromGitHub {
     owner = "google";
@@ -565,6 +578,7 @@ in {
     rev = "07f01b7aa6985e4cafd0fd4b98724841bc9e85a1";
     sha256 = "sha256-pglQY6C0pT80jzWoDeWMvEjI1DTiQ9nLR7n4BvIfLrc=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/platform" = fetchFromGitHub {
     owner = "google";
@@ -572,6 +586,7 @@ in {
     rev = "1ffad63428bbd1b3ecaa15926bacfb724023648c";
     sha256 = "sha256-ZIi3fKw1LLsxXRpLbDAp8viz9XQZL6SFq8RkzgCQ/L4=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/process" = fetchFromGitHub {
     owner = "google";
@@ -579,6 +594,7 @@ in {
     rev = "0c9aeac86dcc4e3a6cf760b76fed507107e244d5";
     sha256 = "sha256-KDKDMNx/sQ/YWuBEY5Z4Tqb8K3pfl3N1qav8Bwxekws=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/process_runner" = fetchFromGitHub {
     owner = "google";
@@ -586,6 +602,7 @@ in {
     rev = "d632ea0bfd814d779fcc53a361ed33eaf3620a0b";
     sha256 = "sha256-e/IOJnEuZi+pfl0+2wuX2Pz7XR43nDp6fXvpN49wdFk=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/quiver" = fetchFromGitHub {
     owner = "google";
@@ -593,6 +610,7 @@ in {
     rev = "66f473cca1332496e34a783ba4527b04388fd561";
     sha256 = "sha256-+oihqyW/yL/xietUNYSOmS5jY+FodPtPrj6OnfobxPk=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/pkg/vector_math" = fetchFromGitHub {
     owner = "google";
@@ -600,6 +618,7 @@ in {
     rev = "0a5fd95449083d404df9768bc1b321b88a7d2eef";
     sha256 = "sha256-CQ2qJEH3R9Hp9dXyWz3REerxOa6yoIlpQnQ0d7g4kNw=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/rapidjson" = fetchFromGoogle {
     owner = "fuchsia";
@@ -619,6 +638,7 @@ in {
     rev = "948660cccfbbc303d2590c7f44a4cee40b66fdd6";
     sha256 = "sha256-uhdN0QgzFsYlwbbgYOSMztyfYI8u8QbQYXwJA/jysEA=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/skia" = fetchFromGoogle {
     owner = "skia";
@@ -710,6 +730,7 @@ in {
     rev = "212c5b5ad8e172d2d914ae454c121c89cccbcb35";
     sha256 = "sha256-+buQydUJEUGzwTTaaJ4MnXBb2eIp5E23gv4J+MMX9sU=";
     leaveDotGit = true;
+    deepClone = true;
   };
   "src/third_party/zlib" = fetchFromGoogle {
     owner = "chromium";

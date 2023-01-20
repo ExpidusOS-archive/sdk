@@ -59,6 +59,7 @@ let
       cp --no-preserve=ownership $gclientFile $out/.gclient
       cd $out
       gclient sync --nohooks --no-history
+      find src -name '.git' -exec rm -rf {} \;
 
       for bin in $binaryFixes; do
         chmod 0755 $bin
