@@ -128,7 +128,7 @@ in {
     owner = "dart";
     repo = "dart_style";
     rev = "d7b73536a8079331c888b7da539b80e6825270ea";
-    sha256 = "sha256-m4+OcncaGtczyC5icYWWcOzPNXAnBw+2oV0z7tsZfN8=";
+    sha256 = "sha256-qz8Wt0fVJbg8Z4E2Bqrpk0qG8eh3lfJiDzn67E0Lrtw=";
   };
   "src/third_party/dart/third_party/pkg/dartdoc" = fetchFromGoogle {
     owner = "dart";
