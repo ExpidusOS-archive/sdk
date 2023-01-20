@@ -326,7 +326,7 @@ in {
     owner = "dart";
     repo = "test";
     rev = "fb4ccaf6c68fcc1d208c5c53a52d8e0e718bdffe";
-    sha256 = "sha256-qjRciV5xjOUQihqLf/9X7ByZ79oHOJ+V+a8dRPb3XlY=";
+    sha256 = "sha256-HhY37pKFYUfdLnYOgHmSqV0FNM0LlCU+zskf1ZNIQ0I=";
   };
   "src/third_party/dart/third_party/pkg/test_reflective_loader" = fetchFromGoogle {
     owner = "dart";
