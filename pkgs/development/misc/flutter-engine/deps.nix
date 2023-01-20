@@ -686,7 +686,7 @@ in {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/SPIRV-Tools";
     rev = "b930e734ea198b7aabbbf04ee1562cf6f57962f0";
-    sha256 = "sha256-OfpxyF7qgWkcthAUOnafIVMxQ8FWDDQ/MMSn+LSIIZQ=";
+    sha256 = "sha256-x71egelLw9lMnoQOcArK37aUVBAAfF/ZWuV1w8lyJ9g=";
   };
   "src/third_party/vulkan-deps/vulkan-headers/src" = fetchFromGoogle {
     owner = "chromium";
