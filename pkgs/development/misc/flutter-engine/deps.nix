@@ -598,7 +598,7 @@ in {
     owner = "google";
     repo = "vector_math.dart";
     rev = "0a5fd95449083d404df9768bc1b321b88a7d2eef";
-    sha256 = "sha256-aVMJwXcaC0RJnPfvI+7+qfungcDi3A0aVveYCnBO/1Y=";
+    sha256 = "sha256-CQ2qJEH3R9Hp9dXyWz3REerxOa6yoIlpQnQ0d7g4kNw=";
     leaveDotGit = true;
   };
   "src/third_party/rapidjson" = fetchFromGoogle {
