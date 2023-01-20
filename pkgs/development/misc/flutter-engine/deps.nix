@@ -362,7 +362,7 @@ in {
     owner = "dart";
     repo = "webdev";
     rev = "9c4428472b04f50748ea4871829897cff43455a3";
-    sha256 = "sha256-hl4i7wCxztkSQ8ky6nx4IFhgz60gDA0RDM4r+ZVtVNY=";
+    sha256 = "sha256-Mtcvr5Ry2hkdvkrv/jNoIhFbj6xWS2NQcTH3fOXhGcE=";
   };
   "src/third_party/dart/third_party/pkg/webkit_inspection_protocol" = fetchFromGoogle {
     owner = "dart";
