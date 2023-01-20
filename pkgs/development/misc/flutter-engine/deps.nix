@@ -715,6 +715,6 @@ in {
     owner = "chromium";
     repo = "chromium/src/third_party/zlib";
     rev = "27c2f474b71d0d20764f86f60ef8b00da1a16cda";
-    sha256 = "sha256-PIbsAvFzf3dW2dwnhISPr2SOWahkOjIUsi3rdAv4u0Q=";
+    sha256 = "sha256-7pOLvK5eDSSYltbTF8oDEUW4vJZF5SoJTqZAV8vr1c0=";
   };
 }
