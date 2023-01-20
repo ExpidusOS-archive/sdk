@@ -7,6 +7,7 @@ let
   flutter-deps = filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg) (callPackage ./deps.nix {});
 
   toolchainArch = if hostPlatform.isx86_64 then "amd64" else if hostPlatform.isAarch64 then "aarch64" else throws "Unsupported platform";
+  interpreter = "ld-linux-${hostPlatform.parsed.cpu.arch}.so.2";
 
   src = stdenvNoCC.mkDerivation rec {
     pname = "flutter-engine-src";
@@ -57,16 +58,16 @@ let
       mkdir -p $out/src
       cp --no-preserve=ownership $gclientFile $out/.gclient
       cd $out
-      gclient sync --nohooks
+      gclient sync --nohooks --no-history
 
       for bin in $binaryFixes; do
         chmod 0755 $bin
-        patchelf --set-interpreter ${stdenv.cc.libc}/lib/ld-linux-x86-64.so.2 $bin
+        patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} $bin
       done
 
       for bin in $(find src/buildtools/ -type l); do
         chmod 0755 $bin
-        patchelf --set-interpreter ${stdenv.cc.libc}/lib/ld-linux-x86-64.so.2 $bin || true
+        patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} $bin || true
       done
 
       sed -i '1 s|^.*$|#!${gnumake}/bin/make -f|' src/third_party/harfbuzz/src/update-unicode-tables.make
@@ -79,9 +80,49 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-1KlU28IdxkuZv3uyw1rlR2NNBO3W7WSnq/DKV4s6eiU=";
+    outputHash = "sha256-mGIsm751mEXkJiHv2BIXjpcF0GunsxqYA771I/7g1II=";
   };
-  # python3 src/third_party/dart/tools/generate_package_config.py
-  # python3 src/third_party/dart/tools/generate_sdk_version_file.py
-  # python3 src/tools/remove_stale_pyc_files.py src/tools
-in src
+in stdenv.mkDerivation {
+  pname = "flutter-engine";
+  inherit version src;
+
+  nativeBuildInputs = [ patchelf python3 pkg-config ];
+
+  postUnpack = ''
+    python3 src/third_party/dart/tools/generate_package_config.py
+    python3 src/third_party/dart/tools/generate_sdk_version_file.py
+    python3 src/tools/remove_stale_pyc_files.py src/tools
+  '';
+
+  configurePhase = ''
+    runHook preConfigure
+    ./src/flutter/tools/gn --no-build-glfw-shell --prebuilt-dart-sdk --embedder-for-target --no-goma
+    runHook postConfigure
+  '';
+
+  buildPhase = ''
+    runHook preBuild
+
+    ninja -C src/out/host_debug/ flatc
+    patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/flatc
+    
+    ninja -C src/out/host_debug/ blobcat
+    patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/blobcat
+    
+    ninja -C src/out/host_debug/ gen_snapshot
+    patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/gen_snapshot
+
+    ninja -C src/out/host_debug/ impellerc
+    patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/impellerc
+
+    ninja -C src/out/host_debug/ flutter_engine_library
+
+    runHook postBuild
+  '';
+
+  installPhase = ''
+    mkdir -p $out/lib/flutter
+    cp src/out/host_debug/libflutter_engine.so $out/lib
+    cp src/out/host_debug/icudtl.dat $out/lib/flutter
+  '';
+}
