@@ -408,7 +408,7 @@ in {
     owner = "google";
     repo = "flatbuffers";
     rev = "0a80646371179f8a7a5c1f42c31ee1d44dcf6709";
-    sha256 = "sha256-6t3bn5SpDh9y5c6ziWKXBPI8UhQWLDMcX66zjBLA+Gs=";
+    sha256 = "sha256-yOw4QHWMhNtNAJ29syQMXh6tQTfpvfkAayhny9uKUyQ=";
     leaveDotGit = true;
     deepClone = true;
   };
