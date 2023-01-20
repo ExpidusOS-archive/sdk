@@ -503,7 +503,7 @@ in {
     owner = "chromium";
     repo = "webm/libwebp";
     rev = "7dfde712a477e420968732161539011e0fd446cf";
-    sha256 = "sha256-h6TUnAuPImSQmTuooqIh/TU/ky7b4WubnczJb+gvE7g=";
+    sha256 = "sha256-NY7tbiVvXm9Ue1jCkRXwukV9Eb7Z0ktHQNUwMkX/kG4=";
   };
   "src/third_party/libxml" = fetchFromGoogle {
     owner = "flutter";
