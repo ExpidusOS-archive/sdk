@@ -18,7 +18,7 @@ in {
     owner = "chromium";
     repo = "chromium/src/third_party/abseil-cpp";
     rev = "2d8c1340f0350828f1287c4eaeebefcf317bcfc9";
-    sha256 = "sha256-jXfAWYbSe2/jxF29sU5xd/6Iu5nR9pN41GGR/PyWSj4=";
+    sha256 = "sha256-MYwKhYwTDGWul63Py2iqljjQXSZPEsY7jO6QGL17NDg=";
   };
   "src/third_party/angle" = fetchFromGoogle {
     owner = "chromium";
