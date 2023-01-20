@@ -64,6 +64,8 @@
             inherit localSystem;
           };
         in (with lib; filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg) pkgs.expidus)
-          ++ (with pkgs; [ flutter-engine ]));
+          // {
+            inherit (pkgs) flutter-engine;
+          });
     };
 }
