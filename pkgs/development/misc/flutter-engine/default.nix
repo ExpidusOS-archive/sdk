@@ -50,9 +50,8 @@ in stdenvNoCC.mkDerivation rec {
   ];
 
   unpackPhase = ''
-    runHook preUnpack
+    cd $NIX_BUILD_TOP
 
-    cd $TMPDIR
     mkdir -p src
     cp --no-preserve=ownership $gclientFile .gclient
     cd $out
@@ -74,28 +73,22 @@ in stdenvNoCC.mkDerivation rec {
 
     mkdir -p src/build/linux/debian_sid_${toolchainArch}-sysroot
     tar -xf $toolchain -C src/build/linux/debian_sid_${toolchainArch}-sysroot
-
-    runHook postUnpack
   '';
 
   configurePhase = ''
-    runHook preConfigure
+    cd $NIX_BUILD_TOP
 
-    cd $TMPDIR
     python3 src/third_party/dart/tools/generate_package_config.py
     python3 src/third_party/dart/tools/generate_sdk_version_file.py
     python3 src/tools/remove_stale_pyc_files.py src/tools
     python3 src/flutter/tools/pub_get_offline.py
 
     ./src/flutter/tools/gn --no-build-glfw-shell --prebuilt-dart-sdk --embedder-for-target --no-goma
-
-    runHook postConfigure
   '';
 
   buildPhase = ''
-    runHook preBuild
+    cd $NIX_BUILD_TOP
 
-    cd $TMPDIR
     ninja -C src/out/host_debug/ flatc
     patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/flatc
     
@@ -109,11 +102,11 @@ in stdenvNoCC.mkDerivation rec {
     patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/impellerc
 
     ninja -C src/out/host_debug/ flutter_engine_library
-
-    runHook postBuild
   '';
 
   installPhase = ''
+    cd $NIX_BUILD_TOP
+
     mkdir -p $out/lib/flutter
     cp src/out/host_debug/libflutter_engine.so $out/lib
     cp src/out/host_debug/icudtl.dat $out/lib/flutter
