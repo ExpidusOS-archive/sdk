@@ -644,7 +644,7 @@ in {
     owner = "skia";
     repo = "skia";
     rev = "936433124f938c06d5b1609d534cd9b693edd71c";
-    sha256 = "sha256-2aDPXJ2Egnj2S28GOSIYTCfjeHPQWed1U9jeZmJYJmE=";
+    sha256 = "sha256-2E3xdQlNi7Uv3F6iDHsMkg/bXxbbwBFW4FQmb3/zgv8=";
   };
   "src/third_party/sqlite" = fetchFromGoogle {
     owner = "flutter";
