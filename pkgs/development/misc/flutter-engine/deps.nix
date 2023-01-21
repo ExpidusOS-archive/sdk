@@ -668,7 +668,7 @@ in {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/glslang";
     rev = "316f12ac1d4f2fc9517ee1a18b2d710561df228c";
-    sha256 = "sha256-a8g/lChZFh70IG173prkmKR7xinclSfrXU2j0JrCtQk=";
+    sha256 = "sha256-MdktJD6YUfiJjEdpvWTRdvKowNS8EULCPpcNJt/lLC8=";
   };
   "src/third_party/vulkan-deps/spirv-cross/src" = fetchFromGoogle {
     owner = "chromium";
