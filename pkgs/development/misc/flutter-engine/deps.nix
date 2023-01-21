@@ -26,7 +26,7 @@ in {
     owner = "chromium";
     repo = "angle/angle";
     rev = "3faaded8234b31dea24c929e40e33089a34a9aa5";
-    sha256 = "sha256-uWTLO4clHsdNyTlVPYyVG8dCYWf/p2WPs/SbGkgoREo=";
+    sha256 = "sha256-O0SEO69JhArURpk7lzvbxQJ1FH82xWrc9DUEp5+tJpU=";
   };
   "src/third_party/benchmark" = fetchFromGitHub {
     owner = "google";
