@@ -60,7 +60,7 @@ in {
     owner = "dart";
     repo = "sdk";
     rev = "b6592742d9f1a82af319f46eda3d59a61e89b91b";
-    sha256 = "sha256-L9C+oIQ8iHK+GTqy1b6kJEO4LHFWaNQA9Ahu/Y0fBms=";
+    sha256 = "sha256-iUCTO1XhmgX/7u7Ws1M8KOR7iD8Zm+7mC53yFriIrOM=";
   };
   "src/third_party/dart/third_party/pkg/args" = fetchFromGoogle {
     owner = "dart";
