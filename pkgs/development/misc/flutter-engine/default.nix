@@ -80,7 +80,8 @@ in stdenvNoCC.mkDerivation rec {
 
   configurePhase = ''
     runHook preConfigure
-      
+
+    cd $TMPDIR
     python3 src/third_party/dart/tools/generate_package_config.py
     python3 src/third_party/dart/tools/generate_sdk_version_file.py
     python3 src/tools/remove_stale_pyc_files.py src/tools
@@ -94,6 +95,7 @@ in stdenvNoCC.mkDerivation rec {
   buildPhase = ''
     runHook preBuild
 
+    cd $TMPDIR
     ninja -C src/out/host_debug/ flatc
     patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/flatc
     
