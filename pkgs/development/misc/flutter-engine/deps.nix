@@ -560,7 +560,7 @@ in {
     owner = "flutter";
     repo = "packages";
     rev = "a19eca7fe2660c71acf5928a275deda1da318c50";
-    sha256 = "sha256-2KrDOBlxzztv2IKDirzliz5E//fpNxMXsZJ1eGYh8aM=";
+    sha256 = "sha256-jklY098QMGrbood+hukuNChQlAz9adwtJGAQLaBSd4A=";
     leaveDotGit = true;
     deepClone = true;
   };
