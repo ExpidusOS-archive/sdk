@@ -59,7 +59,8 @@ let
       cp --no-preserve=ownership $gclientFile $out/.gclient
       cd $out
       gclient sync --nohooks --no-history
-      find src -name '.git' -exec rm -rf {} \;
+      find src -name '.git' -exec chmod 0755 {} \;
+      find src -name '.git' -exec rm -rf {} \; || true
 
       for bin in $binaryFixes; do
         chmod 0755 $bin
@@ -81,7 +82,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-mGIsm751mEXkJiHv2BIXjpcF0GunsxqYA771I/7g1II=";
+    outputHash = "sha256-9pwV+RuqNo+WHZviw+p8kMALqDich531xx1vN5AmBSg=";
   };
 in stdenv.mkDerivation {
   pname = "flutter-engine";
