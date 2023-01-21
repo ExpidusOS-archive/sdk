@@ -54,7 +54,6 @@ in stdenvNoCC.mkDerivation rec {
 
     mkdir -p src
     cp --no-preserve=ownership $gclientFile .gclient
-    cd $out
     gclient sync --nohooks --no-history
     find src -name '.git' -exec chmod 0755 {} \;
     find src -name '.git' -exec rm -rf {} \; || true
