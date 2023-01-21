@@ -480,7 +480,7 @@ in {
     owner = "llvm";
     repo = "libcxx";
     rev = "7524ef50093a376f334a62a7e5cebf5d238d4c99";
-    sha256 = "sha256-9KcbJThHyjbfWPAcOWC3jF4ey1hAibkQSHZbcqte7AM=";
+    sha256 = "sha256-ytateFrCDfw+9Iq9wYJZrBHaww/Eua/uoB3r6tAqCYc=";
   };
   "src/third_party/libcxxabi" = fetchFromGoogle {
     owner = "fuchsia";
