@@ -454,7 +454,7 @@ in {
     owner = "chromium";
     repo = "chromium/deps/icu";
     rev = "12de966fcbe1d1a48dba310aee63807856ffeee8";
-    sha256 = "sha256-3cOC2uKUimVE+qgFFN/71qUF/LYyNogYECE+506HqVc=";
+    sha256 = "sha256-qX54gleif/0BwA+5xxnSJYEMX2zh2Ra3d3sN+SROPfQ=";
   };
   "src/third_party/imgui" = fetchFromGitHub {
     owner = "ocornut";
