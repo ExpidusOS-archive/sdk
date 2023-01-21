@@ -656,7 +656,7 @@ in {
     owner = "swiftshader";
     repo = "SwiftShader";
     rev = "bea8d2471bd912220ba59032e0738f3364632657";
-    sha256 = "sha256-FqeEcyLBkqiN+cBqUVvdERshMaK4LleovIFYPo/dWjs=";
+    sha256 = "sha256-YtzMytWdvBsQqkDct5YBM76fg6jmCLzPWpmtbPtYoOs=";
   };
   "src/third_party/vulkan-deps" = fetchFromGoogle {
     owner = "chromium";
