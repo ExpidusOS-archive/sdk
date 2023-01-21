@@ -48,7 +48,7 @@ in {
     owner = "boringssl";
     repo = "boringssl";
     rev = "87f316d7748268eb56f2dc147bd593254ae93198";
-    sha256 = "sha256-/aOCl2URPJt2IenEavxM0mk0fI2Y9oXTXpx1VqZg2sc=";
+    sha256 = "sha256-lmfOzAPB3U7AEVv2T0H1Qlvcb5nDZPiY6p7SdvtWDvE=";
   };
   "src/third_party/colorama/src" = fetchFromGoogle {
     owner = "chromium";
