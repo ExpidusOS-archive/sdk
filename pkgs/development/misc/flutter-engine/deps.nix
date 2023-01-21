@@ -576,7 +576,7 @@ in {
     owner = "google";
     repo = "googleapis.dart";
     rev = "07f01b7aa6985e4cafd0fd4b98724841bc9e85a1";
-    sha256 = "sha256-pglQY6C0pT80jzWoDeWMvEjI1DTiQ9nLR7n4BvIfLrc=";
+    sha256 = "sha256-7ChL5gmSFDBEt5ucSMTKlzvetlAuNiFeaUgF0wtp6KM=";
     leaveDotGit = true;
     deepClone = true;
   };
