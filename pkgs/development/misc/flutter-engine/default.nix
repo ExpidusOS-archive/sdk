@@ -52,6 +52,7 @@ in stdenvNoCC.mkDerivation rec {
   unpackPhase = ''
     runHook preUnpack
 
+    cd $TMPDIR
     mkdir -p src
     cp --no-preserve=ownership $gclientFile .gclient
     cd $out
