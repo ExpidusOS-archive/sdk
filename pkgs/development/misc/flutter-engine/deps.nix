@@ -606,7 +606,7 @@ in {
     owner = "google";
     repo = "shaderc";
     rev = "948660cccfbbc303d2590c7f44a4cee40b66fdd6";
-    sha256 = "sha256-yhmuz3K2zqwVchebG+jtchYjyCuhBKwe6dDJFDGlnf8=";
+    sha256 = "sha256-uhdN0QgzFsYlwbbgYOSMztyfYI8u8QbQYXwJA/jysEA=";
   };
   "src/third_party/skia" = fetchFromGoogle {
     owner = "skia";
@@ -672,7 +672,7 @@ in {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/Vulkan-Tools";
     rev = "dd7e8d2fbbdaca099e9ada77fec178e12a6b37d5";
-    sha256 = "sha256-4uJJJ9lycjHKC0WQ8TNaMBSxDTH8S6p9r5oABb2ZYmY=";
+    sha256 = "sha256-S5+WyTr9ILgFyLQlAi7yQUAWWIJ738/o1f85NpAtTbA=";
   };
   "src/third_party/vulkan-deps/vulkan-validation-layers/src" = fetchFromGoogle {
     owner = "chromium";
