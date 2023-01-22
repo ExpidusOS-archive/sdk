@@ -49,7 +49,7 @@
         in {
           default = pkgs.mkShell {
             name = "expidus-sdk";
-            inherit (pkgs.flutter-engine) gclientFile;
+            inherit (pkgs.flutter-engine.debug) gclientFile;
             packages = with pkgs; [ gclient-wrapped python3 pkg-config ninja ];
           };
         });
@@ -59,13 +59,13 @@
       });
 
       packages = lib.expidus.system.default.forAllSystems (system: localSystem:
+        with lib;
         let
           pkgs = importPackage {
             inherit localSystem;
           };
-        in (with lib; filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg) pkgs.expidus)
-          // {
-            inherit (pkgs) flutter-engine;
-          });
+          filterPkgs = filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg);
+        in (filterPkgs pkgs.expidus)
+          // (renameAttrs (name: value: value.pname) (filterPkgs pkgs.flutter-engine)));
     };
 }
