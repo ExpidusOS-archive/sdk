@@ -60,7 +60,14 @@ in stdenvNoCC.mkDerivation rec {
 
     mkdir -p src
     cp --no-preserve=ownership $gclientFile .gclient
-    gclient sync --nohooks --no-history
+    ${concatStringsSep "\n" (attrValues (mapAttrs (name: src: ''
+      if [[ ! -z $(dirname ${name}) ]]; then
+        mkdir -p $(dirname ${name})
+      fi
+
+      cp -r -P --no-preserve=ownership ${src} ${name}
+      chmod -R 0755 ${name}
+    '') flutter-deps))}
 
     for bin in $binaryFixes; do
       chmod 0755 $bin

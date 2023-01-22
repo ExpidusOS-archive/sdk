@@ -1,22 +1,13 @@
-{ lib, fetchgit, fetchFromGitHub }@args:
+{ lib, fetchgit, fetchcipd, fetchFromGitHub }@args:
 with lib;
 let
-  postFetch = ''
-    cd $out
-    git rev-parse HEAD > $out/COMMIT
-    date -u -d "@$(git log -1 --pretty=%ct)" "+%Y-%m-%dT%H:%M:%SZ" > $out/SOURCE_DATE_EPOCH
-    find $out -name .git -print0 | xargs -0 rm -rf
-  '';
-
   fetchFromGitHub = { owner, repo, fetchSubmodules ? false, rev ? "HEAD", sha256 ? fakeHash }: args.fetchFromGitHub {
-    inherit owner repo fetchSubmodules rev sha256 postFetch;
-    leaveDotGit = true;
+    inherit owner repo fetchSubmodules rev sha256;
   };
 
   fetchFromGoogle = { owner, repo, fetchSubmodules ? false, rev ? "HEAD", sha256 ? fakeHash }: fetchgit {
     url = "https://${owner}.googlesource.com/${repo}.git";
-    inherit rev sha256 fetchSubmodules postFetch;
-    leaveDotGit = true;
+    inherit rev sha256 fetchSubmodules;
   };
 in {
   src = fetchFromGitHub {
@@ -390,6 +381,12 @@ in {
     repo = "yaml_edit";
     rev = "01589b3ce447b03aed991db49f1ec6445ad5476d";
     sha256 = "sha256-3DFvwcZyENzLFM0ilMACuDEBeJt7xB1GZGAY2c0tFcU=";
+  };
+  "src/third_party/dart/tools/sdks" = fetchcipd {
+    name = "dart-sdk";
+    package = "dart/dart-sdk/\${platform}";
+    version = "version:2.17.0";
+    sha256 = "sha256-5kzEm04Zikgw0LMkQMbKdkaBB8R03pwG0O1OoTD6BTg=";
   };
   "src/third_party/expat" = fetchFromGoogle {
     owner = "chromium";

@@ -1,4 +1,5 @@
 pkgs: prev: with pkgs; {
+  fetchcipd = callPackage ../build-support/fetchcipd {};
   depot_tools = callPackage ../development/tools/depot_tools {};
   cipd = callPackage ../development/tools/cipd {};
   gclient-wrapped = callPackage ../development/tools/gclient-wrapped {};
