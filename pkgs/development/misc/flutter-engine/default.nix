@@ -1,4 +1,4 @@
-{ lib, stdenv, stdenvNoCC, hostPlatform, callPackage, fetchFromGitHub, fetchurl, writeText, makeWrapper, gnumake, patchelf, python3, cacert, clang-tools, pkg-config, openssh, git, gclient-wrapped }:
+{ lib, stdenv, stdenvNoCC, hostPlatform, callPackage, fetchFromGitHub, fetchurl, writeText, makeWrapper, ninja, gnumake, patchelf, python3, cacert, clang-tools, pkg-config, openssh, git, gclient-wrapped }:
 with lib;
 let
   version = "857bd6b74c5eb56151bfafe91e7fa6a82b6fee25";
@@ -27,7 +27,7 @@ in stdenvNoCC.mkDerivation rec {
     sha256 = "sha256-+jooJ4YcWHUfD5AT+Yhe0nYQNBl7IvJl2dRc+d3Yl+g=";
   };
 
-  nativeBuildInputs = [ openssh git gclient-wrapped clang-tools makeWrapper patchelf python3 pkg-config ];
+  nativeBuildInputs = [ openssh git gclient-wrapped clang-tools makeWrapper patchelf python3 pkg-config ninja stdenv.cc.libc ];
 
   gclientFile = writeText "gclient" ''
     solutions = [
@@ -49,14 +49,17 @@ in stdenvNoCC.mkDerivation rec {
     "src/flutter/third_party/gn/gn"
   ];
 
+  shellFixes = [
+    "src/third_party/dart/tools/sdks/dart-sdk/bin/dart2js"
+    "src/flutter/tools/gn"
+  ];
+
   unpackPhase = ''
     cd $NIX_BUILD_TOP
 
     mkdir -p src
     cp --no-preserve=ownership $gclientFile .gclient
     gclient sync --nohooks --no-history
-    find src -name '.git' -exec chmod 0755 {} \;
-    find src -name '.git' -exec rm -rf {} \; || true
 
     for bin in $binaryFixes; do
       chmod 0755 $bin
@@ -66,6 +69,11 @@ in stdenvNoCC.mkDerivation rec {
     for bin in $(find src/buildtools/ -type l); do
       chmod 0755 $bin
       patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} $bin || true
+    done
+
+    for sh in $shellFixes; do
+      chmod 0755 $sh
+      patchShebangs $sh
     done
 
     sed -i '1 s|^.*$|#!${gnumake}/bin/make -f|' src/third_party/harfbuzz/src/update-unicode-tables.make
@@ -88,30 +96,39 @@ in stdenvNoCC.mkDerivation rec {
   buildPhase = ''
     cd $NIX_BUILD_TOP
 
+    echo "Building flatc"
     ninja -C src/out/host_debug/ flatc
-    patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/flatc
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} src/out/host_debug/flatc
     
+    echo "Building blobcat"
     ninja -C src/out/host_debug/ blobcat
-    patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/blobcat
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} src/out/host_debug/blobcat
     
+    echo "Building gen_snapshot"
     ninja -C src/out/host_debug/ gen_snapshot
-    patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/gen_snapshot
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} src/out/host_debug/gen_snapshot
 
+    echo "Building impellerc"
     ninja -C src/out/host_debug/ impellerc
-    patchelf --set-interpreter ${stdenv.cc.libc}/libc/${interpreter} src/out/host_debug/impellerc
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} src/out/host_debug/impellerc
 
+    echo "Building Flutter Engine library"
     ninja -C src/out/host_debug/ flutter_engine_library
+
+    echo "Building icudtl.dat"
+    ninja -C src/out/host_debug/ icudtl.dat
   '';
 
   installPhase = ''
     cd $NIX_BUILD_TOP
 
     mkdir -p $out/lib/flutter
-    cp src/out/host_debug/libflutter_engine.so $out/lib
+    cp src/out/host_debug/libflutter_engine.so $out/lib/flutter
     cp src/out/host_debug/icudtl.dat $out/lib/flutter
+    cp src/out/host_debug/flutter_embedder.h $out/lib/flutter
   '';
 
   outputHashAlgo = "sha256";
   outputHashMode = "recursive";
-  outputHash = "sha256-9pwV+RuqNo+WHZviw+p8kMALqDich531xx1vN5AmBSg=";
+  outputHash = "sha256-GNHB3HMTN1UfiAnUkX3BZp/PRZHPpjKP+65+VEBimL8=";
 }

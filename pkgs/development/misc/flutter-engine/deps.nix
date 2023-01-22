@@ -36,7 +36,7 @@ in {
     owner = "google";
     repo = "benchmark";
     rev = "431abd149fd76a072f821913c0340137cc755f36";
-    sha256 = "sha256-mPB+Yo8TGwwsg4NiiKDlvWDCO9aye03D81VQ6zK+E68=";
+    sha256 = "sha256-77QseVLpSaJf3OaeJsOVzGwDjkQSpcbmZ2qUnhxz1l4=";
   };
   "src/third_party/boringssl" = fetchFromGitHub {
     owner = "dart-lang";
@@ -546,7 +546,7 @@ in {
     owner = "flutter";
     repo = "packages";
     rev = "a19eca7fe2660c71acf5928a275deda1da318c50";
-    sha256 = "sha256-2KrDOBlxzztv2IKDirzliz5E//fpNxMXsZJ1eGYh8aM=";
+    sha256 = "sha256-xVBNFgiXGGsX7AURHNuUOxSgRX7R5UYIKJd5OisL5zg=";
   };
   "src/third_party/pkg/gcloud" = fetchFromGitHub {
     owner = "dart-lang";
@@ -558,7 +558,7 @@ in {
     owner = "google";
     repo = "googleapis.dart";
     rev = "07f01b7aa6985e4cafd0fd4b98724841bc9e85a1";
-    sha256 = "sha256-L9MN//lOttk1LKtaRp4VAnb9u6a2KBBWiuHwN/1mTvI=";
+    sha256 = "sha256-7ChL5gmSFDBEt5ucSMTKlzvetlAuNiFeaUgF0wtp6KM=";
   };
   "src/third_party/pkg/platform" = fetchFromGitHub {
     owner = "google";
@@ -582,7 +582,7 @@ in {
     owner = "google";
     repo = "quiver-dart";
     rev = "66f473cca1332496e34a783ba4527b04388fd561";
-    sha256 = "sha256-+oihqyW/yL/xietUNYSOmS5jY+FodPtPrj6OnfobxPk=";
+    sha256 = "sha256-CQ2qJEH3R9Hp9dXyWz3REerxOa6yoIlpQnQ0d7g4kNw=";
   };
   "src/third_party/pkg/vector_math" = fetchFromGitHub {
     owner = "google";
