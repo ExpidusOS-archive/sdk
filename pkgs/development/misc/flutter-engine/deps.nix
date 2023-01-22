@@ -1,7 +1,13 @@
-{ lib, fetchgit, fetchFromGitHub }:
+{ lib, fetchgit, fetchFromGitHub }@args:
 with lib;
 let
-  fetchFromGoogle = { owner, repo, fetchSubmodules ? false, rev ? "HEAD", sha256 }: fetchgit {
+  fetchFromGitHub = { owner, repo, fetchSubmodules ? false, rev ? "HEAD", sha256 ? fakeHash }: args.fetchFromGitHub {
+    inherit owner repo fetchSubmodules rev sha256;
+    leaveDotGit = true;
+    deepClone = true;
+  };
+
+  fetchFromGoogle = { owner, repo, fetchSubmodules ? false, rev ? "HEAD", sha256 ? fakeHash }: fetchgit {
     url = "https://${owner}.googlesource.com/${repo}.git";
     inherit rev sha256 fetchSubmodules;
     leaveDotGit = true;
@@ -12,43 +18,37 @@ in {
     owner = "flutter";
     repo = "buildroot";
     rev = "6af51ff4b86270cc61517bff3fff5c3bb11492e1";
-    sha256 = "sha256-77QseVLpSaJf3OaeJsOVzGwDjkQSpcbmZ2qUnhxz1l4=";
-    leaveDotGit = true;
-    deepClone = true;
+    sha256 = "sha256-z7Kc1kUR/IUX8/wh+o1yGC05qQ3uMqxDg1w3csjSC+o=";
   };
   "src/third_party/abseil-cpp" = fetchFromGoogle {
     owner = "chromium";
     repo = "chromium/src/third_party/abseil-cpp";
     rev = "2d8c1340f0350828f1287c4eaeebefcf317bcfc9";
-    sha256 = "sha256-MYwKhYwTDGWul63Py2iqljjQXSZPEsY7jO6QGL17NDg=";
+    sha256 = "sha256-jXfAWYbSe2/jxF29sU5xd/6Iu5nR9pN41GGR/PyWSj4=";
   };
   "src/third_party/angle" = fetchFromGoogle {
     owner = "chromium";
     repo = "angle/angle";
     rev = "3faaded8234b31dea24c929e40e33089a34a9aa5";
-    sha256 = "sha256-O0SEO69JhArURpk7lzvbxQJ1FH82xWrc9DUEp5+tJpU=";
+    sha256 = "sha256-uWTLO4clHsdNyTlVPYyVG8dCYWf/p2WPs/SbGkgoREo=";
   };
   "src/third_party/benchmark" = fetchFromGitHub {
     owner = "google";
     repo = "benchmark";
     rev = "431abd149fd76a072f821913c0340137cc755f36";
     sha256 = "sha256-mPB+Yo8TGwwsg4NiiKDlvWDCO9aye03D81VQ6zK+E68=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/boringssl" = fetchFromGitHub {
     owner = "dart-lang";
     repo = "boringssl_gen";
     rev = "ced85ef0a00bbca77ce5a91261a5f2ae61b1e62f";
     sha256 = "sha256-0lnGkWZyq1iyl4AP4NTTwjBvr3mxk322FOTd4prSEpo=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/boringssl/src" = fetchFromGoogle {
     owner = "boringssl";
     repo = "boringssl";
     rev = "87f316d7748268eb56f2dc147bd593254ae93198";
-    sha256 = "sha256-lmfOzAPB3U7AEVv2T0H1Qlvcb5nDZPiY6p7SdvtWDvE=";
+    sha256 = "sha256-/aOCl2URPJt2IenEavxM0mk0fI2Y9oXTXpx1VqZg2sc=";
   };
   "src/third_party/colorama/src" = fetchFromGoogle {
     owner = "chromium";
@@ -60,7 +60,7 @@ in {
     owner = "dart";
     repo = "sdk";
     rev = "b6592742d9f1a82af319f46eda3d59a61e89b91b";
-    sha256 = "sha256-iUCTO1XhmgX/7u7Ws1M8KOR7iD8Zm+7mC53yFriIrOM=";
+    sha256 = "sha256-L9C+oIQ8iHK+GTqy1b6kJEO4LHFWaNQA9Ahu/Y0fBms=";
   };
   "src/third_party/dart/third_party/pkg/args" = fetchFromGoogle {
     owner = "dart";
@@ -132,13 +132,13 @@ in {
     owner = "dart";
     repo = "dart_style";
     rev = "d7b73536a8079331c888b7da539b80e6825270ea";
-    sha256 = "sha256-qz8Wt0fVJbg8Z4E2Bqrpk0qG8eh3lfJiDzn67E0Lrtw=";
+    sha256 = "sha256-m4+OcncaGtczyC5icYWWcOzPNXAnBw+2oV0z7tsZfN8=";
   };
   "src/third_party/dart/third_party/pkg/dartdoc" = fetchFromGoogle {
     owner = "dart";
     repo = "dartdoc";
     rev = "adc5a45ddafb57e3a600ee7d9e88dc81061d1410";
-    sha256 = "sha256-c00MWskBZCcve3icMkzn2f8Zbd80+XkVYVVMaGKrnx4=";
+    sha256 = "sha256-QIR+Jx5m2zWXobmbVZUGfb8DEYHJ6N1HlNJ8F0h+riM=";
   };
   "src/third_party/dart/third_party/pkg/ffi" = fetchFromGoogle {
     owner = "dart";
@@ -174,7 +174,7 @@ in {
     owner = "dart";
     repo = "http";
     rev = "843c5ecb1ea2233ba7b7049833b5801b149fba86";
-    sha256 = "sha256-2Z4n2LhUEzrJ2a8N5AnPCDctvgfIgnMsqdjKpMZLtvE=";
+    sha256 = "sha256-WgdwJ2GiWATzJWQ1WzYxzqj5dfZv6r9fbVNUbBemsZU=";
   };
   "src/third_party/dart/third_party/pkg/http_multi_server" = fetchFromGoogle {
     owner = "dart";
@@ -258,13 +258,13 @@ in {
     owner = "dart";
     repo = "protobuf";
     rev = "2d6c6037cee6c5f683e8f38e598443f9bec74b94";
-    sha256 = "sha256-+ssxEmdo13S3m/8TRK8YZcy6/zq15tpBA4BvVq70qDU=";
+    sha256 = "sha256-Vb0JZgGywMZeuZy28PWc6Z54Z+ylQZwUoWO3j2CuhOE=";
   };
   "src/third_party/dart/third_party/pkg/pub" = fetchFromGoogle {
     owner = "dart";
     repo = "pub";
     rev = "9bf4289d6fd5d6872a8929d6312bbd7098f3ea9c";
-    sha256 = "sha256-16wX8xlPijoc4iqXwiDJgsHsWR94dhr8pIZmt6Fxft8=";
+    sha256 = "sha256-+fm2TB4Mz06LcdZr9AlABV1rcd/Ng7RpIg+Lnkxmtn8=";
   };
   "src/third_party/dart/third_party/pkg/pub_semver" = fetchFromGoogle {
     owner = "dart";
@@ -330,7 +330,7 @@ in {
     owner = "dart";
     repo = "test";
     rev = "fb4ccaf6c68fcc1d208c5c53a52d8e0e718bdffe";
-    sha256 = "sha256-HhY37pKFYUfdLnYOgHmSqV0FNM0LlCU+zskf1ZNIQ0I=";
+    sha256 = "sha256-qjRciV5xjOUQihqLf/9X7ByZ79oHOJ+V+a8dRPb3XlY=";
   };
   "src/third_party/dart/third_party/pkg/test_reflective_loader" = fetchFromGoogle {
     owner = "dart";
@@ -366,7 +366,7 @@ in {
     owner = "dart";
     repo = "webdev";
     rev = "9c4428472b04f50748ea4871829897cff43455a3";
-    sha256 = "sha256-Mtcvr5Ry2hkdvkrv/jNoIhFbj6xWS2NQcTH3fOXhGcE=";
+    sha256 = "sha256-KkrEFKyd1UNRN6o4PwNa//C+Cl9ydcuhFyjd5f78ZL4=";
   };
   "src/third_party/dart/third_party/pkg/webkit_inspection_protocol" = fetchFromGoogle {
     owner = "dart";
@@ -402,15 +402,13 @@ in {
     owner = "chromium";
     repo = "external/fontconfig";
     rev = "c336b8471877371f0190ba06f7547c54e2b890ba";
-    sha256 = "sha256-AOWpx2plU4CdaJUsXvJHzmbBlfZENXFonW2iVaq10k4=";
+    sha256 = "sha256-129CQ2X+wvgCd39Cjo9GQvA5z8sPDtGvIhPbwDdhbWc=";
   };
   "src/third_party/flatbuffers" = fetchFromGitHub {
     owner = "google";
     repo = "flatbuffers";
     rev = "0a80646371179f8a7a5c1f42c31ee1d44dcf6709";
-    sha256 = "sha256-yOw4QHWMhNtNAJ29syQMXh6tQTfpvfkAayhny9uKUyQ=";
-    leaveDotGit = true;
-    deepClone = true;
+    sha256 = "sha256-6t3bn5SpDh9y5c6ziWKXBPI8UhQWLDMcX66zjBLA+Gs=";
   };
   "src/third_party/freetype2" = fetchFromGoogle {
     owner = "flutter";
@@ -435,8 +433,6 @@ in {
     repo = "googletest";
     rev = "054a986a8513149e8374fc669a5fe40117ca6b41";
     sha256 = "sha256-y+BbjhvxJzTBG4UdFYFtXbiHbDudlrrUVnkBJhOtu18=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/gtest-parallel" = fetchFromGoogle {
     owner = "chromium";
@@ -454,15 +450,13 @@ in {
     owner = "chromium";
     repo = "chromium/deps/icu";
     rev = "12de966fcbe1d1a48dba310aee63807856ffeee8";
-    sha256 = "sha256-qX54gleif/0BwA+5xxnSJYEMX2zh2Ra3d3sN+SROPfQ=";
+    sha256 = "sha256-3cOC2uKUimVE+qgFFN/71qUF/LYyNogYECE+506HqVc=";
   };
   "src/third_party/imgui" = fetchFromGitHub {
     owner = "ocornut";
     repo = "imgui";
     rev = "29d462ebce0275345a6ce4621d8fff0ded57c9e5";
     sha256 = "sha256-KqtVInZCO3vjnStavaZEhDUwGfa4EVGF+VeMjUuPixI=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/inja" = fetchFromGoogle {
     owner = "flutter";
@@ -480,7 +474,7 @@ in {
     owner = "llvm";
     repo = "libcxx";
     rev = "7524ef50093a376f334a62a7e5cebf5d238d4c99";
-    sha256 = "sha256-ytateFrCDfw+9Iq9wYJZrBHaww/Eua/uoB3r6tAqCYc=";
+    sha256 = "sha256-9KcbJThHyjbfWPAcOWC3jF4ey1hAibkQSHZbcqte7AM=";
   };
   "src/third_party/libcxxabi" = fetchFromGoogle {
     owner = "fuchsia";
@@ -510,7 +504,7 @@ in {
     owner = "chromium";
     repo = "webm/libwebp";
     rev = "7dfde712a477e420968732161539011e0fd446cf";
-    sha256 = "sha256-NY7tbiVvXm9Ue1jCkRXwukV9Eb7Z0ktHQNUwMkX/kG4=";
+    sha256 = "sha256-h6TUnAuPImSQmTuooqIh/TU/ky7b4WubnczJb+gvE7g=";
   };
   "src/third_party/libxml" = fetchFromGoogle {
     owner = "flutter";
@@ -522,9 +516,7 @@ in {
     owner = "erikdoe";
     repo = "ocmock";
     rev = "c4ec0e3a7a9f56cfdbd0aa01f4f97bb4b75c5ef8";
-    sha256 = "sha256-CQ2qJEH3R9Hp9dXyWz3REerxOa6yoIlpQnQ0d7g4kNw=";
-    leaveDotGit = true;
-    deepClone = true;
+    sha256 = "sha256-XBqoamRCiAuOSdhv93kAbLMZXjrmYN9HWdnZ5uzenic=";
   };
   "src/third_party/pyyaml" = fetchFromGoogle {
     owner = "fuchsia";
@@ -537,88 +529,66 @@ in {
     repo = "archive";
     rev = "9de7a0544457c6aba755ccb65abb41b0dc1db70d";
     sha256 = "sha256-+Be9X/TUj157eKG6DtZ4SC2tR4CuEWkB3BsTdNzEcDU=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/pkg/equatable" = fetchFromGitHub {
     owner = "felangel";
     repo = "equatable";
     rev = "0ba67c72db8bed75877fc1caafa74112ee0bd921";
     sha256 = "sha256-A4qLZHMglprPnsAh11iM5r9B5A7phF5Z2OKtmCVN9hY=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/pkg/file" = fetchFromGitHub {
     owner = "google";
     repo = "file.dart";
     rev = "427bb20ccc852425d67f2880da2a9b4707c266b4";
     sha256 = "sha256-U3Db3BuYmAeLUtT8spymbvAjNFEGCkwTMpu4QzicsKw=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/pkg/flutter_packages" = fetchFromGitHub {
     owner = "flutter";
     repo = "packages";
     rev = "a19eca7fe2660c71acf5928a275deda1da318c50";
-    sha256 = "sha256-jklY098QMGrbood+hukuNChQlAz9adwtJGAQLaBSd4A=";
-    leaveDotGit = true;
-    deepClone = true;
+    sha256 = "sha256-2KrDOBlxzztv2IKDirzliz5E//fpNxMXsZJ1eGYh8aM=";
   };
   "src/third_party/pkg/gcloud" = fetchFromGitHub {
     owner = "dart-lang";
     repo = "gcloud";
     rev = "92a33a9d95ea94a4354b052a28b98088d660e0e7";
     sha256 = "sha256-OpPtkEzfCQD0nGnz0wvkppskTLrpzfpAwswXl+Y8Aws=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/pkg/googleapis" = fetchFromGitHub {
     owner = "google";
     repo = "googleapis.dart";
     rev = "07f01b7aa6985e4cafd0fd4b98724841bc9e85a1";
-    sha256 = "sha256-7ChL5gmSFDBEt5ucSMTKlzvetlAuNiFeaUgF0wtp6KM=";
-    leaveDotGit = true;
-    deepClone = true;
+    sha256 = "sha256-L9MN//lOttk1LKtaRp4VAnb9u6a2KBBWiuHwN/1mTvI=";
   };
   "src/third_party/pkg/platform" = fetchFromGitHub {
     owner = "google";
     repo = "platform.dart";
     rev = "1ffad63428bbd1b3ecaa15926bacfb724023648c";
     sha256 = "sha256-ZIi3fKw1LLsxXRpLbDAp8viz9XQZL6SFq8RkzgCQ/L4=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/pkg/process" = fetchFromGitHub {
     owner = "google";
     repo = "process.dart";
     rev = "0c9aeac86dcc4e3a6cf760b76fed507107e244d5";
     sha256 = "sha256-KDKDMNx/sQ/YWuBEY5Z4Tqb8K3pfl3N1qav8Bwxekws=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/pkg/process_runner" = fetchFromGitHub {
     owner = "google";
     repo = "process_runner";
     rev = "d632ea0bfd814d779fcc53a361ed33eaf3620a0b";
     sha256 = "sha256-e/IOJnEuZi+pfl0+2wuX2Pz7XR43nDp6fXvpN49wdFk=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/pkg/quiver" = fetchFromGitHub {
     owner = "google";
     repo = "quiver-dart";
     rev = "66f473cca1332496e34a783ba4527b04388fd561";
     sha256 = "sha256-+oihqyW/yL/xietUNYSOmS5jY+FodPtPrj6OnfobxPk=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/pkg/vector_math" = fetchFromGitHub {
     owner = "google";
     repo = "vector_math.dart";
     rev = "0a5fd95449083d404df9768bc1b321b88a7d2eef";
-    sha256 = "sha256-CQ2qJEH3R9Hp9dXyWz3REerxOa6yoIlpQnQ0d7g4kNw=";
-    leaveDotGit = true;
-    deepClone = true;
+    sha256 = "sha256-aVMJwXcaC0RJnPfvI+7+qfungcDi3A0aVveYCnBO/1Y=";
   };
   "src/third_party/rapidjson" = fetchFromGoogle {
     owner = "fuchsia";
@@ -636,15 +606,13 @@ in {
     owner = "google";
     repo = "shaderc";
     rev = "948660cccfbbc303d2590c7f44a4cee40b66fdd6";
-    sha256 = "sha256-uhdN0QgzFsYlwbbgYOSMztyfYI8u8QbQYXwJA/jysEA=";
-    leaveDotGit = true;
-    deepClone = true;
+    sha256 = "sha256-yhmuz3K2zqwVchebG+jtchYjyCuhBKwe6dDJFDGlnf8=";
   };
   "src/third_party/skia" = fetchFromGoogle {
     owner = "skia";
     repo = "skia";
     rev = "936433124f938c06d5b1609d534cd9b693edd71c";
-    sha256 = "sha256-2E3xdQlNi7Uv3F6iDHsMkg/bXxbbwBFW4FQmb3/zgv8=";
+    sha256 = "sha256-2aDPXJ2Egnj2S28GOSIYTCfjeHPQWed1U9jeZmJYJmE=";
   };
   "src/third_party/sqlite" = fetchFromGoogle {
     owner = "flutter";
@@ -656,7 +624,7 @@ in {
     owner = "swiftshader";
     repo = "SwiftShader";
     rev = "bea8d2471bd912220ba59032e0738f3364632657";
-    sha256 = "sha256-YtzMytWdvBsQqkDct5YBM76fg6jmCLzPWpmtbPtYoOs=";
+    sha256 = "sha256-FqeEcyLBkqiN+cBqUVvdERshMaK4LleovIFYPo/dWjs=";
   };
   "src/third_party/vulkan-deps" = fetchFromGoogle {
     owner = "chromium";
@@ -668,25 +636,25 @@ in {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/glslang";
     rev = "316f12ac1d4f2fc9517ee1a18b2d710561df228c";
-    sha256 = "sha256-MdktJD6YUfiJjEdpvWTRdvKowNS8EULCPpcNJt/lLC8=";
+    sha256 = "sha256-a8g/lChZFh70IG173prkmKR7xinclSfrXU2j0JrCtQk=";
   };
   "src/third_party/vulkan-deps/spirv-cross/src" = fetchFromGoogle {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/SPIRV-Cross";
     rev = "50b4d5389b6a06f86fb63a2848e1a7da6d9755ca";
-    sha256 = "sha256-0XgIUGq7R/PnesQ0e7Uky9MpOPp6eKwpyCcJWFOx1Hc=";
+    sha256 = "sha256-TiP52X2734E/7iyghipp5Vi0588sIiaRnD21Nk4RNV4=";
   };
   "src/third_party/vulkan-deps/spirv-headers/src" = fetchFromGoogle {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/SPIRV-Headers";
     rev = "b2a156e1c0434bc8c99aaebba1c7be98be7ac580";
-    sha256 = "sha256-qaHyjxX+8Oiw1mn81qIG8X6H8SlZ4rq1Gz7wSmmAqy0=";
+    sha256 = "sha256-Q9xcyBxrlhRnZ4+UPqG8XxrNJJHZM0qDz4sasqCaaN0=";
   };
   "src/third_party/vulkan-deps/spirv-tools/src" = fetchFromGoogle {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/SPIRV-Tools";
     rev = "b930e734ea198b7aabbbf04ee1562cf6f57962f0";
-    sha256 = "sha256-x71egelLw9lMnoQOcArK37aUVBAAfF/ZWuV1w8lyJ9g=";
+    sha256 = "sha256-rUXeHoXPUTkzijpvTtyHE4racxH2qBHhQFh0x4NfJs8=";
   };
   "src/third_party/vulkan-deps/vulkan-headers/src" = fetchFromGoogle {
     owner = "chromium";
@@ -704,7 +672,7 @@ in {
     owner = "chromium";
     repo = "external/github.com/KhronosGroup/Vulkan-Tools";
     rev = "dd7e8d2fbbdaca099e9ada77fec178e12a6b37d5";
-    sha256 = "sha256-zu3XxnwxmawJl1XAELKtfG7cvUTjHSm/J5l1JJzHsc4=";
+    sha256 = "sha256-4uJJJ9lycjHKC0WQ8TNaMBSxDTH8S6p9r5oABb2ZYmY=";
   };
   "src/third_party/vulkan-deps/vulkan-validation-layers/src" = fetchFromGoogle {
     owner = "chromium";
@@ -729,13 +697,11 @@ in {
     repo = "yapf";
     rev = "212c5b5ad8e172d2d914ae454c121c89cccbcb35";
     sha256 = "sha256-+buQydUJEUGzwTTaaJ4MnXBb2eIp5E23gv4J+MMX9sU=";
-    leaveDotGit = true;
-    deepClone = true;
   };
   "src/third_party/zlib" = fetchFromGoogle {
     owner = "chromium";
     repo = "chromium/src/third_party/zlib";
     rev = "27c2f474b71d0d20764f86f60ef8b00da1a16cda";
-    sha256 = "sha256-7pOLvK5eDSSYltbTF8oDEUW4vJZF5SoJTqZAV8vr1c0=";
+    sha256 = "sha256-PIbsAvFzf3dW2dwnhISPr2SOWahkOjIUsi3rdAv4u0Q=";
   };
 }
