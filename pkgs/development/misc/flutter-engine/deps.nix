@@ -11,6 +11,7 @@ let
   };
 
   toolchainArch = if hostPlatform.isx86_64 then "amd64" else if hostPlatform.isAarch64 then "aarch64" else throws "Unsupported platform";
+  ## Note: this must match Flutter Engine's DEPS file
 in {
   "src/buildtools/linux-x64/clang" = fetchcipd {
     package = "fuchsia/third_party/clang/linux-amd64";

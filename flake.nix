@@ -65,6 +65,9 @@
           };
           filterPkgs = filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg);
         in (filterPkgs pkgs.expidus)
-          // (renameAttrs (name: value: value.pname) (filterPkgs pkgs.flutter-engine)));
+          // (renameAttrs (name: value: value.pname) pkgs.flutter-engine.runtimeModes)
+          // {
+            inherit (pkgs) flutter-engine;
+          });
     };
 }

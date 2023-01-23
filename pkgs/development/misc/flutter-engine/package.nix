@@ -1,11 +1,9 @@
+## RFC: should we use "hostPackages" to get the packages we need for "nativeBuildInputs"?
 { lib, stdenv, stdenvNoCC, hostPlatform, callPackage, fetchFromGitHub, fetchurl, writeText,
   ninja, gnumake, patchelf, python3, clang-tools, pkg-config, openssh, git, gclient-wrapped }:
-{ runtimeMode }:
+{ sha256, version, runtimeMode }:
 with lib;
 let
-  version = "857bd6b74c5eb56151bfafe91e7fa6a82b6fee25";
-
-  ## Note: this must match Flutter Engine's DEPS file
   flutter-deps = filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg) (callPackage ./deps.nix {});
 
   toolchainArch = if hostPlatform.isx86_64 then "amd64" else if hostPlatform.isAarch64 then "aarch64" else throws "Unsupported platform";
@@ -25,8 +23,7 @@ let
       owner = "flutter";
       repo = "engine";
       rev = version;
-      sha256 = "sha256-5mKxrm+hvrXeLPjSYihbfd9C5LU1c2IZfqaSy6p/6Vo=";
-      leaveDotGit = true;
+      inherit sha256;
     };
 
     buildroot = fetchFromGitHub {
@@ -45,6 +42,7 @@ let
     dontConfigure = true;
     dontBuild = true;
 
+    ## FIXME: use "flutter-deps" and the arguments which the OG script takes to generate the git revision
     gitrev = writeText "git-revision.py" ''
       #!${python3}/bin/python3
 
@@ -69,6 +67,7 @@ let
       "src/flutter/tools/gn"
     ];
 
+    ## FIXME: instead of patching a bunch of binaries, maybe we copy from nixpkgs?
     installPhase = ''
       mkdir -p $out
       cp -r -P --no-preserve=mode,ownership $buildroot $out/src
@@ -120,6 +119,8 @@ in stdenvNoCC.mkDerivation rec {
 
   nativeBuildInputs = [ git python3 pkg-config ninja stdenv.cc.libc ];
 
+  ## FIXME: create a sysroot toolchain for Nix and use it instead
+  ## TODO: generate for other platforms based on "targetPlatform"
   configurePhase = ''
     ./src/flutter/tools/gn \
       --runtime-mode $runtimeMode \
@@ -134,6 +135,7 @@ in stdenvNoCC.mkDerivation rec {
     rmdir $out/lib/flutter/out
   '';
 
+  ## TODO: add more builds and possibly better cross-compiling
   buildPhase = ''
     cd $out/lib/flutter/$runtimeMode
 
@@ -165,4 +167,11 @@ in stdenvNoCC.mkDerivation rec {
   installPhase = ''
     substituteAll ${./flutter-engine.pc} $out/lib/pkgconfig/flutter-engine-$runtimeMode.pc
   '';
+
+  meta = {
+    description = "The engine for Flutter (${runtimeMode} mode)";
+    homepage = "https://github.com/flutter/engine";
+    license = licenses.bsd3;
+    maintainers = with maintainers; [ RossComputerGuy ];
+  };
 }
