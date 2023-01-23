@@ -49,7 +49,6 @@
         in {
           default = pkgs.mkShell {
             name = "expidus-sdk";
-            inherit (pkgs.flutter-engine.debug) gclientFile;
             packages = with pkgs; [ gclient-wrapped python3 pkg-config ninja cipd ];
           };
         });

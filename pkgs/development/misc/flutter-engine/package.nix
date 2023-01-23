@@ -135,29 +135,31 @@ in stdenvNoCC.mkDerivation rec {
   '';
 
   buildPhase = ''
+    cd $out/lib/flutter/$runtimeMode
+
     echo "Building flatc"
-    ninja -C $out/lib/flutter/$runtimeMode flatc
-    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} $out/lib/flutter/$runtimeMode/flatc
+    ninja flatc -j$NIX_BUILD_CORES
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} flatc
     
     echo "Building blobcat"
-    ninja -C $out/lib/flutter/$runtimeMode blobcat
-    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} $out/lib/flutter/$runtimeMode/blobcat
+    ninja blobcat -j$NIX_BUILD_CORES
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} blobcat
     
     echo "Building gen_snapshot"
-    ninja -C $out/lib/flutter/$runtimeMode gen_snapshot
-    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} $out/lib/flutter/$runtimeMode/gen_snapshot
+    ninja gen_snapshot -j$NIX_BUILD_CORES
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} gen_snapshot
 
     echo "Building impellerc"
-    ninja -C $out/lib/flutter/$runtimeMode impellerc
-    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} $out/lib/flutter/$runtimeMode/impellerc
+    ninja impellerc -j$NIX_BUILD_CORES
+    patchelf --set-interpreter ${stdenv.cc.libc}/lib/${interpreter} impellerc
 
     echo "Building Flutter Engine library"
-    ninja -C $out/lib/flutter/$runtimeMode flutter_engine_library
+    ninja flutter_engine_library -j$NIX_BUILD_CORES
 
     echo "Building icudtl.dat"
-    ninja -C $out/lib/flutter/$runtimeMode icudtl.dat
+    ninja icudtl.dat -j$NIX_BUILD_CORES
 
-    ninja -C $out/lib/flutter/$runtimeMode flutter_embedder.h
+    ninja flutter_embedder.h -j$NIX_BUILD_CORES
   '';
 
   installPhase = ''
