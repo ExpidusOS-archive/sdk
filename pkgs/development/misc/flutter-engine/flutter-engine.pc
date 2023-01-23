@@ -1,8 +1,9 @@
 prefix=@out@
 libdir=${prefix}/lib
+flutter_dir=${libdir}/flutter/@runtimeMode@
 
 Name: flutter-engine-@runtimeMode@
 Version: @version@
 Description: Embedded Flutter (@runtimeMode@)
-Libs: -L${libdir}/flutter-@runtimeMode@ -lflutter_engine
-Cflags: -I${libdir}/flutter-@runtimeMode@
+Libs: -L${flutter_dir} -lflutter_engine
+Cflags: -I${flutter_dir}

@@ -1,4 +1,4 @@
-{ lib, fetchgit, fetchcipd, fetchFromGitHub }@args:
+{ lib, fetchgit, fetchcipd, fetchFromGitHub, hostPlatform }@args:
 with lib;
 let
   fetchFromGitHub = { owner, repo, fetchSubmodules ? false, rev ? "HEAD", sha256 ? fakeHash }: args.fetchFromGitHub {
@@ -9,12 +9,28 @@ let
     url = "https://${owner}.googlesource.com/${repo}.git";
     inherit rev sha256 fetchSubmodules;
   };
+
+  toolchainArch = if hostPlatform.isx86_64 then "amd64" else if hostPlatform.isAarch64 then "aarch64" else throws "Unsupported platform";
 in {
-  src = fetchFromGitHub {
-    owner = "flutter";
-    repo = "buildroot";
-    rev = "6af51ff4b86270cc61517bff3fff5c3bb11492e1";
-    sha256 = "sha256-03jr3H1RvzGfa0rBPZ1rtNpmieKzDjDgBsrZGaj7vuI=";
+  "src/buildtools/linux-x64/clang" = fetchcipd {
+    package = "fuchsia/third_party/clang/linux-amd64";
+    version = "ugk-KfeqO9fhSfhBFRG4Z-56Kr2AQVSEbku9AEUdotYC";
+    sha256 = "sha256-ih43GvJdG+4+iLDJ7Exmj16hvPZe2yC7ePqTMkkrDpY=";
+  };
+  "src/flutter/prebuilts/linux-x64/dart-sdk" = fetchcipd {
+    package = "flutter/dart-sdk/linux-amd64";
+    version = "git_revision:b6592742d9f1a82af319f46eda3d59a61e89b91b";
+    sha256 = "sha256-4g3KJYlnf9sD1ej94uyg4R7Ob0eKuzhEnIJcI7qe5cg=";
+  };
+  "src/flutter/third_party/gn" = fetchcipd {
+    package = "gn/gn/\${platform}";
+    version = "git_revision:b79031308cc878488202beb99883ec1f2efd9a6d";
+    sha256 = "sha256-ghpoWunj3rSu981Jik1QHyHyuVEApZbCxcZygQnh2UE=";
+  };
+  "src/fuchsia/sdk/linux" = fetchcipd {
+    package = "fuchsia/sdk/core/linux-\${arch}";
+    version = "bf53fjQIIvsbEVNhfmqAX7sFPpfw8ib7VIQoJIsdJJEC";
+    sha256 = "sha256-X4h7NafVuSWETewV4Ky24xqUos3nuR/HtKzlZAX4m0s=";
   };
   "src/third_party/abseil-cpp" = fetchFromGoogle {
     owner = "chromium";
@@ -57,6 +73,11 @@ in {
     repo = "sdk";
     rev = "b6592742d9f1a82af319f46eda3d59a61e89b91b";
     sha256 = "sha256-kMpY7ZZYtbv5k0VUyjw7C7PGHH0W7g8JFYIbTdp/GNo=";
+  };
+  "src/third_party/dart/third_party/devtools" = fetchcipd {
+    package = "dart/third_party/flutter/devtools";
+    version = "git_revision:95d292626da26505b02417735f77e8922783b477";
+    sha256 = "sha256-/rWf5D+RYfLA4kAC491oCdhn1h7CarHTm+lB5gjKNP0=";
   };
   "src/third_party/dart/third_party/pkg/args" = fetchFromGoogle {
     owner = "dart";
@@ -383,10 +404,9 @@ in {
     sha256 = "sha256-wzlZhX7ZxL3jBfoBlUCjRM/awlyEZU1QO4rBEZmMr+8=";
   };
   "src/third_party/dart/tools/sdks" = fetchcipd {
-    name = "dart-sdk";
     package = "dart/dart-sdk/\${platform}";
     version = "version:2.17.0";
-    sha256 = "sha256-5kzEm04Zikgw0LMkQMbKdkaBB8R03pwG0O1OoTD6BTg=";
+    sha256 = "sha256-rv3fKuBULvsxf5eC2utFvD5XGPIaR+H/xADT8k/7nOo=";
   };
   "src/third_party/expat" = fetchFromGoogle {
     owner = "chromium";
@@ -687,6 +707,11 @@ in {
     repo = "external/github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator";
     rev = "7de5cc00de50e71a3aab22dea52fbb7ff4efceb6";
     sha256 = "sha256-rxr2RSZ7CrQwS/55HvKkw/LQXCO7R0oBR2lfD4olSpI=";
+  };
+  "src/third_party/web_dependencies" = fetchcipd {
+    package = "flutter/web/canvaskit_bundle";
+    version = "yrsfF-vTvu4jzBBm1o6tDl70dky-l4G29Dnj75UvRDgC";
+    sha256 = "sha256-iudnNMh2toYsJHhwAOVV+E1KiBFIPHyI6IF0qnBaOLA=";
   };
   "src/third_party/wuffs" = fetchFromGoogle {
     owner = "skia";

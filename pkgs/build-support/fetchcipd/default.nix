@@ -3,7 +3,7 @@ with lib;
 { name ? "source", package, version, sha256 ? fakeHash }:
 stdenvNoCC.mkDerivation {
   pname = name;
-  inherit version;
+  inherit version package;
   builder = ./builder.sh;
 
   SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
