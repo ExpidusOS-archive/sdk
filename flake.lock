@@ -3,11 +3,11 @@
     "disko": {
       "flake": false,
       "locked": {
-        "lastModified": 1674131019,
-        "narHash": "sha256-NmbeqCEM9GwwlYPNmu4aWZX3nfBJuMvaJ7T7QzWd8MM=",
+        "lastModified": 1674484560,
+        "narHash": "sha256-VhAgNQSSWeX53PXRaszaBW39f1ekvKSQhH5Ijy0H/RM=",
         "owner": "nix-community",
         "repo": "disko",
-        "rev": "e1eba38e8ea3ee6ca8ffef57668d4a37fff19ca4",
+        "rev": "d7e178126f05d9b1e5bfbf115c36ec9f75b85e8b",
         "type": "github"
       },
       "original": {
@@ -51,11 +51,11 @@
     "mobile-nixos": {
       "flake": false,
       "locked": {
-        "lastModified": 1670131242,
-        "narHash": "sha256-T/o1/3gffr010fsqgNshs1NJJjsnUYvQnUZgm6hilsY=",
+        "lastModified": 1674514177,
+        "narHash": "sha256-YN2EhvDuLwSIkR7eSv9FlwcM1KtDE7tvjelWyRT2Rsc=",
         "owner": "NixOS",
         "repo": "mobile-nixos",
-        "rev": "5ee45cc1f8e43f4af14ee17ccef9156b0db8cd77",
+        "rev": "a98394dbd5a3da325bb4075c90da4bda9cc21a68",
         "type": "github"
       },
       "original": {
@@ -67,11 +67,11 @@
     "nixpkgs": {
       "flake": false,
       "locked": {
-        "lastModified": 1674367895,
-        "narHash": "sha256-NKfstF6+71GthjPalgc2eteSE5a/OXbRsh6aDdRXmIc=",
+        "lastModified": 1674520085,
+        "narHash": "sha256-vRhICuqhVzJad6WDCBjO8EheShaNsQ0KGVkrnbOt8Gg=",
         "owner": "ExpidusOS",
         "repo": "nixpkgs",
-        "rev": "14ef0aa18193998749c2184a728a9a9b2939a388",
+        "rev": "426bd7c2289d15c8c19d7f827aad0550cc46ced0",
         "type": "github"
       },
       "original": {
