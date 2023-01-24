@@ -39,7 +39,9 @@ fixedPoints.makeExtensible (self:
         })) _configs));
 
         forAllPlatform = platform: func: builtins.mapAttrs (arch: value: func "${arch}-${platform}") _configs.${platform};
-      in {
+
+        flake-utils' = import channels.flake-utils;
+      in rec {
         configs = _configs;
         inherit all-configs;
 
@@ -49,6 +51,24 @@ fixedPoints.makeExtensible (self:
         forAllAndroid = forAllPlatform "android";
         forAllLinux = forAllPlatform "linux";
         forAllEmbedded = forAllPlatform "embedded";
+
+        flake-utils = flake-utils' // {
+          system = all-configs;
+          defaultSystems = builtins.attrNames flake-utils.system;
+          allSystems = builtins.attrNames flake-utils.system;
+
+          eachDefaultSystem = flake-utils'.eachSystem flake-utils.defaultSystems;
+          eachDefaultSystemMap = flake-utils'.eachSystemMap flake-utils.defaultSystems;
+
+          filterPackages = import "${channels.flake-utils}/filterPackages.nix" {
+            inherit (flake-utils) allSystems;
+          };
+
+          simpleFlake = import "${channels.flake-utils}/simpleFlake.nix" {
+            lib = flake-utils;
+            inherit (flake-utils) defaultSystems;
+          };
+        };
       };
   in {
     default = make {};

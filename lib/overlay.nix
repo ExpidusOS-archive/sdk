@@ -17,7 +17,7 @@
     };
 
     hm = (import "${home-manager}/modules/lib/stdlib-extended.nix" final).hm;
-    flake-utils = import flake-utils;
+    inherit (final.expidus.system.default) flake-utils;
 
     inherit (final.attrsets) renameAttrs;
   })
