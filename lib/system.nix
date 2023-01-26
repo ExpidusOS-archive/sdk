@@ -53,7 +53,7 @@ fixedPoints.makeExtensible (self:
         forAllEmbedded = forAllPlatform "embedded";
 
         flake-utils = flake-utils' // {
-          system = all-configs;
+          system = filterAttrs (name: value: value.system == name) all-configs;
           defaultSystems = builtins.attrNames flake-utils.system;
           allSystems = builtins.attrNames flake-utils.system;
 
