@@ -37,7 +37,7 @@
       };
 
       importPackage = import ./pkgs/top-level/overlay.nix channels;
-      lib = import ./lib/overlay.nix channels;
+      lib = import ./lib/extend.nix channels;
     in {
       inherit lib;
 

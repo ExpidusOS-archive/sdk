@@ -11,5 +11,8 @@ let
 in (builtins.mapAttrs
   (name: node: fetchTree (node.locked // node.original))
   nodes) // {
-    expidus-sdk = ../.;
+    expidus-sdk = builtins.path {
+      path = ../.;
+      name = "source";
+    };
   }

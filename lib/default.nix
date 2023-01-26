@@ -1,1 +1,1 @@
-import ./overlay.nix (import ./channels.nix)
+import ./extend.nix (import ./channels.nix)

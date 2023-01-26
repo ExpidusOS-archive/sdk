@@ -1,6 +1,6 @@
 { nixpkgs, expidus-sdk, ... }@channels:
 let
-  lib = import "${expidus-sdk}/lib/overlay.nix" channels;
+  lib = import "${expidus-sdk}/lib/extend.nix" channels;
 in
 {
   localSystem ? { system = args.system or builtins.currentSystem; },
