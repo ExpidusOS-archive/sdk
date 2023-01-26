@@ -56,7 +56,12 @@ fixedPoints.makeExtensible (self:
           if builtins.isAttrs system && (builtins.length (builtins.attrNames system)) == 1 then
             get "${system.system}"
           else if builtins.isString system then
-            (all-configs."${system}" or lists.findSingle (v: v.system == system) ({ inherit system; }) ({ inherit system; }) all-configs)
+            (all-configs."${system}"
+              or lists.findSingle
+              (v: v.system == system)
+              ({ inherit system; })
+              ({ inherit system; })
+              (builtins.attrValues all-configs))
           else system;
 
         flake-utils = flake-utils' // {
