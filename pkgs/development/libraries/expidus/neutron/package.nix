@@ -1,16 +1,22 @@
 { lib, fetchFromGitHub, clang14Stdenv, buildPackages }:
 with lib;
 let
-  mkPackage = { rev ? "HEAD", branch ? "master", src ? null, buildType ? "release", sha256 ? fakeHash }@args:
+  mkPackage = {
+    rev ? "HEAD",
+    branch ? "master",
+    src ? fetchFromGitHub {
+      owner = "ExpidusOS";
+      repo = "neutron";
+      inherit rev sha256;
+    },
+    buildType ? "release",
+    sha256 ? fakeHash
+  }@args:
     clang14Stdenv.mkDerivation {
       pname = "neutron";
       version = "git+${rev}";
 
-      src = args.src or fetchFromGitHub {
-        owner = "ExpidusOS";
-        repo = "neutron";
-        inherit rev sha256;
-      };
+      inherit src;
 
       outputs = [ "out" "dev" ];
 
