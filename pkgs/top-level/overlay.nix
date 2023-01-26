@@ -13,6 +13,12 @@ in
   let
     importSystem = name:
       optionalAttrs (builtins.hasAttr name args) {
+        "${name}" = {
+          system = expidus.system.default.get args."${name}";
+        };
+      };
+    importSystem' = name:
+      optionalAttrs (builtins.hasAttr name args) {
         "${name}" = expidus.system.default.get args."${name}";
       };
 
@@ -25,8 +31,8 @@ in
     ] // {
       inherit lib;
     } // importSystem "localSystem"
-      // importSystem "system"
-      // importSystem "crossSystem";
+      // importSystem' "system"
+      // importSystem' "crossSystem";
     pkgs = import "${nixpkgs}/pkgs/top-level/impure.nix" config;
   in pkgs.appendOverlays ([
     (final: prev: { path = expidus-sdk; })
