@@ -68,7 +68,7 @@ fixedPoints.makeExtensible (self:
                 valued
                 valued
                 (mapAttrsToList nameValuePair all-configs)).value;
-            in name)
+            in named)
           else system;
 
         flake-utils = flake-utils' // {
