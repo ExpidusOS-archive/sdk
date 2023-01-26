@@ -56,12 +56,19 @@ fixedPoints.makeExtensible (self:
           if builtins.isAttrs system && (builtins.length (builtins.attrNames system)) == 1 then
             get "${system.system}"
           else if builtins.isString system then
-            (all-configs."${system}"
-              or lists.findSingle
-              (v: v.system == system)
-              ({ inherit system; })
-              ({ inherit system; })
-              (builtins.attrValues all-configs))
+            (let
+              simpleDefault = { inherit system; };
+              valued = lists.findSingle
+                (v: v.system == system)
+                simpleDefault
+                simpleDefault
+                (builtins.attrValues all-configs);
+              named = (lists.findSingle
+                (np: np.name == system)
+                valued
+                valued
+                (mapAttrsToList nameValuePair all-configs)).value;
+            in name)
           else system;
 
         flake-utils = flake-utils' // {
