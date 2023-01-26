@@ -52,6 +52,13 @@ fixedPoints.makeExtensible (self:
         forAllLinux = forAllPlatform "linux";
         forAllEmbedded = forAllPlatform "embedded";
 
+        get = system:
+          if builtins.isAttrs system && (builtins.length (builtins.attrNames system)) == 1 then
+            get "${system.system}"
+          else if builtins.isString system then
+            (all-configs."${system}" or lists.findSingle (v: v.system == system) ({ inherit system; }) ({ inherit system; }) all-configs)
+          else system;
+
         flake-utils = flake-utils' // {
           system = filterAttrs (name: value: value.system == name) all-configs;
           defaultSystems = builtins.attrNames flake-utils.system;

@@ -9,8 +9,24 @@ in
   overlays ? [],
   ...
 }@args:
+  with lib;
   let
-    config = builtins.removeAttrs args [ "overlays" "lib" ] // { inherit lib; };
+    importSystem = name:
+      optionalAttrs (builtins.hasAttr name args) {
+        "${name}" = expidus.system.default.get args."${name}";
+      };
+
+    config = builtins.removeAttrs args [
+      "lib"
+      "overlays"
+      "localSystem"
+      "system"
+      "crossSystem"
+    ] // {
+      inherit lib;
+    } // importSystem "localSystem"
+      // importSystem "system"
+      // importSystem "crossSystem";
     pkgs = import "${nixpkgs}/pkgs/top-level/impure.nix" config;
   in pkgs.appendOverlays ([
     (final: prev: { path = expidus-sdk; })
