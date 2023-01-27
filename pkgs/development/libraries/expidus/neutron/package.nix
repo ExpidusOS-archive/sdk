@@ -1,4 +1,4 @@
-{ lib, fetchFromGitHub, clang14Stdenv, buildPackages }:
+{ lib, fetchFromGitHub, clang14Stdenv, buildPackages, check }:
 with lib;
 let
   mkPackage = {
@@ -23,7 +23,10 @@ let
       nativeBuildInputs = with buildPackages; [
         meson
         ninja
+        pkg-config
       ];
+
+      buildInputs = [ check ];
 
       mesonBuildType = buildType;
       mesonFlags = [
