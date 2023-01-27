@@ -26,6 +26,18 @@ fixedPoints.makeExtensible (self:
           useLLVM = true;
         };
       };
+      wasi = {
+        wasm32 = {
+          system = "wasm32-wasi";
+          config = "wasm32-unknown-wasi";
+          useLLVM = true;
+        };
+        wasm64 = {
+          system = "wasm64-wasi";
+          config = "wasm64-unknown-wasi";
+          useLLVM = true;
+        };
+      };
       embedded = {};
     };
 

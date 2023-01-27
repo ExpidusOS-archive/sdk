@@ -26,7 +26,8 @@ let
         pkg-config
       ];
 
-      buildInputs = [ check ];
+      buildInputs = optional check.meta.available check;
+      doCheck = check.meta.available;
 
       mesonBuildType = buildType;
       mesonFlags = [
