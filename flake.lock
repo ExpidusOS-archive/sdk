@@ -34,11 +34,11 @@
     "home-manager": {
       "flake": false,
       "locked": {
-        "lastModified": 1672244468,
-        "narHash": "sha256-xaZb8AZqoXRCSqPusCk4ouf+fUNP8UJdafmMTF1Ltlw=",
+        "lastModified": 1674440933,
+        "narHash": "sha256-CASRcD/rK3fn5vUCti3jzry7zi0GsqRsBohNq9wPgLs=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "89a8ba0b5b43b3350ff2e3ef37b66736b2ef8706",
+        "rev": "65c47ced082e3353113614f77b1bc18822dc731f",
         "type": "github"
       },
       "original": {
@@ -51,11 +51,11 @@
     "mobile-nixos": {
       "flake": false,
       "locked": {
-        "lastModified": 1674617517,
-        "narHash": "sha256-58nYTwxiYJ0ZEQyX9UcslMSJPm1z0eu62WRqpOxrjnI=",
+        "lastModified": 1674779092,
+        "narHash": "sha256-mFBD0Dvjf8tuxWtJhsCQ+8VYqI4fQeWjd/vfWsZiRRo=",
         "owner": "NixOS",
         "repo": "mobile-nixos",
-        "rev": "0bc11b087a9c953e1de79334bcff9b1f55e1506a",
+        "rev": "80ece5a61738fbf3b96fdda402ab2dfc74ee5cee",
         "type": "github"
       },
       "original": {
@@ -67,11 +67,11 @@
     "nixpkgs": {
       "flake": false,
       "locked": {
-        "lastModified": 1674692015,
-        "narHash": "sha256-DqZrULY6+ZcPP7jzlzSSJ/GYjK1MtR1j7S4kRJz3l5Y=",
+        "lastModified": 1674864547,
+        "narHash": "sha256-Ih8oOF3+PHil+/tfapM26nbRpW2l+kO1KX3EgRnlhwA=",
         "owner": "ExpidusOS",
         "repo": "nixpkgs",
-        "rev": "a35fa7ec66a704a3c1424e8f2360d2a02d2e4c50",
+        "rev": "60c90def7524b2a7857ebffe96b314fa0a168363",
         "type": "github"
       },
       "original": {
