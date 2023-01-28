@@ -18,12 +18,13 @@ let
 
       inherit src;
 
-      outputs = [ "out" "dev" ];
+      outputs = [ "out" "dev" "doc" ];
 
       nativeBuildInputs = with buildPackages; [
         meson
         ninja
         pkg-config
+        hotdoc
       ];
 
       buildInputs = optional check.meta.available check;
