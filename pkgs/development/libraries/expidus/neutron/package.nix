@@ -18,13 +18,18 @@ let
 
       inherit src;
 
-      outputs = [ "out" "dev" "doc" ];
+      outputs = [ "out" "dev" "devdoc" ];
 
       nativeBuildInputs = with buildPackages; [
         meson
         ninja
         pkg-config
-        hotdoc
+        gtk-doc
+        libxslt
+        docbook_xsl
+        docbook_xml_dtd_412
+        docbook_xml_dtd_42
+        docbook_xml_dtd_43
       ];
 
       buildInputs = optional check.meta.available check;
