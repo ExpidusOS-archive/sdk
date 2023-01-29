@@ -14,7 +14,7 @@ let
   }@args:
     clang14Stdenv.mkDerivation {
       pname = "neutron";
-      version = "git+${rev}";
+      version = "git+${builtins.substring 0 7 rev}";
 
       inherit src;
 
@@ -37,7 +37,7 @@ let
 
       mesonBuildType = buildType;
       mesonFlags = [
-        "-Dgit-commit=${rev}"
+        "-Dgit-commit=${builtins.substring 0 7 rev}"
         "-Dgit-branch=${branch}"
       ];
 
