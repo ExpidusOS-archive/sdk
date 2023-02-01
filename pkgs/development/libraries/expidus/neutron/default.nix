@@ -1,5 +1,5 @@
 { callPackage }:
 callPackage ./package.nix {} {
-  rev = "7cd6ebf48e28d04e74765499a79239232b114d1b";
-  sha256 = "sha256-wDCVmrT9MOnJAMF8y5qH04cItZiKdwVaY0FZV2WtVUk=";
+  rev = "321500675d638514da3409edbd1859db0017b72d";
+  sha256 = "sha256-6nH42MfR6Sq1Lryi6CNXzRHmNPiTOBp1Ub9NihvCo/w=";
 }
