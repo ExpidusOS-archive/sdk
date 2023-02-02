@@ -1,6 +1,6 @@
 #!@bash@/bin/sh
 
-export PATH="@out@/bin:$PATH:@dart@/bin"
+export PATH="@out@/bin:@dart@/bin:@flutter@/bin:$PATH"
 set -e
 
 export FILE="./ffigen.yaml"
@@ -14,6 +14,9 @@ for i in "$@"; do
     --file=*)
       export FILE="${i#*=}"
       ;;
+    --flutter)
+      export FLUTTER=true
+      ;;
     *)
       echo "Unknown argument $i"
       exit 1
@@ -24,14 +27,27 @@ done
 temp=$(mktemp)
 ffigen-config "$FILE" >$temp
 
-if ! [[ -e $DIR/pubspec.yaml ]]; then
-  if ! dart pub global list | grep ffigen; then
-    dart pub global activate ffigen
-  fi
+cd $DIR
+if [[ -z $FLUTTER ]]; then
+  if ! [[ -e $DIR/pubspec.yaml ]]; then
+    if ! dart pub global list | grep ffigen; then
+      dart pub global activate ffigen
+    fi
 
-  dart pub -C $DIR global run ffigen --config $temp
+    dart pub global run ffigen --config $temp
+  else
+    dart run ffigen --config $temp
+  fi
 else
-  dart run ffigen --config $temp --directory $DIR
+  if ! [[ -e $DIR/pubspec.yaml ]]; then
+    if ! flutter pub global list | grep ffigen; then
+      flutter pub global activate ffigen
+    fi
+
+    flutter pub global run ffigen --config $temp
+  else
+    flutter pub run ffigen --config $temp
+  fi
 fi
 
 rm $temp

@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, targetPlatform, bash, yq-go, llvmPackages_14, clang14Stdenv, gcc-unwrapped, gcc, dart }:
+{ lib, stdenvNoCC, targetPlatform, bash, yq-go, llvmPackages_14, clang14Stdenv, gcc-unwrapped, gcc, dart, flutter }:
 let
   llvmPackages = llvmPackages_14;
   clangStdenv = clang14Stdenv;
@@ -18,7 +18,7 @@ stdenvNoCC.mkDerivation {
     ./tools/ffigen.sh
   ];
 
-  inherit bash dart;
+  inherit bash dart flutter;
   yq = yq-go;
 
   includePaths = with clang14Stdenv; [
