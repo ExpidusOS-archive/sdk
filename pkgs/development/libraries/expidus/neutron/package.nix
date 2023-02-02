@@ -24,6 +24,7 @@ let
       outputs = [ "out" "dev" "devdoc" ];
 
       nativeBuildInputs = with buildPackages; [
+        expidus.sdk
         meson
         ninja
         pkg-config

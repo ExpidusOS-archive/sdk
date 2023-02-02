@@ -1,17 +1,17 @@
 { lib }:
 with lib;
 fixedPoints.makeExtensible (self: rec {
-  release = strings.fileContents ../.version;
+  release = strings.fileContents ../../.version;
 
-  versionSuffix = (let suffixFile = ../.version-suffix;
+  versionSuffix = (let suffixFile = ../../.version-suffix;
       in if builtins.pathExists suffixFile
       then "-${strings.fileContents suffixFile}"
       else "-alpha");
 
   revisionWithDefault = (default:
       let
-        revisionFile = "${toString ./..}/.git-revision";
-        gitRepo      = "${toString ./..}/.git";
+        revisionFile = "${toString ./../..}/.git-revision";
+        gitRepo      = "${toString ./../..}/.git";
       in if pathIsGitRepo gitRepo
         then commitIdFromGitRepo gitRepo
         else if pathExists revisionFile then fileContents revisionFile
