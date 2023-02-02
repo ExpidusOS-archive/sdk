@@ -53,5 +53,6 @@ stdenvNoCC.mkDerivation {
     homepage = "https://github.com/ExpidusOS/sdk";
     license = licenses.gpl3Only;
     maintainers = with maintainers; [ RossComputerGuy ];
+    platforms = platforms.linux ++ platforms.darwin ++ platforms.cygwin;
   };
 }

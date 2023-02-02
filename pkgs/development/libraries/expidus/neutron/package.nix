@@ -1,4 +1,4 @@
-{ lib, fetchFromGitHub, clang14Stdenv, buildPackages, check, flutter-engine, libglvnd, pixman }:
+{ lib, fetchFromGitHub, stdenv, buildPackages, check, flutter-engine, libglvnd, pixman }:
 with lib;
 let
   mkPackage = {
@@ -15,7 +15,7 @@ let
     buildType ? "release",
     sha256 ? fakeHash
   }@args:
-    clang14Stdenv.mkDerivation {
+    stdenv.mkDerivation {
       pname = "neutron${optionalString bootstrap "-bootstrap"}";
       version = "git+${builtins.substring 0 7 rev}";
 
@@ -34,13 +34,13 @@ let
         docbook_xml_dtd_412
         docbook_xml_dtd_42
         docbook_xml_dtd_43
-      ] ++ optionals (!bootstrap) [
-        flutter-engine
-        libglvnd
-        pixman
       ];
 
-      buildInputs = optional check.meta.available check;
+      buildInputs = optionals (!bootstrap) [
+        flutter-engine
+      ] ++ (optional libglvnd.meta.available libglvnd)
+        ++ (optional pixman.meta.available pixman)
+        ++ (optional check.meta.available check);
       doCheck = check.meta.available;
 
       mesonBuildType = buildType;
