@@ -13,7 +13,7 @@ let
       owner = "ExpidusOS";
       repo = "libtokyo";
       inherit rev;
-      sha256 = "sha256-GGr8t4VVpLb3clkOuBWhoP4ZREblGnBqejJ8I85lYwc=";
+      sha256 = "sha256-TO1LsD35kBdRrHXX3zFCHk1CbD8bq+veOV+mWtTHahw=";
       fetchSubmodules = true;
       leaveDotGit = true;
     };
