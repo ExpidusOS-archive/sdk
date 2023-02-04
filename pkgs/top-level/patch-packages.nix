@@ -8,14 +8,14 @@ rec {
   inherit lib;
   path = lib.expidus.channels.sdk;
 
-  nix = super.nix.overrideAttrs (old: {
-    doInstallCheck = !isCrossCompiling;
-  });
+  #nix = super.nix.overrideAttrs (old: {
+  #  doInstallCheck = !isCrossCompiling;
+  #});
 
   nwg-drawer = callPackage ../applications/misc/nwg-drawer/default.nix {};
-  libvpx = callPackage ../development/libraries/libvpx/default.nix {};
+  #libvpx = callPackage ../development/libraries/libvpx/default.nix {};
 
-  ninja = super.ninja.overrideAttrs (old: {
+  /*ninja = super.ninja.overrideAttrs (old: {
     depsBuildBuild = [ buildPackages.stdenv.cc ];
 
     postPatch = ''
@@ -51,5 +51,5 @@ rec {
   elfutils = super.elfutils.overrideAttrs (old: {
     buildInputs = old.buildInputs
       ++ lib.optionals (with stdenv; !cc.isGNU && !(isDarwin && isAarch64)) [ libgcc ];
-  });
+  });*/
 }
