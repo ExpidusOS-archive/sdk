@@ -6,6 +6,7 @@ set -e
 export FILE="./ffigen.yaml"
 export DIR=$(pwd)
 export COMPILER_OPTS=""
+export VERBOSE="info"
 
 for i in "$@"; do
   case $i in
@@ -21,6 +22,9 @@ for i in "$@"; do
     --compiler-opts=*)
       export COMPILER_OPTS="${i#*=}"
       ;;
+    --verbose)
+      export VERBOSE="${i#*=}"
+      ;;
     *)
       echo "Unknown argument $i"
       exit 1
@@ -31,8 +35,10 @@ done
 temp=$(mktemp)
 ffigen-config "$FILE" >$temp
 
+export ffigenExtra="--config $temp --verbose $VERBOSE"
+
 if ! [[ -z "$COMPILER_OPTS" ]]; then
-  ffigenExtra="--compiler-opts $COMPILER_OPTS"
+  ffigenExtra="$ffigenExtra --compiler-opts $COMPILER_OPTS"
 fi
 
 cd $DIR
@@ -42,9 +48,9 @@ if [[ -z $FLUTTER ]]; then
       dart pub global activate ffigen
     fi
 
-    dart pub global run ffigen --config $temp $ffigenExtra
+    dart pub global run ffigen $ffigenExtra
   else
-    dart run ffigen --config $temp $ffigenExtra
+    dart run ffigen $ffigenExtra
   fi
 else
   if ! [[ -e $DIR/pubspec.yaml ]]; then
@@ -52,9 +58,9 @@ else
       flutter pub global activate ffigen
     fi
 
-    flutter pub global run ffigen --config $temp $ffigenExtra
+    flutter pub global run ffigen $ffigenExtra
   else
-    flutter pub run ffigen --config $temp $ffigenExtra
+    flutter pub run ffigen $ffigenExtra
   fi
 fi
 
