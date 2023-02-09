@@ -38,7 +38,7 @@ ffigen-config "$FILE" >$temp
 export ffigenExtra="--config $temp --verbose $VERBOSE"
 
 if ! [[ -z "$COMPILER_OPTS" ]]; then
-  ffigenExtra="$ffigenExtra --compiler-opts $COMPILER_OPTS"
+  ffigenExtra="$ffigenExtra --compiler-opts \"$COMPILER_OPTS\""
 fi
 
 cd $DIR
