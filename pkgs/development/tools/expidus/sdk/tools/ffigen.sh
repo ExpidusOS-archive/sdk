@@ -40,7 +40,7 @@ if ! [[ -z "$COMPILER_OPTS" ]]; then
   ffigenExtra+=("--compiler-opts" "\"$COMPILER_OPTS\"")
 fi
 
-echo "Running ffigen with $ffigenExtra"
+echo "Running ffigen with ${ffigenExtra[@]}"
 
 cd $DIR
 if [[ -z $FLUTTER ]]; then
