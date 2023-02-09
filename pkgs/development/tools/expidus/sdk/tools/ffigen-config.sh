@@ -15,7 +15,7 @@ temp=$(mktemp)
 cp $file $temp
 
 if [[ "$#" -gt 0 ]]; then
-  yq -i ".[\"compiler-opts\"] += [\"$@\"]" $temp
+  yq -i ".[\"compiler-opts\"] += [$@]" $temp
 fi
 
 for includePath in @includePaths@; do
