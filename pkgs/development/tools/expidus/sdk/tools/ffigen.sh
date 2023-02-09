@@ -32,10 +32,9 @@ for i in "$@"; do
   esac
 done
 
-temp=$(mktemp)
-ffigen-config "$FILE" >$temp
+ffigen-config "$FILE" >"$DIR/.ffigen.yaml"
 
-export ffigenExtra="--config $temp --verbose $VERBOSE"
+export ffigenExtra="--config $DIR/.ffigen.yaml --verbose $VERBOSE"
 
 if ! [[ -z "$COMPILER_OPTS" ]]; then
   ffigenExtra="$ffigenExtra --compiler-opts \"$COMPILER_OPTS\""
@@ -64,4 +63,4 @@ else
   fi
 fi
 
-rm $temp
+rm "$DIR/.ffigen.yaml"
