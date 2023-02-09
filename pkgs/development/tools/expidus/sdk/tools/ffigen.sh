@@ -34,10 +34,10 @@ done
 
 ffigen-config "$FILE" >"$DIR/.ffigen.yaml"
 
-export ffigenExtra="--config $DIR/.ffigen.yaml --verbose $VERBOSE"
+export ffigenExtra=("--config" "$DIR/.ffigen.yaml" "--verbose" "$VERBOSE")
 
 if ! [[ -z "$COMPILER_OPTS" ]]; then
-  ffigenExtra="$ffigenExtra --compiler-opts \"$COMPILER_OPTS\""
+  ffigenExtra+=("--compiler-opts" "\"$COMPILER_OPTS\"")
 fi
 
 echo "Running ffigen with $ffigenExtra"
@@ -49,9 +49,9 @@ if [[ -z $FLUTTER ]]; then
       dart pub global activate ffigen
     fi
 
-    dart pub global run ffigen $ffigenExtra
+    dart pub global run ffigen ${ffigenExtra[@]}
   else
-    dart run ffigen $ffigenExtra
+    dart run ffigen ${ffigenExtra[@]}
   fi
 else
   if ! [[ -e $DIR/pubspec.yaml ]]; then
@@ -59,9 +59,9 @@ else
       flutter pub global activate ffigen
     fi
 
-    flutter pub global run ffigen $ffigenExtra
+    flutter pub global run ffigen ${ffigenExtra[@]}
   else
-    flutter pub run ffigen $ffigenExtra
+    flutter pub run ffigen ${ffigenExtra[@]}
   fi
 fi
 
