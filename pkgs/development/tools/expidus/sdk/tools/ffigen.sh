@@ -40,6 +40,8 @@ if ! [[ -z "$COMPILER_OPTS" ]]; then
   ffigenExtra="$ffigenExtra --compiler-opts \"$COMPILER_OPTS\""
 fi
 
+echo "Running ffigen with $ffigenExtra"
+
 cd $DIR
 if [[ -z $FLUTTER ]]; then
   if ! [[ -e $DIR/pubspec.yaml ]]; then
