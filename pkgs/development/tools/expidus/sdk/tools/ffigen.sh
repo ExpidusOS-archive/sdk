@@ -22,7 +22,7 @@ for i in "$@"; do
     --compiler-opts=*)
       export COMPILER_OPTS="${i#*=}"
       ;;
-    --verbose)
+    --verbose=*)
       export VERBOSE="${i#*=}"
       ;;
     *)
