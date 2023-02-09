@@ -37,7 +37,7 @@ ffigen-config "$FILE" >"$DIR/.ffigen.yaml"
 export ffigenExtra="--config $DIR/.ffigen.yaml --verbose $VERBOSE"
 
 if ! [[ -z "$COMPILER_OPTS" ]]; then
-  ffigenExtra="$ffigenExtra --compiler-opts $COMPILER_OPTS"
+  ffigenExtra="$ffigenExtra --compiler-opts \"$COMPILER_OPTS\""
 fi
 
 echo "Running ffigen with $ffigenExtra"
