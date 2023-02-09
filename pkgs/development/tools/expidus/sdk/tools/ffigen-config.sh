@@ -7,11 +7,14 @@ file="$1"
 if [[ -z "$file" ]]; then
   file="./ffigen.yaml"
 fi
+shift 1
 
 set -e
 
 temp=$(mktemp)
 cp $file $temp
+
+yq -i ".[\"compiler-opts\"] += [\"$@\"]" $temp
 
 for includePath in @includePaths@; do
   yq -i ".[\"compiler-opts\"] += [\"-I $includePath\"]" $temp

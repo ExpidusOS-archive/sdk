@@ -32,14 +32,9 @@ for i in "$@"; do
   esac
 done
 
-ffigen-config "$FILE" >"$DIR/.ffigen.yaml"
+ffigen-config "$FILE" "$COMPILER_OPTS" >"$DIR/.ffigen.yaml"
 
 export ffigenExtra=("--config" "$DIR/.ffigen.yaml" "--verbose" "$VERBOSE")
-
-if ! [[ -z "$COMPILER_OPTS" ]]; then
-  ffigenExtra+=("--compiler-opts" "\"$COMPILER_OPTS\"")
-fi
-
 echo "Running ffigen with ${ffigenExtra[@]}"
 
 cd $DIR
