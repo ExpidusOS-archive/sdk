@@ -108,6 +108,7 @@ let
       ] ++ nativeFeatureInputs);
 
       buildInputs = featureInputs
+        ++ optional (libxkbcommon.meta.available) libxkbcommon
         ++ optional (stdenv.isLinux) systemd
         ++ optional (wayland.meta.available) wayland;
       doCheck = features'.tests.value;
