@@ -1,7 +1,11 @@
 #!@bash@/bin/sh
 
-export PATH="@out@/bin:@dart@/bin:@flutter@/bin:$PATH"
+export PATH="@out@/bin:@dart@/bin:$PATH"
 set -e
+
+if ! [[ -z "@flutter@" ]]; then
+  export PATH="@flutter@/bin:$PATH"
+fi
 
 export FILE="./ffigen.yaml"
 export DIR=$(pwd)

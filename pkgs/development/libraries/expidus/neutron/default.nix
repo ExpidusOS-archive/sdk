@@ -1,7 +1,8 @@
-{ callPackage, stdenv }:
+{ callPackage, stdenv, isWASM }:
 callPackage ./package.nix {
-  inherit stdenv;
+  inherit stdenv isWASM;
 } {
-  rev = "7cda7c85af49accca9625f5c8f5297d2c0e243e3";
-  sha256 = "sha256-8OUNZ1BPBou8v69RzZ8UO/frfXy2LDDOFaf4iq/NFdA=";
+  rev = "850ad2159499ab15ae3bb986e8bc29dd53c64d47";
+  sha256 = "sha256-+P2hoHApoORZIm0aieciHzlJgNz3GvpBjC0vCGTY+r4=";
+  inherit isWASM;
 }

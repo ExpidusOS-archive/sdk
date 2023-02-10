@@ -18,7 +18,7 @@ stdenvNoCC.mkDerivation {
     ./tools/ffigen.sh
   ];
 
-  inherit bash dart flutter;
+  inherit bash dart;
   yq = yq-go;
 
   includePaths = with clang14Stdenv; [
@@ -53,6 +53,8 @@ stdenvNoCC.mkDerivation {
     homepage = "https://github.com/ExpidusOS/sdk";
     license = licenses.gpl3Only;
     maintainers = with maintainers; [ RossComputerGuy ];
-    platforms = platforms.linux ++ platforms.darwin ++ platforms.cygwin;
+    inherit (dart.meta) platforms;
   };
+} // optionalAttrs (flutter.meta.available) {
+  inherit flutter;
 }
