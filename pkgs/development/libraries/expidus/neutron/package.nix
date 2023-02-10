@@ -17,8 +17,7 @@ let
     passthru ? {},
     engineType ? "release",
     buildType ? "release",
-    sha256 ? fakeHash,
-    vendorHash ? fakeHash
+    sha256 ? fakeHash
   }@args:
     stdenv.mkDerivation {
       pname = "neutron${optionalString bootstrap "-bootstrap"}";
