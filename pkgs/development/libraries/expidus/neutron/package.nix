@@ -1,4 +1,4 @@
-{ lib, fetchFromGitHub, stdenv, buildPackages, check, flutter-engine, libglvnd, pixman, xorg, wlroots, wayland, libxkbcommon, systemd, cacert }@pkgs:
+{ lib, fetchFromGitHub, stdenv, buildPackages, check, flutter-engine, libglvnd, pixman, xorg, wlroots, wayland, libxkbcommon, systemd }@pkgs:
 with lib;
 let
   optionalPkg = pkg: optional pkg.meta.available pkg;
@@ -24,52 +24,7 @@ let
       pname = "neutron${optionalString bootstrap "-bootstrap"}";
       version = "git+${builtins.substring 0 7 rev}";
 
-      src = stdenv.mkDerivation {
-        pname = "neutron${optionalString bootstrap "-bootstrap"}-source";
-        version = "git+${builtins.substring 0 7 rev}";
-
-        inherit src;
-
-        nativeBuildInputs = with buildPackages; [
-          flutter.dart
-        ];
-
-        dontConfigure = true;
-        dontBuild = true;
-
-        dirs = [
-          "elemental"
-          "flutter_engine"
-          "platform"
-          "shimmy"
-          "graphics"
-          "inputcore"
-          "displaykit"
-          "runtime"
-          "."
-        ];
-
-        installPhase = ''
-          cp -r -P --no-preserve=ownership,mode $src $out
-
-          export HOME=$NIX_BUILD_TOP
-
-          for dir in $dirs; do
-            dart pub get -C $out/$dir
-          done
-        '';
-
-        GIT_SSL_CAINFO = "${cacert}/etc/ssl/certs/ca-bundle.crt";
-        SSL_CERT_FILE = "${cacert}/etc/ssl/certs/ca-bundle.crt";
-
-        impureEnvVars = lib.fetchers.proxyImpureEnvVars ++ [
-          "GIT_PROXY_COMMAND" "NIX_GIT_SSL_CAINFO" "SOCKS_SERVER"
-        ];
-
-        outputHashAlgo = "sha256";
-        outputHashMode = "recursive";
-        outputHash = vendorHash;
-      };
+      inherit src;
 
       outputs = [ "out" "dev" "devdoc" ];
 
@@ -119,6 +74,11 @@ let
         "-Dgraphics-renderer-egl=${mesonFeature libglvnd.meta.available}"
         "-Dgraphics-renderer-pixman=${mesonFeature pixman.meta.available}"
       ];
+
+      postInstall = ''
+        mkdir -p $dev/lib
+        mv $out/lib/neutron $dev/lib/neutron
+      '';
 
       passthru = passthru // {
         inherit mkPackage rev branch;
