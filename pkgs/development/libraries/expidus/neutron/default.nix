@@ -2,6 +2,7 @@
 callPackage ./package.nix {
   inherit stdenv;
 } {
-  rev = "321500675d638514da3409edbd1859db0017b72d";
-  sha256 = "sha256-6nH42MfR6Sq1Lryi6CNXzRHmNPiTOBp1Ub9NihvCo/w=";
+  rev = "e2a9801967dc20653dc3aff90a1c581f08abfc83";
+  sha256 = "sha256-X5AwSmQSzYD9Q0gGPcZGQYicZ3ep2uMQattch0fU8uA=";
+  vendorHash = "sha256-QLaw/TxyO4mu0WzLY1V8IG1slWiVQeu+k3q7nV7fNl4=";
 }
