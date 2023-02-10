@@ -84,9 +84,9 @@ let
       featuresEnabled = filterAttrs (name: option: option.value) features';
 
       featureFlags = builtins.attrValues (builtins.mapAttrs (name: option: "-D${name}=${mesonFeature option.value}") features');
-      featureInputs = lists.flatten (builtins.attrValues (builtins.mapAttrs (name: option: option.inputs or (if "input" ? option then [ option.input ] else [])) featuresEnabled));
+      featureInputs = lists.flatten (builtins.attrValues (builtins.mapAttrs (name: option: option.inputs or (if builtins.hasAttr "input" option then [ option.input ] else [])) featuresEnabled));
 
-      nativeFeatureInputs = lists.flatten (builtins.attrValues (builtins.mapAttrs (name: option: option.nativeInputs or (if "nativeInput" ? option then [ option.nativeInput ] else [])) featuresEnabled));
+      nativeFeatureInputs = lists.flatten (builtins.attrValues (builtins.mapAttrs (name: option: option.nativeInputs or (if builtins.hasAttr "nativeInput" option then [ option.nativeInput ] else [])) featuresEnabled));
     in stdenv.mkDerivation {
       pname = "neutron${optionalString bootstrap "-bootstrap"}";
       version = "git+${builtins.substring 0 7 rev}";
@@ -132,7 +132,7 @@ let
           cpp = '${emscripten}/bin/em++'
           cpp_ld = '${llvmPackages_14.bintools-unwrapped}/bin/wasm-ld'
           ranlib = '${emscripten}/bin/emranlib'
-          pkgconfig = ['${emscripten}/bin/emmake', 'env', 'PKG_CONFIG_PATH=${concatMapStringsSep ":" (pkg: "${if "dev" ? pkg then pkg.dev else pkg}/lib/pkgconfig") (featureInputs ++ nativeFeatureInputs)}', '${pkg-config}/bin/pkg-config']
+          pkgconfig = ['${emscripten}/bin/emmake', 'env', 'PKG_CONFIG_PATH=${concatMapStringsSep ":" (pkg: "${if builtins.hasAttr "dev" pkg then pkg.dev else pkg}/lib/pkgconfig") (featureInputs ++ nativeFeatureInputs)}', '${pkg-config}/bin/pkg-config']
           file_packager = '${emscripten}/share/emscripten/tools/file_packager'
 
           [properties]
