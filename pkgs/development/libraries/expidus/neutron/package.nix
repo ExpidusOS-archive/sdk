@@ -139,7 +139,6 @@ let
           [properties]
           needs_exe_wrapper = true
           exe_suffix = 'js'
-          default_library = 'static'
           static_library_suffix = 'la'
           shared_library_suffix = 'js'
           shared_module_suffix = 'js'
@@ -147,6 +146,7 @@ let
           [built-in options]
           c_args = cflags
           c_link_args = ldflags
+          default_library = 'static'
 
           [host_machine]
           system = 'emscripten'
