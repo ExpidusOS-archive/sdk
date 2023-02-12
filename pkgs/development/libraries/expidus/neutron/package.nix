@@ -49,9 +49,114 @@ let
 
         packages = [
           (fetchFromPubdev {
+            name = "args";
+            version = "2.3.2";
+            sha256 = "sha256-VddOHZcSf0b4kQ26afb7WjwIj++SIapzEfnKHDWViis=";
+          })
+          (fetchFromPubdev {
+            name = "async";
+            version = "2.10.0";
+            sha256 = "sha256-3Xky9zLMWKY2rimHQQka6w0Tc40ua9oXq5hJXRX1EAI=";
+          })
+          (fetchFromPubdev {
+            name = "cli_util";
+            version = "0.3.5";
+            sha256 = "sha256-Rg6eBlrq556Lq3BoEWWlZo+cQ55sVNpweemzywpzswY=";
+          })
+          (fetchFromPubdev {
+            name = "collection";
+            version = "1.17.1";
+            sha256 = "sha256-bY5gKplieuYGbbFC9SbwuyHYHiG9jMaZqbQer4Vxyb8=";
+          })
+          (fetchFromPubdev {
+            name = "ffi";
+            version = "2.0.1";
+            sha256 = "sha256-qeQpj1MgJ69LxGzHSaiKMBIoAaMsYjr/xyWa1h5HxAg=";
+          })
+          (fetchFromPubdev {
             name = "ffigen";
             version = "7.2.1";
             sha256 = "sha256-XGE7zSpWVBu/kFCPL3oYS/YwtoVJVDbB0TkiU6s9xUQ=";
+          })
+          (fetchFromPubdev {
+            name = "file";
+            version = "6.1.4";
+            sha256 = "sha256-Z9477phM5lac1RIcylEDGyzQYF7zPx0ui4005OhyTCo=";
+          })
+          (fetchFromPubdev {
+            name = "glob";
+            version = "2.1.1";
+            sha256 = "sha256-SwPNnriP3R8JXffTpt4i1jwKQJc+Nhkyp+Z19BSL26g=";
+          })
+          (fetchFromPubdev {
+            name = "js";
+            version = "0.6.5";
+            sha256 = "sha256-oNiUJsfKHOKJM7K/OqwbIo25SSLmVdX3r8vs8Pzry40=";
+          })
+          (fetchFromPubdev {
+            name = "logging";
+            version = "1.1.1";
+            sha256 = "sha256-BFoLSsb7080C/d8xC1uVh7+IQtO3KNKMbFgJs5g/xSA=";
+          })
+          (fetchFromPubdev {
+            name = "matcher";
+            version = "0.12.14";
+            sha256 = "sha256-Mnlinnwtp2eKwuUncsSf2nH2mlcwotwkQb06Kp6Vdr8=";
+          })
+          (fetchFromPubdev {
+            name = "meta";
+            version = "1.9.0";
+            sha256 = "sha256-Eo/YauGJNG6bmpr+sBN6PRqrWGXGlIh0mfZ0E+X5PY8=";
+          })
+          (fetchFromPubdev {
+            name = "package_config";
+            version = "2.1.0";
+            sha256 = "sha256-7K6jYIDvUAAxBn0OYGWIgc8rXoa6uELkJ2T4xUgElLQ=";
+          })
+          (fetchFromPubdev {
+            name = "path";
+            version = "1.8.3";
+            sha256 = "sha256-O5JyRH8NTWnNBq+eS5Qmg7Ml9FS2igvzTNF87QSGTdY=";
+          })
+          (fetchFromPubdev {
+            name = "quiver";
+            version = "3.2.1";
+            sha256 = "sha256-AAVL6eUrcejUMMqDfrgJnNjyG+t6ykaPxYxoSBSP6F4=";
+          })
+          (fetchFromPubdev {
+            name = "source_span";
+            version = "1.9.1";
+            sha256 = "sha256-Bq1s4Ax7I9svyfxLe3IKGZtwEaHGycjS1rgETo/XBNM=";
+          })
+          (fetchFromPubdev {
+            name = "stack_trace";
+            version = "1.11.0";
+            sha256 = "sha256-yooEjFq7ju0pmTv+wb4qhIGZSiI52kXEx9vleffG7y0=";
+          })
+          (fetchFromPubdev {
+            name = "string_scanner";
+            version = "1.2.0";
+            sha256 = "sha256-AETXoJlFtOf7KdF0dvsHNQhnWL1g5gGe41sNkcQGOVw=";
+          })
+          (fetchFromPubdev {
+            name = "term_glyph";
+            version = "1.2.1";
+            sha256 = "sha256-CXbKc4omicY/DeJxI+Fu3Zdy/QDnViW7BpoypvrVFvU=";
+          })
+          (fetchFromPubdev {
+            name = "web_ffi";
+            version = "0.7.2";
+            sha256 = "sha256-X8NAXeXy5Jv3xCKP8HGjBD6ZdPeeGSyjW/LA5HMIBUI=";
+          })
+          (fetchFromPubdev {
+            name = "yaml";
+            version = "3.1.1";
+            sha256 = "sha256-PIJ7f1/nTAVTPodUasba5vodvhNh1F4WGjknNuyvGFc=";
+          })
+          (fetchFromPubdev {
+            name = "yaml_edit";
+            version = "2.0.3";
+            sha256 = "sha256-0IG/5jdOqv08tdwKYT86ADHmwMNWegGORpe5Ww/6hxg=";
           })
         ];
       };
