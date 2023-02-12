@@ -1,4 +1,6 @@
 { lib,
+  buildDartVendor,
+  fetchFromPubdev,
   fetchFromGitHub,
   writeText,
   stdenv,
@@ -40,6 +42,19 @@ let
   }@args:
     let
       isWASM = args.isWASM or false;
+
+      dartPackages = buildDartVendor {
+        pname = "neutron${optionalString bootstrap "-bootstrap"}-dart-vendor";
+        version = "git+${builtins.substring 0 7 rev}";
+
+        packages = [
+          (fetchFromPubdev {
+            name = "ffigen";
+            version = "7.2.1";
+            sha256 = "sha256-XGE7zSpWVBu/kFCPL3oYS/YwtoVJVDbB0TkiU6s9xUQ=";
+          })
+        ];
+      };
 
       mkSimpleFeat = input: {
         default = input.meta.available;
@@ -91,7 +106,7 @@ let
       pname = "neutron${optionalString bootstrap "-bootstrap"}";
       version = "git+${builtins.substring 0 7 rev}";
 
-      inherit src;
+      inherit src dartPackages;
 
       outputs = [ "out" "dev" ]
         ++ optional (features'.docs.value) "devdoc";
@@ -113,12 +128,17 @@ let
         ++ optional (wayland.meta.available) wayland;
       doCheck = features'.tests.value;
 
+      postUnpack = ''
+        ln -s $dartPackages $NIX_BUILD_TOP/.pub-dev
+      '';
+
       mesonBuildType = buildType;
       mesonFlags = mesonFlags ++ [
         "-Dgit-commit=${builtins.substring 0 7 rev}"
         "-Dgit-branch=${branch}"
         "-Dbootstrap=${if bootstrap then "true" else "false"}"
         "-Dflutter-engine=${if isWASM then buildPackages.flutter-engine else flutter-engine}/lib/flutter/out/${engineType}"
+        "-Ddart-offline=true"
       ] ++ featureFlags
         ++ optional (isWASM) "--cross-file=${writeText "neutron.cross" (with pkgs.buildPackages.buildPackages; ''
           [constants]
