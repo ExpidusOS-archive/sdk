@@ -497,7 +497,7 @@ let
           endian = '${strings.removeSuffix "Endian" wasmParsed.cpu.significantByte.name}'
         '')}";
 
-      postInstall = ''
+      postInstall = optionalString (!bootstrap) ''
         mkdir -p $dev/lib
         mv $out/lib/neutron $dev/lib/neutron
       '';
