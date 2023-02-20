@@ -37,7 +37,12 @@
       };
 
       importPackage = import ./pkgs/top-level/overlay.nix channels;
-      lib = import ./lib/extend.nix channels;
+      lib = (import ./lib/extend.nix channels).extend (final: prev: {
+        expidus = prev.expidus.extend (final: prev: import ./variants {
+          inherit lib;
+          inherit (final) channels;
+        });
+      });
     in {
       inherit lib;
 
