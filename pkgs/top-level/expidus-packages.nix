@@ -5,6 +5,7 @@ let
 in
 fixedPoints.makeExtensible (self: {
   sdk = callPackage ../development/tools/expidus/sdk {};
+  launcher = callPackage ../os-specific/linux/expidus/launcher {};
 
   neutron = callPackage ../development/libraries/expidus/neutron {
     inherit stdenv isWASM;
