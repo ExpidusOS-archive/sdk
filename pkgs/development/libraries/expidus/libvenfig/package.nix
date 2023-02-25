@@ -1,6 +1,8 @@
 { lib, stdenv, fetchFromGitHub, buildPackages, expidus, check }:
 with lib;
 let
+  mesonFeature = b: if b then "enabled" else "disabled";
+
   mkPackage = {
     rev,
     version ? "git+${builtins.substring 0 7 rev}",
@@ -18,7 +20,7 @@ let
   let
     featdefs = {
       docs = {
-        default = false; # TODO: use buildPackages.gtk-doc.meta.available once we have docs
+        default = buildPackages.gtk-doc.meta.available;
         nativeInputs = with buildPackages; [
           gtk-doc
           libxslt
@@ -69,7 +71,8 @@ let
     mesonFlags = mesonFlags ++ [
       "-Dgit-commit=${builtins.substring 0 7 rev}"
       "-Dgit-branch=${branch}"
-    ];
+      "--sysconfdir=/etc"
+    ] ++ featureFlags;
 
     doCheck = features'.tests.value;
 
