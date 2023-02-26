@@ -427,11 +427,16 @@ let
       featureInputs = lists.flatten (builtins.attrValues (builtins.mapAttrs (name: option: option.inputs or (if builtins.hasAttr "input" option then [ option.input ] else [])) featuresEnabled));
 
       nativeFeatureInputs = lists.flatten (builtins.attrValues (builtins.mapAttrs (name: option: option.nativeInputs or (if builtins.hasAttr "nativeInput" option then [ option.nativeInput ] else [])) featuresEnabled));
+
+      buildInputs = featureInputs
+        ++ optional (libxkbcommon.meta.available) libxkbcommon
+        ++ optional (stdenv.isLinux) systemd
+        ++ optional (wayland.meta.available) wayland;
     in stdenv.mkDerivation {
       pname = "neutron${optionalString bootstrap "-bootstrap"}";
       version = "git+${builtins.substring 0 7 rev}";
 
-      inherit src;
+      inherit src buildInputs;
       PUB_CACHE = dartPackages;
 
       outputs = [ "out" "dev" ]
@@ -448,10 +453,7 @@ let
         wayland-protocols
       ] ++ nativeFeatureInputs);
 
-      buildInputs = featureInputs
-        ++ optional (libxkbcommon.meta.available) libxkbcommon
-        ++ optional (stdenv.isLinux) systemd
-        ++ optional (wayland.meta.available) wayland;
+      propagatedBuildInputs = filter (drv: drv != check) buildInputs;
       doCheck = features'.tests.value;
 
       mesonBuildType = buildType;
