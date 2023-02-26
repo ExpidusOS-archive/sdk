@@ -5,6 +5,14 @@ final: prev: {
       name = fn name value;
       inherit value;
     }) set));
+
+    findOne = fn: set: default:
+      let
+        filtered = filterAttrs fn set;
+        keys = attrNames filtered;
+        values = attrValues filtered;
+      in if length keys == 0 then nameValuePair default default
+      else nameValuePair (head keys) (head values);
   });
 
   expidus = import ./expidus {

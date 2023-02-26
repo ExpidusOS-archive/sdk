@@ -22,4 +22,20 @@ fixedPoints.makeExtensible (self: rec {
 
   version = self.release + self.versionSuffix + self.revisionTag;
   codeName = self.codeName or "Willamette";
+
+  mkVendorConfig = vendorConfig:
+    let
+      stringify = value:
+        if isString value then value
+        else if isInt value then toString value
+        else if isBool value then (if value then "true" else "false")
+        else if isList value then concatMapStringsSep "," stringify value
+        else throw "Unsupported type";
+
+      listOfAttrs = attrValues (mapAttrs (topLevel: children:
+        attrsets.renameAttrs
+          (key: value: "${topLevel}::${key}") children) vendorConfig);
+
+      flat = lists.flatten (map (configs: attrValues (mapAttrs (key: value: "${key}=${stringify value}") configs)) listOfAttrs);
+    in concatStringsSep "\n" flat;
 })
