@@ -2,6 +2,6 @@
 let
   mkPackage = callPackage ./package.nix { inherit stdenv; };
 in mkPackage {
-  rev = "16936f3cf4cc2108973c898b845c9b3bf23c26a5";
-  sha256 = "sha256-tLuZxXFsemolHGKw4Xxqcnss3obJcdbt90Qy1UWQ7Cg=";
+  rev = "5b92c067289c5eff253640941a0d48d54bd56720";
+  sha256 = "sha256-6lcXqsmaffXBtn5Ajov8oNQ4xaYwRAgxiW9VR3LrOks=";
 }
