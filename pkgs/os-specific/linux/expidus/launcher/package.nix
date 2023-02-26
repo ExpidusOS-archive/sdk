@@ -1,4 +1,4 @@
-{ lib, stdenv, buildPackages, fetchFromGitHub, expidus, plymouth }:
+{ lib, stdenv, buildPackages, fetchFromGitHub, expidus, plymouth, check }:
 with lib;
 let
   mesonFeature = b: if b then "enabled" else "disabled";
