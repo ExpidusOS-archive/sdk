@@ -53,7 +53,7 @@ let
     ] ++ nativeFeatureInputs;
 
     buildInputs = [
-      expidus.libvenfig
+      expidus.libexpidus
     ] ++ featureInputs;
 
     mesonFlags = mesonFlags ++ [

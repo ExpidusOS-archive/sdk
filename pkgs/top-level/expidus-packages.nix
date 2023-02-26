@@ -5,9 +5,6 @@ let
 in
 fixedPoints.makeExtensible (self: {
   sdk = callPackage ../development/tools/expidus/sdk {};
-  launcher = callPackage ../os-specific/linux/expidus/launcher {
-    inherit stdenv;
-  };
 
   neutron = callPackage ../development/libraries/expidus/neutron {
     inherit stdenv isWASM;
@@ -15,11 +12,11 @@ fixedPoints.makeExtensible (self: {
 
   neutron-bootstrap = self.neutron.bootstrap;
 
-  libvenfig = callPackage ../development/libraries/expidus/libvenfig {
+  libexpidus = callPackage ../development/libraries/expidus/libexpidus {
     inherit stdenv;
   };
 
-  libexpidus = callPackage ../development/libraries/expidus/libexpidus {
+  launcher = callPackage ../os-specific/linux/expidus/launcher {
     inherit stdenv;
   };
 } // optionalAttrs (!isWASM) {
