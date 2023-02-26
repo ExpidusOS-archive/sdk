@@ -6,13 +6,40 @@ let
     version ? "git+${rev}",
     branch ? "master",
     sha256 ? fakeHash,
+    mesonFlags ? [],
+    features ? {},
     src ? fetchFromGitHub {
       owner = "ExpidusOS";
       repo = "launcher";
       inherit rev sha256;
     }
   }:
-  stdenv.mkDerivation {
+  let
+    featdefs = {
+      tests = {
+        default = check.meta.available;
+        input = check;
+      };
+      plymouth = {
+        default = plymouth.meta.available;
+        input = plymouth;
+      };
+    };
+
+    features' = builtins.mapAttrs (name: def:
+      let
+        value = features.${name} or def.default;
+      in {
+        inherit value;
+      } // def) featdefs;
+
+    featuresEnabled = filterAttrs (name: option: option.value) features';
+
+    featureFlags = builtins.attrValues (builtins.mapAttrs (name: option: "-D${name}=${mesonFeature option.value}") features');
+    featureInputs = lists.flatten (builtins.attrValues (builtins.mapAttrs (name: option: option.inputs or (if builtins.hasAttr "input" option then [ option.input ] else [])) featuresEnabled));
+
+    nativeFeatureInputs = lists.flatten (builtins.attrValues (builtins.mapAttrs (name: option: option.nativeInputs or (if builtins.hasAttr "nativeInput" option then [ option.nativeInput ] else [])) featuresEnabled));
+  in stdenv.mkDerivation {
     pname = "expidus-launcher";
     inherit version src;
 
@@ -21,15 +48,14 @@ let
       meson
       ninja
       pkg-config
-    ];
+    ] ++ nativeFeatureInputs;
 
-    buildInputs = optional plymouth.meta.available plymouth;
+    buildInputs = featureInputs;
 
-    mesonFlags = [
+    mesonFlags = mesonFlags ++ [
       "-Dgit-commit=${builtins.substring 0 7 rev}"
       "-Dgit-branch=${branch}"
-      "-Dplymouth=${if plymouth.meta.available then "enabled" else "disabled"}"
-    ];
+    ] ++ featureFlags;
 
     postInstall = ''
       mkdir -p $out/bin
@@ -37,6 +63,7 @@ let
 
     passthru = {
       inherit mkPackage;
+      features = features';
     };
 
     meta = {
