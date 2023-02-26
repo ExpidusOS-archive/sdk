@@ -1,6 +1,8 @@
 { lib, stdenv, buildPackages, fetchFromGitHub, expidus, plymouth }:
 with lib;
 let
+  mesonFeature = b: if b then "enabled" else "disabled";
+
   mkPackage = {
     rev,
     version ? "git+${rev}",
