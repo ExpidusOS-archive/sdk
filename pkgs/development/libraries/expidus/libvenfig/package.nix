@@ -67,6 +67,10 @@ let
       expidus.neutron
     ];
 
+    propagatedBuildInputs = featureInputs ++ [
+      expidus.neutron
+    ];
+
     mesonBuildType = buildType;
     mesonFlags = mesonFlags ++ [
       "-Dgit-commit=${builtins.substring 0 7 rev}"
