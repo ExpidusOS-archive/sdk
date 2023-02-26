@@ -18,6 +18,10 @@ fixedPoints.makeExtensible (self: {
   libvenfig = callPackage ../development/libraries/expidus/libvenfig {
     inherit stdenv;
   };
+
+  libexpidus = callPackage ../development/libraries/expidus/libexpidus {
+    inherit stdenv;
+  };
 } // optionalAttrs (!isWASM) {
   wasm = callPackage ./expidus-packages.nix {
     isWASM = !isWASM;
