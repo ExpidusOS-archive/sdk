@@ -1,4 +1,4 @@
-{ lib, stdenv, buildPackages, fetchFromGitHub, plymouth }:
+{ lib, stdenv, buildPackages, fetchFromGitHub, expidus, plymouth }:
 with lib;
 let
   mkPackage = {
@@ -50,7 +50,9 @@ let
       pkg-config
     ] ++ nativeFeatureInputs;
 
-    buildInputs = featureInputs;
+    buildInputs = [
+      expidus.libvenfig
+    ] ++ featureInputs;
 
     mesonFlags = mesonFlags ++ [
       "-Dgit-commit=${builtins.substring 0 7 rev}"
