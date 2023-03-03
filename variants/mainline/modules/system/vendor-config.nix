@@ -10,7 +10,15 @@ in
     description = mdDoc ''
       Vendor configuration
     '';
-    default = {};
+    default = {
+      System = {
+        nix_daemon = true;
+        nix_store = true;
+      };
+      VendorConfig = {
+        datafs = false;
+      };
+    };
   };
 
   config.environment.etc."expidus/vendor.conf" = {

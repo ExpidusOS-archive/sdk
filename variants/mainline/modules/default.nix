@@ -1,5 +1,6 @@
 { nixpkgs, ... }:
 [
+  ./system/data.nix
   ./system/vendor-config.nix
   "${nixpkgs}/nixos/modules/misc/assertions.nix"
   "${nixpkgs}/nixos/modules/misc/ids.nix"
