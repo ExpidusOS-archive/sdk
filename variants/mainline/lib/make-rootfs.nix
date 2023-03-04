@@ -23,7 +23,7 @@ let format' = format; in let
 
   compress = optionalString (format' == "qcow2-compressed") "-c";
 
-  filename = "expidus-rootfs." + {
+  filename = "${name}." + {
     qcow2 = "qcow2";
     vdi = "vdi";
     vpc = "vhd";
@@ -208,7 +208,7 @@ let format' = format; in let
     ''}
     diskImage=$out
   '';
-in pkgs.vmTools.runInLinuxVM (pkgs.runCommand name {
+in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   preVM = prepareImage;
   buildInputs = with pkgs; [ util-linux e2fsprogs dosfstools squashfsTools ];
   postVM = moveImage + postVM;
