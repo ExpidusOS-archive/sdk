@@ -15,6 +15,7 @@
   wayland,
   libxkbcommon,
   systemd,
+  libxml2,
   isWASM
 }@pkgs:
 with lib;
@@ -431,7 +432,8 @@ let
       buildInputs = featureInputs
         ++ optional (libxkbcommon.meta.available) libxkbcommon
         ++ optional (stdenv.isLinux) systemd
-        ++ optional (wayland.meta.available) wayland;
+        ++ optional (wayland.meta.available) wayland
+        ++ optional (!bootstrap) libxml2;
     in stdenv.mkDerivation {
       pname = "neutron${optionalString bootstrap "-bootstrap"}";
       version = "git+${builtins.substring 0 7 rev}";
