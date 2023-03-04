@@ -1,5 +1,7 @@
 { nixpkgs, ... }:
 [
+  ./system/boot/kernel.nix
+  ./system/boot/kernel-config.nix
   ./system/build/activation.nix
   ./system/build/data.nix
   ./system/build/etc.nix
@@ -7,8 +9,8 @@
   ./system/build/system-path.nix
   ./system/build/toplevel.nix
   ./system/tools/default.nix
-  ./system/vendor-config.nix
   ./system/users.nix
+  ./system/vendor-config.nix
   ./system/version.nix
   "${nixpkgs}/nixos/modules/misc/assertions.nix"
   "${nixpkgs}/nixos/modules/misc/ids.nix"

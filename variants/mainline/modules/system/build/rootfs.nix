@@ -28,7 +28,11 @@ in
     };
   };
 
-  config.system.build = {
-    inherit rootfs;
+  config = {
+    system.build = {
+      inherit rootfs;
+    };
+
+    boot.initrd.availableKernelModules = if cfg.mutable then [ "ext4" ] else [ "squashfs" ];
   };
 }
