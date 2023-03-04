@@ -9,6 +9,7 @@
   ./system/tools/default.nix
   ./system/vendor-config.nix
   ./system/users.nix
+  ./system/version.nix
   "${nixpkgs}/nixos/modules/misc/assertions.nix"
   "${nixpkgs}/nixos/modules/misc/ids.nix"
   "${nixpkgs}/nixos/modules/misc/lib.nix"

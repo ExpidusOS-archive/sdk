@@ -21,7 +21,7 @@ fixedPoints.makeExtensible (self: rec {
   revisionTag = if self.revision != "unknown" then ".${self.revision}" else "";
 
   version = self.release + self.versionSuffix + self.revisionTag;
-  codeName = self.codeName or "Willamette";
+  codename = "Willamette";
 
   mkVendorConfig = vendorConfig:
     let

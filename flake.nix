@@ -38,10 +38,27 @@
 
       importPackage = import ./pkgs/top-level/overlay.nix channels;
       lib = (import ./lib/extend.nix channels).extend (final: prev: {
-        expidus = prev.expidus.extend (final: prev: import ./variants {
-          inherit lib;
-          inherit (final) channels;
-        });
+        expidus = prev.expidus.extend (final: prev:
+          let
+            variants = import ./variants {
+              inherit channels lib;
+            };
+          in {
+            mkMainline = args: variants.mkMainline (args // {
+              extraModules = (args.extraModules or []) ++ [
+                {
+                  system.expidus = {
+                    versionSuffix = ".${lib.substring 0 8 (self.lastModifiedDate or self.lastModified or "19700101")}.${self.shortRev or "dirty"}";
+                    revision = lib.mkIf (self ? rev) self.rev;
+                  };
+                }
+              ];
+            });
+
+            trivial = prev.trivial.extend (f: p: {
+              revision = "${self.rev or "diry"}";
+            });
+          });
       });
     in {
       inherit lib;
