@@ -1,7 +1,14 @@
 { nixpkgs, ... }:
 [
-  ./system/data.nix
+  ./system/build/activation.nix
+  ./system/build/data.nix
+  ./system/build/etc.nix
+  ./system/build/rootfs.nix
+  ./system/build/system-path.nix
+  ./system/build/toplevel.nix
+  ./system/tools/default.nix
   ./system/vendor-config.nix
+  ./system/users.nix
   "${nixpkgs}/nixos/modules/misc/assertions.nix"
   "${nixpkgs}/nixos/modules/misc/ids.nix"
   "${nixpkgs}/nixos/modules/misc/lib.nix"
