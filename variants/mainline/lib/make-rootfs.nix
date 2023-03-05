@@ -250,6 +250,8 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   cp -r ${config.system.build.etc.outPath}/etc $mountPoint/etc/static
   # TODO: remove any already existing file from /etc/static
 
+  mount
+
   ${if mutable then "umount -R /mnt"
   else "mksquashfs $mountPoint $rootDisk -noappend"}
 '')

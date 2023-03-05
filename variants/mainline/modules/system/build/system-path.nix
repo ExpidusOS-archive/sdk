@@ -153,10 +153,6 @@ in
       inherit (config.environment) pathsToLink extraOutputsToInstall;
       ignoreCollisions = true;
       postBuild = ''
-        # Temporarily add this for nixos-enter
-        echo "#!${pkgs.runtimeShell}" >$out/bin/systemd-tmpfiles
-        chmod u+x $out/bin/systemd-tmpfiles
-
         # Remove wrapped binaries, they shouldn't be accessible via PATH.
         find $out/bin -maxdepth 1 -name ".*-wrapped" -type l -delete
         if [ -x $out/bin/glib-compile-schemas -a -w $out/share/glib-2.0/schemas ]; then
