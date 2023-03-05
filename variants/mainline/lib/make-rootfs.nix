@@ -212,7 +212,7 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   preVM = prepareImage;
   buildInputs = with pkgs; [ util-linux e2fsprogs dosfstools squashfsTools ];
   postVM = moveImage + postVM;
-  memSize = 1024;
+  memSize = 1024 * 2;
 } ''
   export PATH=${binPath}:$PATH
 

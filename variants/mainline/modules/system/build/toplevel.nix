@@ -1,23 +1,41 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-  systemBuilder = ''
-    mkdir -p $out
+  systemBuilder =
+    let
+      kernelPath = "${config.boot.kernelPackages.kernel}/" +
+        "${config.system.boot.loader.kernelFile}";
+    in ''
+      mkdir -p $out
 
-    echo "$activationScript" > $out/activate
-    substituteInPlace $out/activate --subst-var out
-    chmod u+x $out/activate
-    unset activationScript
+      ${optionalString config.boot.kernel.enable ''
+        if [ ! -f ${kernelPath} ]; then
+          echo "The bootloader cannot find the proper kernel image."
+          echo "(Expecting ${kernelPath})"
+          false
+        fi
 
-    ln -s ${config.system.build.etc}/etc $out/etc
-    ln -s ${config.system.path} $out/sw
+        ln -s ${kernelPath} $out/kernel
+        ln -s ${config.system.modulesTree} $out/kernel-modules
+        echo -n "$kernelParams" > $out/kernel-params
 
-    mkdir $out/bin
+        ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
+      ''}
 
-    ${config.system.systemBuilderCommands}
-    echo -n "$extraDependencies" > $out/extra-dependencies
-    ${config.system.extraSystemBuilderCmds}
-  '';
+      echo "$activationScript" > $out/activate
+      substituteInPlace $out/activate --subst-var out
+      chmod u+x $out/activate
+      unset activationScript
+
+      ln -s ${config.system.build.etc}/etc $out/etc
+      ln -s ${config.system.path} $out/sw
+
+      mkdir $out/bin
+
+      ${config.system.systemBuilderCommands}
+      echo -n "$extraDependencies" > $out/extra-dependencies
+      ${config.system.extraSystemBuilderCmds}
+    '';
 
   baseSystem = pkgs.stdenvNoCC.mkDerivation ({
     name = "expidus-system";
@@ -27,13 +45,14 @@ let
     buildCommand = systemBuilder;
 
     inherit (pkgs) coreutils;
-
+    systemd = config.systemd.package;
     shell = "${pkgs.bash}/bin/sh";
     su = "${pkgs.shadow.su}/bin/su";
     utillinux = pkgs.util-linux;
 
     inherit (config.system) extraDependencies;
 
+    kernelParams = config.boot.kernelParams;
     activationScript = config.system.activationScripts.script;
   } // config.system.systemBuilderArgs);
 
@@ -49,6 +68,18 @@ let
 in
 {
   options.system = {
+    boot.loader = {
+      kernelFile = mkOption {
+        internal = true;
+        default = pkgs.stdenv.hostPlatform.linux-kernel.target;
+        defaultText = literalExpression "pkgs.stdenv.hostPlatform.linux-kernel.target";
+        type = types.str;
+        description = lib.mdDoc ''
+          Name of the kernel file to be passed to the bootloader.
+        '';
+      };
+    };
+
     systemBuilderCommands = mkOption {
       type = types.lines;
       internal = true;
