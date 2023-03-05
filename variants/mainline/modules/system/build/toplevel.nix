@@ -18,6 +18,9 @@ let
         ln -s ${kernelPath} $out/kernel
         ln -s ${config.system.modulesTree} $out/kernel-modules
         echo -n "$kernelParams" > $out/kernel-params
+        ${optionalString (config.hardware.deviceTree.package != null) ''
+          ln -s ${config.hardware.deviceTree.package} $out/dtbs
+        ''}
 
         ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
       ''}
@@ -27,8 +30,21 @@ let
       chmod u+x $out/activate
       unset activationScript
 
+      ${if config.boot.initrd.systemd.enable then ''
+        cp ${config.system.build.bootStage2} $out/prepare-root
+        substituteInPlace $out/prepare-root --subst-var-by systemConfig $out
+        cp "$systemd/lib/systemd/systemd" $out/init
+      '' else ''
+        cp ${config.system.build.bootStage2} $out/init
+        substituteInPlace $out/init --subst-var-by systemConfig $out
+      ''}
+
+      echo -n "systemd ${toString config.systemd.package.interfaceVersion}" > $out/init-interface-version
+      echo -n "${config.boot.kernelPackages.stdenv.hostPlatform.system}" > $out/system
+
       ln -s ${config.system.build.etc}/etc $out/etc
       ln -s ${config.system.path} $out/sw
+      ln -s "$systemd" $out/systemd
 
       mkdir $out/bin
 

@@ -15,9 +15,9 @@ in
 [
   ./security/wrappers.nix
   ./services/x11/xserver.nix
-  ./system/boot/bootkit.nix
   ./system/boot/initrd.nix
   ./system/boot/modprobe.nix
+  ./system/boot/stage-2.nix
   ./system/build/activation.nix
   ./system/build/data.nix
   ./system/build/etc.nix
@@ -48,6 +48,7 @@ in
   (nixpkgsImport "${nixpkgs}/nixos/modules/config/users-groups.nix")
   "${nixpkgs}/nixos/modules/config/vte.nix"
   "${nixpkgs}/nixos/modules/hardware/all-firmware.nix"
+  "${nixpkgs}/nixos/modules/hardware/device-tree.nix"
   "${nixpkgs}/nixos/modules/hardware/opengl.nix"
   "${nixpkgs}/nixos/modules/hardware/uinput.nix"
   "${nixpkgs}/nixos/modules/misc/assertions.nix"
