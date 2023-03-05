@@ -14,12 +14,13 @@ let
 in
 [
   ./security/wrappers.nix
+  ./services/ttys/getty.nix
   ./services/x11/xserver.nix
-  ./system/boot/initrd.nix
+  (nixpkgsImport ./system/boot/initrd.nix)
   ./system/boot/modprobe.nix
   ./system/boot/stage-2.nix
   ./system/build/activation.nix
-  ./system/build/data.nix
+  ./system/build/datafs.nix
   ./system/build/etc.nix
   ./system/build/rootfs.nix
   ./system/build/system-path.nix
@@ -75,6 +76,8 @@ in
   "${nixpkgs}/nixos/modules/services/hardware/bluetooth.nix"
   "${nixpkgs}/nixos/modules/services/hardware/udev.nix"
   "${nixpkgs}/nixos/modules/services/logging/logrotate.nix"
+  "${nixpkgs}/nixos/modules/services/logging/rsyslogd.nix"
+  "${nixpkgs}/nixos/modules/services/logging/syslog-ng.nix"
   "${nixpkgs}/nixos/modules/services/misc/sssd.nix"
   "${nixpkgs}/nixos/modules/services/networking/ssh/sshd.nix"
   "${nixpkgs}/nixos/modules/services/networking/avahi-daemon.nix"
@@ -82,6 +85,7 @@ in
   "${nixpkgs}/nixos/modules/services/networking/firewall.nix"
   "${nixpkgs}/nixos/modules/services/networking/iwd.nix"
   "${nixpkgs}/nixos/modules/services/networking/mstpd.nix"
+  "${nixpkgs}/nixos/modules/services/networking/multipath.nix"
   "${nixpkgs}/nixos/modules/services/networking/networkmanager.nix"
   "${nixpkgs}/nixos/modules/services/networking/wpa_supplicant.nix"
   "${nixpkgs}/nixos/modules/services/security/fprintd.nix"
@@ -89,7 +93,11 @@ in
   "${nixpkgs}/nixos/modules/services/system/nscd.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/coredump.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/initrd.nix")
+  (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/journald.nix")
+  (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/logind.nix")
+  (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/nspawn.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/oomd.nix")
+  (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/shutdown.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/tmpfiles.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/user.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd.nix")
@@ -101,6 +109,7 @@ in
   (nixpkgsImport "${nixpkgs}/nixos/modules/tasks/filesystems.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/tasks/network-interfaces-scripted.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/tasks/network-interfaces-systemd.nix")
+  "${nixpkgs}/nixos/modules/tasks/swraid.nix"
   "${nixpkgs}/nixos/modules/virtualisation/lxc.nix"
   "${nixpkgs}/nixos/modules/virtualisation/lxcfs.nix"
   "${nixpkgs}/nixos/modules/virtualisation/openvswitch.nix"

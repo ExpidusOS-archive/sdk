@@ -14,13 +14,10 @@ assert (lib.assertMsg (lib.all
   (attrs: ((attrs.user  or null) == null)
     == ((attrs.group or null) == null))
   contents) "Contents of the disk image should set none of {user, group} or both at the same time.");
-assert (lib.assertMsg (!mutable -> diskSize == "auto") "diskSize must be auto on immutable images");
 assert (lib.assertMsg (!mutable -> format == "raw") "format must be raw on immutable images");
 with lib;
 let format' = format; in let
-
   format = if format' == "qcow2-compressed" then "qcow2" else format';
-
   compress = optionalString (format' == "qcow2-compressed") "-c";
 
   filename = "${name}." + {
@@ -92,18 +89,15 @@ let format' = format; in let
     root="$PWD/root"
     mkdir -p $root
 
-    mkdir -p $root/{bin,boot,dev,home,lib,mnt,nix/store,opt,proc,root,run,srv,sys,tmp,usr}
-    mkdir -p $root/var/{empty,lock,run,tmp}
+    mkdir -p $root/{bin,boot,dev,home,lib,mnt,nix/store,opt,proc,root,run,sbin,sys,tmp,usr}
+    mkdir -p $root/var/{cache,db,empty,lib,log,lock,run/expidus/{system-,}pkgs,spool,tmp}
+    mkdir -p $root/data
 
     set -f
     sources_=(${concatStringsSep " " sources})
     targets_=(${concatStringsSep " " targets})
     modes_=(${concatStringsSep " " modes})
     set +f
-
-    if ((NIX_BUILD_CORES > 48)); then
-      NIX_BUILD_CORES=48
-    fi
 
     for ((i = 0; i < ''${#targets_[@]}; i++)); do
       source="''${sources_[$i]}"
@@ -158,44 +152,44 @@ let format' = format; in let
 
     diskImage=expidus-rootfs.raw
 
+    ${if diskSize == "auto" then ''
+      additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))
+
+      diskUsage=$(find . ! -type d -print0 | du --files0-from=- --apparent-size --block-size "${blockSize}" | cut -f1 | sum_lines)
+      # Each inode takes space!
+      numInodes=$(find . | wc -l)
+      # Convert to bytes, inodes take two blocks each!
+      diskUsage=$(( (diskUsage + 2 * numInodes) * ${blockSize} ))
+      # Then increase the required space to account for the reserved blocks.
+      fudge=$(compute_fudge $diskUsage)
+      requiredFilesystemSpace=$(( diskUsage + fudge ))
+      diskSize=$(( requiredFilesystemSpace  + additionalSpace ))
+
+      # Round up to the nearest mebibyte.
+      # This ensures whole 512 bytes sector sizes in the disk image
+      # and helps towards aligning partitions optimally.
+      if (( diskSize % mebibyte )); then
+        diskSize=$(( ( diskSize / mebibyte + 1) * mebibyte ))
+      fi
+
+      truncate -s $diskSize $diskImage
+
+      printf "Automatic disk size...\n"
+      printf "  Closure space use: %d bytes\n" $diskUsage
+      printf "  fudge: %d bytes\n" $fudge
+      printf "  Filesystem size needed: %d bytes\n" $requiredFilesystemSpace
+      printf "  Additional space: %d bytes\n" $additionalSpace
+      printf "  Disk image size: %d bytes\n" $diskSize
+    '' else ''
+      truncate -s ${toString diskSize} $diskImage
+    ''}
+
     ${if mutable then ''
-      ${if diskSize == "auto" then ''
-        additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))
-
-        diskUsage=$(find . ! -type d -print0 | du --files0-from=- --apparent-size --block-size "${blockSize}" | cut -f1 | sum_lines)
-        # Each inode takes space!
-        numInodes=$(find . | wc -l)
-        # Convert to bytes, inodes take two blocks each!
-        diskUsage=$(( (diskUsage + 2 * numInodes) * ${blockSize} ))
-        # Then increase the required space to account for the reserved blocks.
-        fudge=$(compute_fudge $diskUsage)
-        requiredFilesystemSpace=$(( diskUsage + fudge ))
-        diskSize=$(( requiredFilesystemSpace  + additionalSpace ))
-
-        # Round up to the nearest mebibyte.
-        # This ensures whole 512 bytes sector sizes in the disk image
-        # and helps towards aligning partitions optimally.
-        if (( diskSize % mebibyte )); then
-          diskSize=$(( ( diskSize / mebibyte + 1) * mebibyte ))
-        fi
-
-        truncate -s $diskSize $diskImage
-
-        printf "Automatic disk size...\n"
-        printf "  Closure space use: %d bytes\n" $diskUsage
-        printf "  fudge: %d bytes\n" $fudge
-        printf "  Filesystem size needed: %d bytes\n" $requiredFilesystemSpace
-        printf "  Additional space: %d bytes\n" $additionalSpace
-        printf "  Disk image size: %d bytes\n" $diskSize
-      '' else ''
-        truncate -s ${toString diskSize}M $diskImage
-      ''}
-
       mkfs.ext4 -b ${blockSize} -F $diskImage
       cptofs -t ext4 -i $diskImage $root/* / ||
         (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
     '' else ''
-      mksquashfs $root $diskImage
+      mksquashfs $root $diskImage -noappend -b ${blockSize} -comp lz4 -Xhc
     ''}
   '';
 
@@ -215,6 +209,33 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   memSize = 1024 * 2;
 } ''
   export PATH=${binPath}:$PATH
+
+  # Yes, mkfs.ext4 takes different units in different contexts. Fun.
+  sectorsToKilobytes() {
+    echo $(( ( "$1" * 512 ) / 1024 ))
+  }
+
+  sectorsToBytes() {
+    echo $(( "$1" * 512  ))
+  }
+
+  # Given lines of numbers, adds them together
+  sum_lines() {
+    local acc=0
+    while read -r number; do
+      acc=$((acc+number))
+    done
+    echo "$acc"
+  }
+
+  mebibyte=$((1024 * 1024))
+  
+  # Approximative percentage of reserved space in an ext4 fs over 512MiB.
+  # 0.05208587646484375
+  #  × 1000, integer part: 52
+  compute_fudge() {
+    echo $(($1 * 52 / 1000))
+  }
 
   mkdir /dev/block
   ln -s /dev/vda /dev/block/254:1
@@ -249,9 +270,36 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   rm -rf $mountPoint/etc/static
   cp -r ${config.system.build.etc.outPath}/etc $mountPoint/etc/static
   # TODO: remove any already existing file from /etc/static
+  # FIXME: out-of-space issues with immutable rootfs
 
-  mount
+  ${optionalString (diskSize == "auto") ''
+    additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))
+
+    diskUsage=$(find $mountPoint ! -type d -print0 | du --files0-from=- --apparent-size --block-size "${blockSize}" | cut -f1 | sum_lines)
+    # Each inode takes space!
+    numInodes=$(find $mountPoint | wc -l)
+    # Convert to bytes, inodes take two blocks each!
+    diskUsage=$(( (diskUsage + 2 * numInodes) * ${blockSize} ))
+    # Then increase the required space to account for the reserved blocks.
+    fudge=$(compute_fudge $diskUsage)
+    requiredFilesystemSpace=$(( diskUsage + fudge ))
+    diskSize=$(( requiredFilesystemSpace  + additionalSpace ))
+
+    # Round up to the nearest mebibyte.
+    # This ensures whole 512 bytes sector sizes in the disk image
+    # and helps towards aligning partitions optimally.
+    if (( diskSize % mebibyte )); then
+      diskSize=$(( ( diskSize / mebibyte + 1) * mebibyte ))
+    fi
+
+    printf "Automatic disk size...\n"
+    printf "  Closure space use: %d bytes\n" $diskUsage
+    printf "  fudge: %d bytes\n" $fudge
+    printf "  Filesystem size needed: %d bytes\n" $requiredFilesystemSpace
+    printf "  Additional space: %d bytes\n" $additionalSpace
+    printf "  Disk image size: %d bytes\n" $diskSize
+  ''}
 
   ${if mutable then "umount -R /mnt"
-  else "mksquashfs $mountPoint $rootDisk -noappend"}
+  else "mksquashfs $mountPoint $rootDisk -noappend -b ${blockSize} -comp lz4 -Xhc"}
 '')

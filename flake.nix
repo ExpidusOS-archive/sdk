@@ -75,6 +75,21 @@
           };
         });
 
+      expidusConfiguration.x86_64-linux.demo = lib.expidus.mkMainline {
+        pkgs = self.legacyPackages.x86_64-linux;
+
+        extraModules = [{
+          fileSystems = {
+            "/" = { device = "/dev/vda"; };
+            "/data" = { device = "/dev/vdb"; };
+          };
+
+          boot.initrd.availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
+
+          system.rootfs.diskSize = "2G";
+        }];
+      };
+
       legacyPackages = lib.expidus.system.default.forAllSystems (system: localSystem: importPackage {
         inherit localSystem;
       });

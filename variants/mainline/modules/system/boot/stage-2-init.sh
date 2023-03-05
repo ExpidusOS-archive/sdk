@@ -43,7 +43,11 @@ else
   echo "booting system configuration $systemConfig" > /dev/kmsg
 fi
 
-# TODO: manage Nix store via BootKit
+mount --bind /data/var/cache /var/cache
+mount --bind /data/var/lib /var/lib
+mount --bind /data/var/log /var/log
+
+# TODO: manage Nix store
 
 if [ "${IN_NIXOS_SYSTEMD_STAGE1:-}" != true ]; then
   if [ -n "@useHostResolvConf@" ] && [ -e /etc/resolv.conf ]; then

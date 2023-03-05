@@ -5,7 +5,7 @@ let
 
   rootfs = import ../../../lib/make-rootfs.nix {
     inherit config lib pkgs;
-    inherit (cfg) mutable;
+    inherit (cfg) mutable additionalSpace diskSize;
     additionalPaths = cfg.storePaths;
   };
 in
@@ -16,6 +16,16 @@ in
         type = types.bool;
         default = false;
         description = mdDoc "Whether to make an immutable rootfs using squash or a rootfs using ext4";
+      };
+      diskSize = mkOption {
+        type = types.str;
+        default = "auto";
+        description = mdDoc "The size to allocate for the disk image, auto to automatically allocate.";
+      };
+      additionalSpace = mkOption {
+        type = types.str;
+        default = "1024M";
+        description = mdDoc "Extra space to allocate to the rootfs";
       };
       storePaths = mkOption {
         type = with types; listOf package;
