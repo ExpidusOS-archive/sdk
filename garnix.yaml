@@ -1,8 +1,6 @@
 builds:
   exclude: []
   include:
-    - 'expidusConfiguration.x86_64-linux.demo.config.system.build.datafs'
-    - 'expidusConfiguration.x86_64-linux.demo.config.system.build.initialRamdisk'
-    - 'expidusConfiguration.x86_64-linux.demo.config.system.build.rootfs'
+    - 'expidusConfiguration.x86_64-linux.demo.config.system.build.*'
     - 'nixosConfigurations.x86_64-linux.*'
     - 'packages.x86_64-linux.*'
