@@ -19,6 +19,7 @@ in
   (nixpkgsImport ./system/boot/initrd.nix)
   ./system/boot/modprobe.nix
   ./system/boot/stage-2.nix
+  (nixpkgsImport ./system/boot/systemd.nix)
   ./system/build/activation.nix
   ./system/build/datafs.nix
   ./system/build/etc.nix
@@ -104,6 +105,7 @@ in
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/networkd.nix")
   "${nixpkgs}/nixos/modules/system/boot/kernel.nix"
   "${nixpkgs}/nixos/modules/system/boot/kernel_config.nix"
+  "${nixpkgs}/nixos/modules/system/boot/plymouth.nix"
   "${nixpkgs}/nixos/modules/system/boot/resolved.nix"
   "${nixpkgs}/nixos/modules/system/etc/etc.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/tasks/filesystems.nix")

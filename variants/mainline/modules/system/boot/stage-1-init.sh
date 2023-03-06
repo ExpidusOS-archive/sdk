@@ -522,7 +522,7 @@ mount --move /sys $targetRoot/sys
 mount --move /dev $targetRoot/dev
 mount --move /run $targetRoot/run
 
-echo "Relinking current system"
+ln -s $currentSystem $targetRoot/run/booted-system
 ln -s $currentSystem $targetRoot/run/current-system
 
 exec env -i $(type -P switch_root) "$targetRoot" "$stage2Init"

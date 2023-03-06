@@ -84,7 +84,11 @@
             "/data" = { device = "/dev/vdb"; };
           };
 
-          boot.initrd.availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
+          boot = {
+            initrd.availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
+            plymouth.enable = true;
+          };
+
           services.getty.autologinUser = "root";
         }];
       };

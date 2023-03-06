@@ -44,6 +44,7 @@ else
 fi
 
 mount --bind /data/var/cache /var/cache
+mount --bind /data/var/db /var/db
 mount --bind /data/var/lib /var/lib
 mount --bind /data/var/log /var/log
 mount --bind /data/users /home

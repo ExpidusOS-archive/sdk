@@ -90,8 +90,10 @@ let format' = format; in let
     mkdir -p $root
 
     mkdir -p $root/{bin,boot,dev,home,lib,mnt,nix/store,opt,proc,root,run,sbin,sys,tmp,usr}
-    mkdir -p $root/var/{cache,db,empty,lib,log,lock,run/expidus/{system-,}pkgs,spool,tmp}
+    mkdir -p $root/var/{cache,db,empty,lib,log,lock,spool,tmp}
     mkdir -p $root/data
+
+    ln -s /run $root/var/run
 
     set -f
     sources_=(${concatStringsSep " " sources})
