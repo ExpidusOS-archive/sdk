@@ -43,6 +43,7 @@ else
   echo "booting system configuration $systemConfig" > /dev/kmsg
 fi
 
+mount -o remount,hidepid=2 proc /proc
 mount --bind /data/var/cache /var/cache
 mount --bind /data/var/db /var/db
 mount --bind /data/var/lib /var/lib
