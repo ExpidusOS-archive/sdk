@@ -150,8 +150,6 @@ let format' = format; in let
       nix --extra-experimental-features nix-command copy --to $root --no-check-sigs ${concatStringsSep " " additionalPaths'}
     ''}
 
-    diskImage=expidus-rootfs.raw
-
     ${if diskSize == "auto" then ''
       additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))
 
@@ -172,7 +170,7 @@ let format' = format; in let
         diskSize=$(( ( diskSize / mebibyte + 1) * mebibyte ))
       fi
 
-      truncate -s $diskSize $diskImage
+      truncate -s $diskSize $out/img
 
       printf "Automatic disk size...\n"
       printf "  Closure space use: %d bytes\n" $diskUsage
@@ -181,26 +179,27 @@ let format' = format; in let
       printf "  Additional space: %d bytes\n" $additionalSpace
       printf "  Disk image size: %d bytes\n" $diskSize
     '' else ''
-      truncate -s ${toString diskSize} $diskImage
+      truncate -s ${toString diskSize} $out/img
     ''}
 
     ${if mutable then ''
-      mkfs.ext4 -b ${blockSize} -F $diskImage
-      cptofs -t ext4 -i $diskImage $root/* / ||
+      mkfs.ext4 -b ${blockSize} -F $out/img
+      cptofs -t ext4 -i $out $root/* / ||
         (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
     '' else ''
-      mksquashfs $root $diskImage -noappend -b ${blockSize} -comp lz4 -Xhc
+      mksquashfs $root $out/img -noappend -comp lz4 -Xhc
     ''}
   '';
 
   moveImage = ''
-    rmdir $out
     ${if format == "raw" then ''
-      mv $diskImage $out
+      mv $out/img $NIX_BUILD_TOP/${filename}
     '' else ''
-      ${pkgs.qemu}/bin/qemu-img convert -f raw -O ${format} ${compress} $diskImage $out
+      ${pkgs.qemu}/bin/qemu-img convert -f raw -O ${format} ${compress} $out/img $NIX_BUILD_TOP/${filename}
     ''}
-    diskImage=$out
+
+    rm -rf $out
+    mv $NIX_BUILD_TOP/${filename} $out
   '';
 in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   preVM = prepareImage;
@@ -240,7 +239,7 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   mkdir /dev/block
   ln -s /dev/vda /dev/block/254:1
 
-  rootDisk=/dev/vda
+  rootDisk=$out/img
   mountPoint=/mnt
   mkdir $mountPoint
 
@@ -292,6 +291,8 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
       diskSize=$(( ( diskSize / mebibyte + 1) * mebibyte ))
     fi
 
+    truncate -s $diskSize $rootDisk
+
     printf "Automatic disk size...\n"
     printf "  Closure space use: %d bytes\n" $diskUsage
     printf "  fudge: %d bytes\n" $fudge
@@ -301,5 +302,5 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   ''}
 
   ${if mutable then "umount -R /mnt"
-  else "mksquashfs $mountPoint $rootDisk -noappend -b ${blockSize} -comp lz4 -Xhc"}
+  else "mksquashfs $mountPoint $rootDisk -noappend -comp lz4 -Xhc"}
 '')

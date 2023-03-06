@@ -85,8 +85,7 @@
           };
 
           boot.initrd.availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
-
-          system.rootfs.diskSize = "2G";
+          services.getty.autologinUser = "root";
         }];
       };
 
