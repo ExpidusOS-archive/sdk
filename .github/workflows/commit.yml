@@ -8,8 +8,9 @@ on:
     tags:
       - v*.*.*-*
   pull_request:
-    - 'master'
-    - 'release/v*.*.*-*'
+    branches:
+      - 'master'
+      - 'release/v*.*.*-*'
 
 permissions:
   contents: read
