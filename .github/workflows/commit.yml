@@ -30,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api repos/${{github.repository.name}}/pulls/${{github.event.number}}/files --paginate \
+          gh api repos/${{github.event.repository.name}}/pulls/${{github.event.number}}/files --paginate \
             | jq '.[] | select(.status != "removed") | .filename' > $HOME/changed_files
       - name: Print change list
         run: cat $HOME/changed_files
@@ -43,5 +43,5 @@ jobs:
         run: |
           cat "$HOME/changed_files" | nix-shell -p editorconfig-checker --run 'xargs -r editorconfig-checker -disable-indent-size'
       - if: ${{ failure() }}
-        run: | 
+        run: |
           echo "::error :: Hey! It looks like your changes don't follow our editorconfig settings. Read https://editorconfig.org/#download to configure your editor so you never see this error again."
