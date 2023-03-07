@@ -3,7 +3,7 @@
   system ? builtins.currentSystem,
   pkgs ? import ../../pkgs/top-level/overlay.nix channels { inherit system; },
   baseModules ? import ./modules/default.nix channels,
-  extraModules ? [],
+  modules ? [],
   specialArgs ? {}
 }@args:
 with lib;
@@ -13,11 +13,11 @@ let
     system = null;
     pkgs = import ../../pkgs/top-level/overlay.nix channels { inherit system; };
     baseModules = import ./modules/default.nix channels;
-    extraModules = [];
+    modules = [];
     specialArgs = {};
   } // args;
 
-  modules = fargs.baseModules ++ fargs.extraModules;
+  modules = fargs.baseModules ++ fargs.modules;
 
   isCross = fargs.pkgs.buildPlatform != fargs.pkgs.hostPlatform;
 
