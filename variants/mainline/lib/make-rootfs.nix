@@ -77,7 +77,7 @@ let format' = format; in let
     }
 
     mebibyte=$((1024 * 1024))
-    
+
     # Approximative percentage of reserved space in an ext4 fs over 512MiB.
     # 0.05208587646484375
     #  × 1000, integer part: 52
@@ -230,7 +230,7 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   }
 
   mebibyte=$((1024 * 1024))
-  
+
   # Approximative percentage of reserved space in an ext4 fs over 512MiB.
   # 0.05208587646484375
   #  × 1000, integer part: 52

@@ -4,7 +4,7 @@
   fetchFromGitHub,
   writeText,
   stdenv,
-  buildPackages, 
+  buildPackages,
   targetPlatform,
   check,
   flutter-engine,

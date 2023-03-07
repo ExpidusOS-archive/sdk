@@ -340,7 +340,7 @@ let
         defined = x: x != "_mkMergedOptionModule";
       in [
         (mkChangedOptionModule [ "preferTempAddress" ] [ "tempAddress" ]
-         (config:
+        (config:
           let bool = getAttrFromPath [ "preferTempAddress" ] config;
           in if bool then "default" else "enabled"
         ))
@@ -458,8 +458,8 @@ in
 
         WARNING: Do not use underscores (_) or you may run into unexpected issues.
       '';
-       # warning until the issues in https://github.com/NixOS/nixpkgs/pull/138978
-       # are resolved
+      # warning until the issues in https://github.com/NixOS/nixpkgs/pull/138978
+      # are resolved
     };
 
     networking.fqdn = mkOption {
@@ -1383,7 +1383,7 @@ in
         (i: let
           opt = i.tempAddress;
           val = tempaddrValues.${opt}.sysctl;
-         in nameValuePair "net.ipv6.conf.${replaceChars ["."] ["/"] i.name}.use_tempaddr" val));
+        in nameValuePair "net.ipv6.conf.${replaceChars ["."] ["/"] i.name}.use_tempaddr" val));
 
     security.wrappers = {
       ping = {

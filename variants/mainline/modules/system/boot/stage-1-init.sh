@@ -35,7 +35,7 @@ EOF
   if [ -n "$allowShell" ]; then cat <<EOF
   i) to launch an interactive shell
   f) to start an interactive shell having pid 1 (needed if you want to
-     start stage 2's init manually)
+    start stage 2's init manually)
 EOF
   fi
   cat <<EOF

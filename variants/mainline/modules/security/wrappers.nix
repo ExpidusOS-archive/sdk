@@ -16,8 +16,8 @@ let
       numeric = "[-+=]?[0-7]{0,4}";
       mode = "((${symbolic})(,${symbolic})*)|(${numeric})";
     in
-     lib.types.strMatching mode
-     // { description = "file mode string"; };
+      lib.types.strMatching mode
+      // { description = "file mode string"; };
 
   wrapperType = lib.types.submodule ({ name, config, ... }: {
     options.source = lib.mkOption

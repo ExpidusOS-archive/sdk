@@ -544,19 +544,18 @@ in
         unitConfig.X-StopOnReconfiguration = true;
       };
 
-    systemd.units =
-         mapAttrs' (n: v: nameValuePair "${n}.path"    (pathToUnit    n v)) cfg.paths
+    systemd.units = mapAttrs' (n: v: nameValuePair "${n}.path"    (pathToUnit    n v)) cfg.paths
       // mapAttrs' (n: v: nameValuePair "${n}.service" (serviceToUnit n v)) cfg.services
       // mapAttrs' (n: v: nameValuePair "${n}.slice"   (sliceToUnit   n v)) cfg.slices
       // mapAttrs' (n: v: nameValuePair "${n}.socket"  (socketToUnit  n v)) cfg.sockets
       // mapAttrs' (n: v: nameValuePair "${n}.target"  (targetToUnit  n v)) cfg.targets
       // mapAttrs' (n: v: nameValuePair "${n}.timer"   (timerToUnit   n v)) cfg.timers
       // listToAttrs (map
-                   (v: let n = escapeSystemdPath v.where;
-                       in nameValuePair "${n}.mount" (mountToUnit n v)) cfg.mounts)
+        (v: let n = escapeSystemdPath v.where;
+          in nameValuePair "${n}.mount" (mountToUnit n v)) cfg.mounts)
       // listToAttrs (map
-                   (v: let n = escapeSystemdPath v.where;
-                       in nameValuePair "${n}.automount" (automountToUnit n v)) cfg.automounts);
+        (v: let n = escapeSystemdPath v.where;
+          in nameValuePair "${n}.automount" (automountToUnit n v)) cfg.automounts);
 
       # Environment of PID 1
       systemd.managerEnvironment = {

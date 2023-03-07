@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 with lib;
 let
-   makeProg = args: pkgs.substituteAll (args // {
+  makeProg = args: pkgs.substituteAll (args // {
     dir = "bin";
     isExecutable = true;
   });
