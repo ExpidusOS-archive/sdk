@@ -32,6 +32,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v20
       - name: Check EditorConfig
         run: |
           find . -type f | nix-shell -p editorconfig-checker --run 'xargs -r editorconfig-checker -disable-indent-size'
