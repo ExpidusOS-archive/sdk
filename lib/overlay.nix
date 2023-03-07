@@ -24,6 +24,8 @@ final: prev: {
     examples = final.expidus.system.default.all-configs;
   };
 
+  expidusSystem = final.expidus.mkMainline;
+
   hm = (import "${home-manager}/modules/lib/stdlib-extended.nix" final).hm;
   inherit (final.expidus.system.default) flake-utils;
 
