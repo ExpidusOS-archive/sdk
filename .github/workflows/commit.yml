@@ -33,6 +33,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - uses: cachix/install-nix-action@v20
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/refs/heads/nixos-22.11.tar.gz
       - name: Check EditorConfig
         run: |
           find . -type f | nix-shell -p editorconfig-checker --run 'xargs -r editorconfig-checker -disable-indent-size'
@@ -58,6 +60,8 @@ jobs:
         with:
           ref: refs/pull/${{github.event.pull_request.number}}/merge
       - uses: cachix/install-nix-action@v20
+        with:
+          nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/refs/heads/nixos-22.11.tar.gz
       - name: Check EditorConfig
         run: |
           cat "$HOME/changed_files" | nix-shell -p editorconfig-checker --run 'xargs -r editorconfig-checker -disable-indent-size'
