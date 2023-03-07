@@ -38,14 +38,10 @@
 
       importPackage = import ./pkgs/top-level/overlay.nix channels;
       lib = (import ./lib/extend.nix channels).extend (final: prev: {
-        expidus = prev.expidus.extend (final: prev:
-          let
-            variants = import ./variants {
-              inherit channels lib;
-            };
-          in {
-            mkMainline = args: variants.mkMainline (args // {
-              extraModules = (args.extraModules or []) ++ [
+        expidus = prev.expidus.extend (final: prev: {
+          variants = prev.variants // {
+            mkMainline = prev.variants.mkMainline (args // {
+              modules = (args.modules or []) ++ [
                 {
                   system.expidus = {
                     versionSuffix = ".${lib.substring 0 8 (self.lastModifiedDate or self.lastModified or "19700101")}.${self.shortRev or "dirty"}";
@@ -54,11 +50,12 @@
                 }
               ];
             });
+          };
 
-            trivial = prev.trivial.extend (f: p: {
-              revision = "${self.rev or "diry"}";
-            });
+          trivial = prev.trivial.extend (f: p: {
+            revision = "${self.rev or "diry"}";
           });
+        });
       });
     in {
       inherit lib;
@@ -75,10 +72,10 @@
           };
         });
 
-      expidusConfiguration.x86_64-linux.demo = lib.expidus.mkMainline {
+      expidusConfiguration.x86_64-linux.demo = lib.expidusSystem {
         pkgs = self.legacyPackages.x86_64-linux;
 
-        extraModules = [{
+        modules = [{
           fileSystems = {
             "/" = { device = "/dev/vda"; };
             "/data" = { device = "/dev/vdb"; };
