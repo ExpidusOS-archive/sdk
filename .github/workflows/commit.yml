@@ -30,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api repos/${{github.event.repository.name}}/pulls/${{github.event.number}}/files --paginate \
+          gh api repos/${{github.repository}}/pulls/${{github.event.number}}/files --paginate \
             | jq '.[] | select(.status != "removed") | .filename' > $HOME/changed_files
       - name: Print change list
         run: cat $HOME/changed_files
