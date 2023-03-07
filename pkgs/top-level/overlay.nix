@@ -1,19 +1,38 @@
-{ nixpkgs, sdk, ... }@channels:
+{ nixpkgs, expidus-sdk, ... }@channels:
 let
-  lib = import ("${sdk}/lib/overlay.nix") channels;
+  lib = import "${expidus-sdk}/lib/extend.nix" channels;
 in
 {
-  localSystem ? { system = args.system or lib.expidus.system.current; },
+  localSystem ? { system = args.system or builtins.currentSystem; },
   system ? localSystem.system,
   crossSystem ? localSystem,
   overlays ? [],
   ...
 }@args:
-let
-  config = builtins.removeAttrs args [ "overlays" "lib" ] // { inherit lib; };
-  pkgs = import ./nixpkgs/impure.nix config;
-in pkgs.appendOverlays ([
-    (import ./patch-packages.nix { inherit lib config; })
-    (import ./nix-packages.nix { inherit lib config; })
-    (import ./all-packages.nix { inherit lib config; })
+  with lib;
+  let
+    importSystem = name:
+      optionalAttrs (builtins.hasAttr name args) {
+        "${name}" = expidus.system.default.get args."${name}";
+      };
+    importSystem' = name:
+      optionalAttrs (builtins.hasAttr name args) {
+        "${name}" = (expidus.system.default.get args."${name}").system;
+      };
+
+    config = builtins.removeAttrs args [
+      "lib"
+      "overlays"
+      "localSystem"
+      "system"
+      "crossSystem"
+    ] // {
+      inherit lib;
+    } // importSystem "localSystem"
+      // importSystem' "system"
+      // importSystem "crossSystem";
+    pkgs = import "${nixpkgs}/pkgs/top-level/impure.nix" config;
+  in pkgs.appendOverlays ([
+    (final: prev: { path = expidus-sdk; })
+    (import ./all-packages.nix)
   ] ++ overlays)

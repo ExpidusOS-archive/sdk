@@ -1,38 +1,21 @@
-{ lib, stdenv, fetchFromGitHub, meson, ninja, pkg-config, gobject-introspection, dbus, vala, vadi, libtokyo,
-  gtk-layer-shell, libpeas, libdevident, wrapGAppsHook, gsettings-desktop-schemas, expidus-sdk, networkmanager,
-  upower, libpulseaudio, ibus, callaudiod, feedbackd, gi-docgen, evolution-data-server, git }:
-with lib;
+{ lib, buildExpidusPackage, fetchFromGitHub }:
 let
-  rev = "070b6c9a99de20a89e63f7d5fcfc88c66f5e9bee";
-in
-stdenv.mkDerivation rec {
+  rev = "0bd5e19cedd8f7a2601d019150c928057c48bc43";
+in buildExpidusPackage {
   pname = "genesis-shell";
-  version = "0.2.0-${rev}";
+  version = "git+${rev}";
 
   src = fetchFromGitHub {
     owner = "ExpidusOS";
     repo = "genesis";
     inherit rev;
-    sha256 = "sha256-zHnYUcHg7Tat+WONS/aktXDXFYa/rPbPgQc/b8VrVGE=";
-    fetchSubmodules = true;
-    leaveDotGit = true;
+    sha256 = lib.fakeHash;
   };
-
-  outputs = [ "out" "dev" "devdoc" ];
-
-  nativeBuildInputs = [ meson ninja pkg-config vala gobject-introspection wrapGAppsHook expidus-sdk git ]
-    ++ optionals stdenv.isLinux [ gi-docgen ];
-  buildInputs = [ vadi libdevident libtokyo libpeas dbus gsettings-desktop-schemas ]
-    ++ optionals stdenv.isLinux [ gtk-layer-shell networkmanager upower libpulseaudio ibus callaudiod feedbackd evolution-data-server ];
-  propagatedBuildInputs = buildInputs;
-
-  mesonFlags = optionals stdenv.isDarwin [ "-Ddbus=disabled" "-Dx11=disabled" "-Dwayland=disabled" ];
 
   meta = with lib; {
     description = "The next generation desktop and mobile shell";
     homepage = "https://github.com/ExpidusOS/genesis";
     license = licenses.gpl3Only;
-    maintainers = with expidus.maintainers; [ TheComputerGuy ];
-    platforms = builtins.map (value: value.value.system) (lists.flatten (with expidus.system.defaultSupported; [ darwin linux ]));
+    maintainers = with maintainers; [ RossComputerGuy ];
   };
 }

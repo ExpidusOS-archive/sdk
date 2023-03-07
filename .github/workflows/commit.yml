@@ -1,0 +1,47 @@
+name: Commit Checks
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'release/v*.*.*-*'
+    tags:
+      - v*.*.*-*
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Lint Commits
+        uses: wagoid/commitlint-github-action@v5
+
+  # Based on https://github.com/NixOS/nixpkgs/blob/master/.github/workflows/editorconfig.yml
+  editorconfig:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get list of changed files from PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api repos/${{github.repository.name}}/pulls/${{github.event.number}}/files --paginate \
+            | jq '.[] | select(.status != "removed") | .filename' > $HOME/changed_files
+      - name: Print change list
+        run: cat $HOME/changed_files
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: refs/pull/${{github.event.pull_request.number}}/merge
+      - uses: cachix/install-nix-action@v20
+      - name: Check EditorConfig
+        run: |
+          cat "$HOME/changed_files" | nix-shell -p editorconfig-checker --run 'xargs -r editorconfig-checker -disable-indent-size'
+      - if: ${{ failure() }}
+        run: | 
+          echo "::error :: Hey! It looks like your changes don't follow our editorconfig settings. Read https://editorconfig.org/#download to configure your editor so you never see this error again."
