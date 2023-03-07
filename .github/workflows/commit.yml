@@ -7,6 +7,9 @@ on:
       - 'release/v*.*.*-*'
     tags:
       - v*.*.*-*
+  pull_request:
+    - 'master'
+    - 'release/v*.*.*-*'
 
 permissions:
   contents: read
@@ -22,15 +25,29 @@ jobs:
       - name: Lint Commits
         uses: wagoid/commitlint-github-action@v5
 
+  editorconfig-commit:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check EditorConfig
+        run: |
+          find . -type f | nix-shell -p editorconfig-checker --run 'xargs -r editorconfig-checker -disable-indent-size'
+      - if: ${{ failure() }}
+        run: |
+          echo "::error :: Hey! It looks like your changes don't follow our editorconfig settings. Read https://editorconfig.org/#download to configure your editor so you never see this error again."
+
   # Based on https://github.com/NixOS/nixpkgs/blob/master/.github/workflows/editorconfig.yml
   editorconfig:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Get list of changed files from PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api repos/${{github.repository}}/pulls/${{github.event.pull_request.number}}/files --paginate \
+          gh api repos/${{github.repository}}/pulls/${{github.event.number}}/files --paginate \
             | jq '.[] | select(.status != "removed") | .filename' > $HOME/changed_files
       - name: Print change list
         run: cat $HOME/changed_files
