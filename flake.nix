@@ -8,29 +8,31 @@
     fallback = true;
   };
 
-  inputs.flake-utils.url = github:numtide/flake-utils;
-
-  inputs.disko = {
-    url = github:nix-community/disko;
-    flake = false;
+  inputs = {
+    flake-utils.url = github:numtide/flake-utils;
+    disko = {
+      url = github:nix-community/disko;
+      flake = false;
+    };
+    nixpkgs = {
+      url = github:ExpidusOS/nixpkgs/nixos-22.11;
+      flake = false;
+    };
+    home-manager = {
+      url = github:nix-community/home-manager/release-22.11;
+      flake = false;
+    };
+    mobile-nixos = {
+      url = github:NixOS/mobile-nixos;
+      flake = false;
+    };
+    zig-overlay = {
+      url = github:mitchellh/zig-overlay;
+      flake = false;
+    };
   };
 
-  inputs.nixpkgs = {
-    url = github:ExpidusOS/nixpkgs/nixos-22.11;
-    flake = false;
-  };
-
-  inputs.home-manager = {
-    url = github:nix-community/home-manager/release-22.11;
-    flake = false;
-  };
-
-  inputs.mobile-nixos = {
-    url = github:NixOS/mobile-nixos;
-    flake = false;
-  };
-
-  outputs = { self, flake-utils, home-manager, nixpkgs, mobile-nixos, disko }@args:
+  outputs = { self, flake-utils, home-manager, nixpkgs, mobile-nixos, disko, zig-overlay }@args:
     let
       channels = (builtins.mapAttrs (name: attrs: attrs.outPath) (builtins.removeAttrs args [ "self" ])) // {
         expidus-sdk = self.outPath;

@@ -1,4 +1,4 @@
-{ nixpkgs, expidus-sdk, ... }@channels:
+{ nixpkgs, expidus-sdk, zig-overlay, ... }@channels:
 let
   lib = import "${expidus-sdk}/lib/extend.nix" channels;
 in
@@ -34,5 +34,11 @@ in
     pkgs = import "${nixpkgs}/pkgs/top-level/impure.nix" config;
   in pkgs.appendOverlays ([
     (final: prev: { path = expidus-sdk; })
+    (final: prev: {
+      zigpkgs = import "${zig-overlay}/default.nix" {
+        pkgs = prev;
+        inherit (prev) system;
+      };
+    })
     (import ./all-packages.nix)
   ] ++ overlays)
