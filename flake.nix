@@ -16,7 +16,7 @@
   };
 
   inputs.nixpkgs = {
-    url = github:ExpidusOS/nixpkgs/nixos-22.11;
+    url = github:ExpidusOS/nixpkgs;
     flake = false;
   };
 
@@ -101,10 +101,6 @@
             inherit localSystem;
           };
           filterPkgs = filterAttrs (name: pkg: isAttrs pkg && hasAttr "outPath" pkg);
-        in (filterPkgs pkgs.expidus)
-          // (renameAttrs (name: value: value.pname) pkgs.flutter-engine.runtimeModes)
-          // {
-            inherit (pkgs) flutter-engine;
-          });
+        in filterPkgs pkgs.expidus);
     };
 }
