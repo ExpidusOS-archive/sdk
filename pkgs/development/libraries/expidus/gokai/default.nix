@@ -8,6 +8,7 @@
   wayland-protocols,
   libxdg_basedir,
   libuv,
+  libdrm,
   glib,
   packagekit,
   wlroots_0_16,
@@ -27,7 +28,7 @@
   flutter-engine
 }:
 let
-  rev = "7bb62afb55694f0aaf48367f801544e91f0cdc23";
+  rev = "939cc600b463e4c295f75f046798dc8cb23d6636";
 in
 stdenv.mkDerivation rec {
   pname = "gokai";
@@ -41,7 +42,7 @@ stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "gokai";
     inherit rev;
-    sha256 = "sha256-5s+f/fLcN9fou5rYx6sRvxceR9XBMFwP2jwjHuwxmQE=";
+    sha256 = "sha256-a3wHXR3tcKX3z6h4cbZA6FHaknfMoQedGweCANHJysI=";
   };
 
   nativeBuildInputs = [
@@ -71,6 +72,7 @@ stdenv.mkDerivation rec {
     jsoncpp
     libxkbcommon
     accountsservice
+    libdrm
   ];
   propagatedBuildInputs = buildInputs;
 
