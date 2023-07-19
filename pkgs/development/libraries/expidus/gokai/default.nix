@@ -9,6 +9,7 @@
   libxdg_basedir,
   libuv,
   libdrm,
+  libevdev,
   glib,
   packagekit,
   wlroots_0_16,
@@ -25,10 +26,11 @@
   jsoncpp,
   libxkbcommon,
   accountsservice,
+  upower,
   flutter-engine
 }:
 let
-  rev = "939cc600b463e4c295f75f046798dc8cb23d6636";
+  rev = "01810e28cdc20e0fa3f42ea006f78e6c661f8b21";
 in
 stdenv.mkDerivation rec {
   pname = "gokai";
@@ -42,7 +44,7 @@ stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "gokai";
     inherit rev;
-    sha256 = "sha256-a3wHXR3tcKX3z6h4cbZA6FHaknfMoQedGweCANHJysI=";
+    sha256 = "sha256-Si4SKHxCkPFMNfdZLKqV15HU/wrE3bSutZ9Y+SrPv+A=";
   };
 
   nativeBuildInputs = [
@@ -73,6 +75,8 @@ stdenv.mkDerivation rec {
     libxkbcommon
     accountsservice
     libdrm
+    libevdev
+    upower
   ];
   propagatedBuildInputs = buildInputs;
 
