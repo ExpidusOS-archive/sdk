@@ -1,6 +1,6 @@
 { lib, fetchFromGitHub, flutter, pkg-config, expidus }:
 let
-  rev = "75d38e77521bffef7257f70c4b14f9a3aaaa3b13";
+  rev = "82aa28024ec804777a1b9469badd5b88fecc3f79";
 in
 flutter.buildFlutterApplication {
   pname = "genesis-shell";
@@ -10,11 +10,11 @@ flutter.buildFlutterApplication {
     owner = "ExpidusOS";
     repo = "genesis";
     inherit rev;
-    sha256 = "sha256-R82ghRXl9zTbPt/jySvoQDaz/vgYbibiPtARE00ZjAE=";
+    sha256 = "sha256-5/migW//BoX221MtTcwJVc0cZ6/GqWHSchYjI7FgnIk=";
   };
 
   depsListFile = ./deps.json;
-  vendorHash = "sha256-Z8YR4QgVWOuB73Qsq5qlXr/SafR9FoZuYBpvyjQOvoo=";
+  vendorHash = "sha256-dKI0y8qEmxqv4a/+pR0Yx+wT7kSJcJRCl2kQCi68TEk=";
 
   nativeBuildInputs = [
     pkg-config
