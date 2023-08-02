@@ -90,16 +90,19 @@ in
   "${nixpkgs}/nixos/modules/services/networking/avahi-daemon.nix"
   "${nixpkgs}/nixos/modules/services/networking/dhcpcd.nix"
   "${nixpkgs}/nixos/modules/services/networking/firewall.nix"
+  "${nixpkgs}/nixos/modules/services/networking/nftables.nix"
   "${nixpkgs}/nixos/modules/services/networking/iwd.nix"
   "${nixpkgs}/nixos/modules/services/networking/mstpd.nix"
   "${nixpkgs}/nixos/modules/services/networking/multipath.nix"
   "${nixpkgs}/nixos/modules/services/networking/networkmanager.nix"
   "${nixpkgs}/nixos/modules/services/networking/wpa_supplicant.nix"
   "${nixpkgs}/nixos/modules/services/security/fprintd.nix"
+  "${nixpkgs}/nixos/modules/services/security/kanidm.nix"
   "${nixpkgs}/nixos/modules/services/system/dbus.nix"
   "${nixpkgs}/nixos/modules/services/system/nscd.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/coredump.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/initrd.nix")
+  (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/homed.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/journald.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/logind.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/nspawn.nix")
@@ -107,6 +110,7 @@ in
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/shutdown.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/tmpfiles.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/user.nix")
+  (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/userdbd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/networkd.nix")
   "${nixpkgs}/nixos/modules/system/boot/kernel.nix"
