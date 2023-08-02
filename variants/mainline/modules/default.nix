@@ -32,7 +32,8 @@ in
   (nixpkgsImport ./tasks/network-interfaces.nix)
   ./virtualisation/nixos-containers.nix
   "${nixpkgs}/nixos/modules/config/fonts/fontconfig.nix"
-  "${nixpkgs}/nixos/modules/config/fonts/fonts.nix"
+  "${nixpkgs}/nixos/modules/config/fonts/ghostscript.nix"
+  "${nixpkgs}/nixos/modules/config/fonts/packages.nix"
   "${nixpkgs}/nixos/modules/config/krb5/default.nix"
   "${nixpkgs}/nixos/modules/config/console.nix"
   "${nixpkgs}/nixos/modules/config/i18n.nix"
@@ -66,6 +67,7 @@ in
   "${nixpkgs}/nixos/modules/programs/bash/bash.nix"
   "${nixpkgs}/nixos/modules/programs/zsh/zsh.nix"
   "${nixpkgs}/nixos/modules/programs/environment.nix"
+  "${nixpkgs}/nixos/modules/programs/feedbackd.nix"
   "${nixpkgs}/nixos/modules/programs/less.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/programs/shadow.nix")
   "${nixpkgs}/nixos/modules/programs/ssh.nix"

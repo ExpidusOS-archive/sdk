@@ -306,10 +306,6 @@ let
     contents = [
       { object = bootStage1; symlink = "/init"; }
       {
-        object = pkgs.writeText "mdadm.conf" config.boot.initrd.services.swraid.mdadmConf;
-        symlink = "/etc/mdadm.conf";
-      }
-      {
         object = pkgs.runCommand "initrd-kmod-blacklist-ubuntu" {
           src = "${pkgs.kmod-blacklist-ubuntu}/modprobe.conf";
           preferLocalBuild = true;
