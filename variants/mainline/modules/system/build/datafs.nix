@@ -34,6 +34,9 @@ in
       inherit datafs;
     };
 
-    boot.initrd.availableKernelModules = if cfg.mutable then [ "ext4" ] else [ "squashfs" ];
+    boot.initrd = rec {
+      availableKernelModules = if cfg.mutable then [ "ext4" ] else [ "squashfs" ];
+      kernelModules = availableKernelModules;
+    };
   };
 }
