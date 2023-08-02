@@ -95,6 +95,11 @@ in
         description = mdDoc "A lower-case string identifying a specific variant or edition of the OS";
       };
     };
+
+    system.stateVersion = mkOption {
+      type = types.str;
+      default = lib.version;
+    };
   };
 
   config = {
