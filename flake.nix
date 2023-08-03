@@ -75,19 +75,41 @@
       expidusConfiguration.x86_64-linux.demo = lib.expidusSystem {
         pkgs = self.legacyPackages.x86_64-linux;
 
-        modules = [{
+        modules = [({ pkgs, ... }: {
           fileSystems = {
             "/" = { device = "/dev/vda"; };
             "/data" = { device = "/dev/vdb"; };
           };
 
+          environment.systemPackages = with pkgs; [ gdb ];
+
           boot = {
-            initrd.availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
+            initrd = rec {
+              availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
+              kernelModules = availableKernelModules;
+            };
             plymouth.enable = true;
           };
 
-          services.getty.autologinUser = "root";
-        }];
+          security.polkit.extraConfig = ''
+            polkit.addRule(function(action, subject) {
+              return polkit.Result.YES;
+            });
+          '';
+
+          users.users.expidus = {
+            password = "expidus";
+            isNormalUser = true;
+            home = "/home/expidus";
+            description = "ExpidusOS Live User";
+            group = "wheel";
+            extraGroups = [ "video" "input" "tty" "users" "systemd-journal" ];
+          };
+
+          programs.genesis.enable = true;
+
+          services.getty.autologinUser = "expidus";
+        })];
       };
 
       legacyPackages = lib.expidus.system.default.forAllSystems (system: localSystem: importPackage {

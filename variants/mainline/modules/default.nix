@@ -13,7 +13,31 @@ let
     };
 in
 [
+  ({ lib, ... }: {
+    disabledModules = [
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/xterm.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/phosh.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/xfce.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/plasma5.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/lumina.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/lxqt.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/enlightenment.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/gnome.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/retroarch.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/kodi.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/mate.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/pantheon.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/surf-display.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/cde.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/cinnamon.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/budgie.nix"
+      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/deepin.nix"
+    ];
+
+    boot.tmp.useTmpfs = lib.mkForce true;
+  })
   ./security/wrappers.nix
+  ./services/desktops/genesis/default.nix
   ./services/ttys/getty.nix
   ./services/x11/xserver.nix
   (nixpkgsImport ./system/boot/initrd.nix)
@@ -35,6 +59,9 @@ in
   "${nixpkgs}/nixos/modules/config/fonts/ghostscript.nix"
   "${nixpkgs}/nixos/modules/config/fonts/packages.nix"
   "${nixpkgs}/nixos/modules/config/krb5/default.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/portals/wlr.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/autostart.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/portal.nix"
   "${nixpkgs}/nixos/modules/config/console.nix"
   "${nixpkgs}/nixos/modules/config/i18n.nix"
   "${nixpkgs}/nixos/modules/config/iproute2.nix"
@@ -58,6 +85,7 @@ in
   "${nixpkgs}/nixos/modules/hardware/device-tree.nix"
   "${nixpkgs}/nixos/modules/hardware/opengl.nix"
   "${nixpkgs}/nixos/modules/hardware/uinput.nix"
+  "${nixpkgs}/nixos/modules/services/hardware/upower.nix"
   "${nixpkgs}/nixos/modules/misc/assertions.nix"
   "${nixpkgs}/nixos/modules/misc/ids.nix"
   "${nixpkgs}/nixos/modules/misc/lib.nix"
@@ -80,6 +108,7 @@ in
   "${nixpkgs}/nixos/modules/security/rtkit.nix"
   "${nixpkgs}/nixos/modules/security/sudo.nix"
   "${nixpkgs}/nixos/modules/services/audio/alsa.nix"
+  "${nixpkgs}/nixos/modules/services/desktops/accountsservice.nix"
   "${nixpkgs}/nixos/modules/services/desktops/geoclue2.nix"
   "${nixpkgs}/nixos/modules/services/hardware/actkbd.nix"
   "${nixpkgs}/nixos/modules/services/hardware/bluetooth.nix"
@@ -102,6 +131,9 @@ in
   "${nixpkgs}/nixos/modules/services/security/kanidm.nix"
   "${nixpkgs}/nixos/modules/services/system/dbus.nix"
   "${nixpkgs}/nixos/modules/services/system/nscd.nix"
+  "${nixpkgs}/nixos/modules/services/x11/desktop-managers/default.nix"
+  "${nixpkgs}/nixos/modules/services/x11/display-managers/default.nix"
+  "${nixpkgs}/nixos/modules/services/x11/window-managers/default.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/coredump.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/initrd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/homed.nix")
@@ -119,6 +151,7 @@ in
   "${nixpkgs}/nixos/modules/system/boot/kernel_config.nix"
   "${nixpkgs}/nixos/modules/system/boot/plymouth.nix"
   "${nixpkgs}/nixos/modules/system/boot/resolved.nix"
+  "${nixpkgs}/nixos/modules/system/boot/tmp.nix"
   "${nixpkgs}/nixos/modules/system/etc/etc.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/tasks/filesystems.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/tasks/network-interfaces-scripted.nix")

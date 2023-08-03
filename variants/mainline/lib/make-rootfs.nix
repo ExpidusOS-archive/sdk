@@ -3,7 +3,7 @@
   config,
   diskSize ? "auto",
   format ? "raw",
-  additionalSpace ? "512M",
+  additionalSpace ? "1G",
   additionalPaths ? [],
   contents ? [],
   postVM ? "",
@@ -64,7 +64,7 @@ let format' = format; in let
     }
 
     sectorsToBytes() {
-      echo $(( "$1" * 512  ))
+      echo $(( "$1" * 512 ))
     }
 
     # Given lines of numbers, adds them together
@@ -207,7 +207,7 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   preVM = prepareImage;
   buildInputs = with pkgs; [ util-linux e2fsprogs dosfstools squashfsTools ];
   postVM = moveImage + postVM;
-  memSize = 1024 * 2;
+  memSize = 1024 * 8;
 } ''
   export PATH=${binPath}:$PATH
 
@@ -217,7 +217,7 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   }
 
   sectorsToBytes() {
-    echo $(( "$1" * 512  ))
+    echo $(( "$1" * 512 ))
   }
 
   # Given lines of numbers, adds them together
@@ -272,6 +272,8 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   cp -r ${config.system.build.etc.outPath}/etc $mountPoint/etc/static
   # TODO: remove any already existing file from /etc/static
   # FIXME: out-of-space issues with immutable rootfs
+  rm -rf $mountPoint/nix/store/.links
+  rm -rf $mountPoint/nix/var
 
   ${optionalString (diskSize == "auto") ''
     additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))
@@ -304,5 +306,8 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   ''}
 
   ${if mutable then "umount -R /mnt"
-  else "mksquashfs $mountPoint $rootDisk -noappend -comp lz4 -Xhc"}
+  else ''
+    rm $rootDisk
+    mksquashfs $mountPoint $rootDisk -noappend -comp lz4 -Xhc
+  ''}
 '')
