@@ -30,7 +30,7 @@
   flutter-engine
 }:
 let
-  rev = "01810e28cdc20e0fa3f42ea006f78e6c661f8b21";
+  rev = "1fb37714a505292eb31efdcee584a053bfaf416a";
 in
 stdenv.mkDerivation rec {
   pname = "gokai";
@@ -44,7 +44,7 @@ stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "gokai";
     inherit rev;
-    sha256 = "sha256-Si4SKHxCkPFMNfdZLKqV15HU/wrE3bSutZ9Y+SrPv+A=";
+    sha256 = "sha256-9jsR6FbtGUP+e0fPTlNsjSYdKVfuh81Y//Y2Ic1JNrQ=";
   };
 
   nativeBuildInputs = [
