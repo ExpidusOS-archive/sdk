@@ -78,7 +78,10 @@
         modules = [({ pkgs, ... }: {
           fileSystems = {
             "/" = { device = "/dev/vda"; };
-            "/data" = { device = "/dev/vdb"; };
+            "/data" = {
+              device = "/dev/vdb";
+              neededForBoot = true;
+            };
           };
 
           environment.systemPackages = with pkgs; [ gdb ];

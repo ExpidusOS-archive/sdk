@@ -23,6 +23,7 @@ with lib;
     hardware.opengl.enable = mkDefault true;
 
     systemd.services.display-manager = {
+      enable = true;
       description = "Next-generation desktop environment for ExpidusOS (login)";
 
       script = ''
