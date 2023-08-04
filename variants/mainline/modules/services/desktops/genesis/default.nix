@@ -17,6 +17,7 @@ with lib;
       };
     };
 
+    services.xserver.enable = true;
     services.accounts-daemon.enable = true;
     services.upower.enable = true;
     security.polkit.enable = true;
@@ -27,15 +28,14 @@ with lib;
       enableDefaultPackages = true;
     };
 
+    services.xserver.displayManager.job.execCmd = ''
+      export PATH=${pkgs.expidus.genesis-shell}/bin:$PATH
+      cd ${pkgs.expidus.genesis-shell}/app
+      exec genesis_shell --login
+    '';
+
     systemd.services.display-manager = {
       enable = true;
-      description = "Next-generation desktop environment for ExpidusOS (login)";
-
-      script = ''
-        export PATH=${pkgs.expidus.genesis-shell}/bin:$PATH
-        cd ${pkgs.expidus.genesis-shell}/app
-        exec genesis_shell --login
-      '';
 
       wants = [
         "upower.service"

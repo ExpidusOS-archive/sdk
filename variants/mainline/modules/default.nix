@@ -46,7 +46,7 @@ in
   ./security/wrappers.nix
   ./services/desktops/genesis/default.nix
   ./services/ttys/getty.nix
-  ./services/x11/xserver.nix
+  (nixpkgsImport ./services/x11/xserver.nix)
   (nixpkgsImport ./system/boot/systemd/tmpfiles.nix)
   (nixpkgsImport ./system/boot/initrd.nix)
   ./system/boot/modprobe.nix
