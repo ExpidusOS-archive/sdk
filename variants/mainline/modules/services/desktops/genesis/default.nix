@@ -1,12 +1,21 @@
 { config, lib, pkgs, ... }:
 with lib;
+let
+  cfg = config.programs.genesis;
+in
 {
   options.programs.genesis = {
     enable = mkEnableOption (mdDoc "Next-generation desktop environment for ExpidusOS");
+    package = mkOption {
+      type = types.package;
+      default = pkgs.expidus.genesis-shell;
+      defaultText = literalExpression "pkgs.expidus.genesis-shell";
+      description = mdDoc "The package providing Genesis Shell";
+    };
   };
 
-  config = mkIf config.programs.genesis.enable {
-    environment.systemPackages = with pkgs; [ expidus.genesis-shell ];
+  config = mkIf cfg.enable {
+    environment.systemPackages = [ cfg.package ];
 
     xdg = {
       autostart.enable = true;
@@ -30,7 +39,7 @@ with lib;
     };
 
     services.xserver.displayManager.job.execCmd = ''
-      export PATH=${pkgs.expidus.genesis-shell}/bin:$PATH
+      export PATH=${cfg.package}/bin:$PATH
       exec genesis_shell --login
     '';
 
