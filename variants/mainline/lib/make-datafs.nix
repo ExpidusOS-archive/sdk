@@ -73,7 +73,7 @@ let format' = format; in let
 
     mkdir $out
     root="$PWD/root"
-    mkdir -p $root/{config,pkgs,users,var/{cache,db,lib,log}}
+    mkdir -p $root/{config,pkgs,users,var/{cache,db,lib,log,tmp}}
 
     ${optionalString config.system.vendorConfig.System.nix_daemon ''
       mkdir -p $root/nix/var/{log,nix}

@@ -248,6 +248,8 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   ${if mutable then "mount $rootDisk $mountPoint"
   else "unsquashfs -dest $mountPoint $rootDisk"}
 
+  chown -R root $mountPoint
+
   targets_=(${concatStringsSep " " targets})
   users_=(${concatStringsSep " " users})
   groups_=(${concatStringsSep " " groups})

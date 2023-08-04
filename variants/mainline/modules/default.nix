@@ -34,12 +34,20 @@ in
       "${nixpkgs}/nixos/modules/services/x11/desktop-managers/deepin.nix"
     ];
 
-    boot.tmp.useTmpfs = lib.mkForce true;
+    config = {
+      boot.tmp.useTmpfs = lib.mkForce true;
+
+      system.activationScripts.fonts = ''
+        mkdir -p /usr/share
+        ln -sf /run/current-system/sw/share/X11/fonts/ /usr/share/fonts
+      '';
+    };
   })
   ./security/wrappers.nix
   ./services/desktops/genesis/default.nix
   ./services/ttys/getty.nix
   ./services/x11/xserver.nix
+  (nixpkgsImport ./system/boot/systemd/tmpfiles.nix)
   (nixpkgsImport ./system/boot/initrd.nix)
   ./system/boot/modprobe.nix
   ./system/boot/stage-2.nix
@@ -56,11 +64,15 @@ in
   (nixpkgsImport ./tasks/network-interfaces.nix)
   ./virtualisation/nixos-containers.nix
   "${nixpkgs}/nixos/modules/config/fonts/fontconfig.nix"
+  "${nixpkgs}/nixos/modules/config/fonts/fontdir.nix"
   "${nixpkgs}/nixos/modules/config/fonts/ghostscript.nix"
   "${nixpkgs}/nixos/modules/config/fonts/packages.nix"
   "${nixpkgs}/nixos/modules/config/krb5/default.nix"
   "${nixpkgs}/nixos/modules/config/xdg/portals/wlr.nix"
   "${nixpkgs}/nixos/modules/config/xdg/autostart.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/icons.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/menus.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/mime.nix"
   "${nixpkgs}/nixos/modules/config/xdg/portal.nix"
   "${nixpkgs}/nixos/modules/config/console.nix"
   "${nixpkgs}/nixos/modules/config/i18n.nix"
@@ -99,6 +111,7 @@ in
   "${nixpkgs}/nixos/modules/programs/less.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/programs/shadow.nix")
   "${nixpkgs}/nixos/modules/programs/ssh.nix"
+  "${nixpkgs}/nixos/modules/programs/xwayland.nix"
   "${nixpkgs}/nixos/modules/security/apparmor.nix"
   "${nixpkgs}/nixos/modules/security/oath.nix"
   "${nixpkgs}/nixos/modules/security/pam_mount.nix"
@@ -142,7 +155,6 @@ in
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/nspawn.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/oomd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/shutdown.nix")
-  (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/tmpfiles.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/user.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/userdbd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd.nix")

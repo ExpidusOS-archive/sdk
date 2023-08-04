@@ -22,6 +22,11 @@ with lib;
     security.polkit.enable = true;
     hardware.opengl.enable = mkDefault true;
 
+    fonts = {
+      fontDir.enable = true;
+      enableDefaultPackages = true;
+    };
+
     systemd.services.display-manager = {
       enable = true;
       description = "Next-generation desktop environment for ExpidusOS (login)";

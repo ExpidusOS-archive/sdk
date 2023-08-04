@@ -169,6 +169,18 @@ in
         name length, and ideally should have close-to-identical directory layout.
       '';
     };
+
+    checks = mkOption {
+      type = types.listOf types.package;
+      default = [];
+      description = lib.mdDoc ''
+        Packages that are added as dependencies of the system's build, usually
+        for the purpose of validating some part of the configuration.
+
+        Unlike `system.extraDependencies`, these store paths do not
+        become part of the built system configuration.
+      '';
+    };
   };
 
   config.system = {
@@ -181,7 +193,9 @@ in
       fi
     '';
 
-    systemBuilderArgs = lib.optionalAttrs (config.system.forbiddenDependenciesRegex != "") {
+    systemBuilderArgs = {
+      passedChecks = concatStringsSep " " config.system.checks;
+    } // lib.optionalAttrs (config.system.forbiddenDependenciesRegex != "") {
       inherit (config.system) forbiddenDependenciesRegex;
       closureInfo = pkgs.closureInfo { rootPaths = [
         # override to avoid  infinite recursion (and to allow using extraDependencies to add forbidden dependencies)
