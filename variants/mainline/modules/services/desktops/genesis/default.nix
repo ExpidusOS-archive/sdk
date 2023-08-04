@@ -56,6 +56,9 @@ with lib;
 
         after = [
           "getty@tty1.service"
+          "rc-local.service"
+          "plymouth-quit-wait.service"
+          "systemd-user-sessions.service"
         ];
 
         wants = [
