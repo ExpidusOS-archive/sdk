@@ -1,6 +1,12 @@
-{ lib, fetchFromGitHub, flutter, pkg-config, expidus }:
+{ lib, fetchFromGitHub, runCommand, flutter, flutter-engine, pkg-config, expidus }@pkgs:
 let
   rev = "82aa28024ec804777a1b9469badd5b88fecc3f79";
+
+  flutterEngine = runCommand flutter-engine.name {} ''
+    mkdir -p $out/src
+    find ${pkgs.flutter-engine.src}/src -maxdepth 1 -mindepth 1 -exec ln -sf {} $out/src \;
+    ln -s ${pkgs.flutter-engine}/out $out/src/out
+  '';
 in
 flutter.buildFlutterApplication {
   pname = "genesis-shell";
@@ -18,6 +24,11 @@ flutter.buildFlutterApplication {
 
   nativeBuildInputs = [
     pkg-config
+  ];
+
+  flutterBuildFlags = [
+    "--local-engine=${flutterEngine}/src/out/host_release"
+    "--local-engine-src-path=${flutterEngine}/src"
   ];
 
   buildInputs = [
