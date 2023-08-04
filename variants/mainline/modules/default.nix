@@ -123,6 +123,7 @@ in
   "${nixpkgs}/nixos/modules/services/audio/alsa.nix"
   "${nixpkgs}/nixos/modules/services/desktops/accountsservice.nix"
   "${nixpkgs}/nixos/modules/services/desktops/geoclue2.nix"
+  "${nixpkgs}/nixos/modules/services/hardware/acpid.nix"
   "${nixpkgs}/nixos/modules/services/hardware/actkbd.nix"
   "${nixpkgs}/nixos/modules/services/hardware/bluetooth.nix"
   "${nixpkgs}/nixos/modules/services/hardware/udev.nix"
