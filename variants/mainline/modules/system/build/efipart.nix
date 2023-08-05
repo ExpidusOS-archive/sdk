@@ -54,7 +54,7 @@ in
     '';
 
     boot.initrd = rec {
-      availableKernelModules = [ "vfat" ];
+      availableKernelModules = [ "vfat" "nls_cp437" "nls_ascii" "nls_iso8859_1" ];
       kernelModules = availableKernelModules;
     };
   };
