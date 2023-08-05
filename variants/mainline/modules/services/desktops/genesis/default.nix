@@ -42,16 +42,13 @@ in
 
     services.xserver.displayManager.job.execCmd = ''
       export PATH=${cfg.package}/bin:$PATH
+      export XDG_RUNTIME_DIR=/run/genesis-shell
       exec genesis_shell --login
     '';
 
     systemd = {
       services.display-manager = {
         enable = true;
-
-        environment = {
-          XDG_RUNTIME_DIR = "/run/genesis-shell";
-        };
 
         onFailure = [
           "getty@tty1.service"
@@ -82,6 +79,9 @@ in
         };
 
         serviceConfig = {
+          RuntimeDirectory = "genesis-shell";
+          RuntimeDirectoryMode = "0755";
+
           User = "genesis";
           PAMName = "login";
 
@@ -94,9 +94,6 @@ in
           UtmpMode = "user";
         };
       };
-      tmpfiles.rules = [
-        "d /run/genesis-shell 0711 genesis genesis -"
-      ];
     };
 
     users = {
