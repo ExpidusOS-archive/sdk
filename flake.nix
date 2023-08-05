@@ -77,9 +77,14 @@
 
         modules = [({ pkgs, ... }: {
           fileSystems = {
-            "/" = { device = "/dev/vda"; };
-            "/data" = {
+            "/" = {
               device = "/dev/vdb";
+            };
+            "/boot/efi" = {
+              device = "/dev/vda";
+            };
+            "/data" = {
+              device = "/dev/vdc";
               neededForBoot = true;
             };
           };
@@ -90,6 +95,7 @@
               kernelModules = availableKernelModules;
             };
             plymouth.enable = true;
+            kernelParams = [ "root=/dev/vdb" "console=ttyS0,9600" ];
           };
 
           security.polkit.extraConfig = ''
