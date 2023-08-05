@@ -113,6 +113,7 @@ in
   (nixpkgsImport "${nixpkgs}/nixos/modules/programs/shadow.nix")
   "${nixpkgs}/nixos/modules/programs/ssh.nix"
   "${nixpkgs}/nixos/modules/programs/xwayland.nix"
+  "${nixpkgs}/nixos/modules/security/audit.nix"
   "${nixpkgs}/nixos/modules/security/apparmor.nix"
   "${nixpkgs}/nixos/modules/security/oath.nix"
   "${nixpkgs}/nixos/modules/security/pam_mount.nix"
@@ -135,6 +136,7 @@ in
   "${nixpkgs}/nixos/modules/services/networking/ssh/sshd.nix"
   "${nixpkgs}/nixos/modules/services/networking/avahi-daemon.nix"
   "${nixpkgs}/nixos/modules/services/networking/dhcpcd.nix"
+  "${nixpkgs}/nixos/modules/services/networking/dnsmasq.nix"
   "${nixpkgs}/nixos/modules/services/networking/firewall.nix"
   "${nixpkgs}/nixos/modules/services/networking/nftables.nix"
   "${nixpkgs}/nixos/modules/services/networking/iwd.nix"

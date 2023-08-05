@@ -26,6 +26,8 @@ in
       };
     };
 
+    networking.networkmanager.enable = true;
+
     services.acpid.enable = true;
     services.xserver.enable = true;
     services.accounts-daemon.enable = true;

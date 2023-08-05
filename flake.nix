@@ -98,6 +98,11 @@
             kernelParams = [ "root=/dev/vdb" "console=ttyS0,9600" ];
           };
 
+          networking = {
+            useDHCP = false;
+            useNetworkd = false;
+          };
+
           security.polkit.extraConfig = ''
             polkit.addRule(function(action, subject) {
               return polkit.Result.YES;
