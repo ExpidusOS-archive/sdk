@@ -54,6 +54,7 @@ in
   (nixpkgsImport ./system/boot/systemd.nix)
   ./system/build/activation.nix
   ./system/build/datafs.nix
+  ./system/build/efipart.nix
   ./system/build/etc.nix
   ./system/build/rootfs.nix
   ./system/build/system-path.nix

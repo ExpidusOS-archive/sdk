@@ -72,7 +72,7 @@
           };
         });
 
-      expidusConfiguration.x86_64-linux.demo = lib.expidusSystem {
+      expidusConfigurations.x86_64-linux.demo = lib.expidusSystem {
         pkgs = self.legacyPackages.x86_64-linux;
 
         modules = [({ pkgs, ... }: {
@@ -83,8 +83,6 @@
               neededForBoot = true;
             };
           };
-
-          environment.systemPackages = with pkgs; [ gdb ];
 
           boot = {
             initrd = rec {
@@ -110,7 +108,6 @@
           };
 
           programs.genesis.enable = true;
-
           services.getty.autologinUser = "expidus";
         })];
       };
