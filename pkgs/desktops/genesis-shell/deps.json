@@ -14,6 +14,7 @@
       "dbus",
       "xdg_directories",
       "flutter_adaptive_scaffold",
+      "provider",
       "flutter_test",
       "flutter_lints"
     ]
@@ -248,6 +249,26 @@
     "dependencies": []
   },
   {
+    "name": "provider",
+    "version": "6.0.5",
+    "kind": "direct",
+    "source": "hosted",
+    "dependencies": [
+      "collection",
+      "flutter",
+      "nested"
+    ]
+  },
+  {
+    "name": "nested",
+    "version": "1.0.0",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "flutter"
+    ]
+  },
+  {
     "name": "flutter_adaptive_scaffold",
     "version": "0.1.6",
     "kind": "direct",
@@ -329,10 +350,21 @@
     "kind": "direct",
     "source": "git",
     "dependencies": [
+      "event",
       "flutter",
       "flutter_web_plugins",
       "plugin_platform_interface",
-      "vector_math"
+      "vector_math",
+      "arena_listener"
+    ]
+  },
+  {
+    "name": "arena_listener",
+    "version": "0.0.2",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": [
+      "flutter"
     ]
   },
   {
@@ -358,6 +390,13 @@
       "meta",
       "vector_math"
     ]
+  },
+  {
+    "name": "event",
+    "version": "2.1.2",
+    "kind": "transitive",
+    "source": "hosted",
+    "dependencies": []
   },
   {
     "name": "libtokyo_flutter",
