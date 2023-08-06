@@ -38,16 +38,17 @@ let format' = format; in let
 
   blockSize = toString (4 * 1024);
 
+  arch = pkgs.targetPlatform.efiArch;
   prepareImage = ''
     export PATH=${binPath}
 
     mkdir $out
     root="$PWD/root"
     mkdir -p $root/EFI/{BOOT,refind,expidus}
-    cp ${pkgs.refind}/share/refind/refind_x64.efi $root/EFI/BOOT/BOOTX64.efi
+    cp ${pkgs.refind}/share/refind/refind_${arch}.efi $root/EFI/BOOT/BOOT${arch}.efi
     cp ${config.system.build.refindConfig} $root/EFI/BOOT/refind.conf
 
-    cp -r ${pkgs.refind}/share/refind/drivers_x64 $root/EFI/refind/drivers_x64
+    cp -r ${pkgs.refind}/share/refind/drivers_${arch} $root/EFI/refind/drivers_${arch}
     cp -r ${pkgs.refind}/share/refind/icons $root/EFI/refind/icons
     cp -r ${pkgs.refind}/share/refind/fonts $root/EFI/refind/fonts
 
