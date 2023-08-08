@@ -20,17 +20,12 @@
     flake = false;
   };
 
-  inputs.home-manager = {
-    url = github:nix-community/home-manager/release-23.05;
-    flake = false;
-  };
-
   inputs.mobile-nixos = {
     url = github:NixOS/mobile-nixos;
     flake = false;
   };
 
-  outputs = { self, flake-utils, home-manager, nixpkgs, mobile-nixos, disko }@args:
+  outputs = { self, flake-utils, nixpkgs, mobile-nixos, disko }@args:
     let
       channels = (builtins.mapAttrs (name: attrs: attrs.outPath) (builtins.removeAttrs args [ "self" ])) // {
         expidus-sdk = self.outPath;
