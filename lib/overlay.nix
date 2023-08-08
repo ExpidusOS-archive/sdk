@@ -26,7 +26,7 @@ final: prev: {
 
   expidusSystem = final.expidus.mkMainline;
 
-  hm = (import "${home-manager}/modules/lib/stdlib-extended.nix" final).hm;
+  hm = import "${home-manager}/modules/lib/default.nix" { lib = final; };
   inherit (final.expidus.system.default) flake-utils;
 
   inherit (final.attrsets) renameAttrs;
