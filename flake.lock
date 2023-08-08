@@ -34,23 +34,6 @@
         "type": "github"
       }
     },
-    "home-manager": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1685325875,
-        "narHash": "sha256-tevlLIMPeVNNYPd9UgjHApAUoFAnw9iohqUyj+LPp88=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "b372d7f8d5518aaba8a4058a453957460481afbc",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "ref": "release-22.11",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
     "mobile-nixos": {
       "flake": false,
       "locked": {
@@ -87,7 +70,6 @@
       "inputs": {
         "disko": "disko",
         "flake-utils": "flake-utils",
-        "home-manager": "home-manager",
         "mobile-nixos": "mobile-nixos",
         "nixpkgs": "nixpkgs"
       }

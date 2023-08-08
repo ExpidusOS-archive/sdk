@@ -1,4 +1,4 @@
-{ nixpkgs, home-manager, flake-utils, ... }@channels:
+{ nixpkgs, flake-utils, ... }@channels:
 final: prev: {
   attrsets = prev.attrsets // (with final; {
     renameAttrs = fn: set: listToAttrs (builtins.attrValues (builtins.mapAttrs (name: value: {
@@ -26,8 +26,6 @@ final: prev: {
 
   expidusSystem = final.expidus.mkMainline;
 
-  hm = import "${home-manager}/modules/lib/default.nix" { lib = final; };
   inherit (final.expidus.system.default) flake-utils;
-
   inherit (final.attrsets) renameAttrs;
 }
