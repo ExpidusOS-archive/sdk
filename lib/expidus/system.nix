@@ -10,10 +10,28 @@ fixedPoints.makeExtensible (self:
           system = "x86_64-linux";
           config = "x86_64-unknown-linux-gnu";
         };
+        aarch64 = {
+          system = "aarch64-linux";
+          config = "aarch64-unknown-linux-gnu";
+        };
         raspberry-pi = {
           system = "armv6l-linux";
           config = "armv6l-unknown-linux-gnueabihf";
         } // platforms.raspberrypi;
+      };
+      darwin = {
+        aarch64 = {
+          system = "aarch64-darwin";
+          config = "aarch64-apple-darwin";
+          xcodePlatform = "MacOSX";
+          platform = {};
+        };
+        x86_64 = {
+          system = "x86_64-darwin";
+          config = "x86_64-apple-darwin";
+          xcodePlatform = "MacOSX";
+          platform = {};
+        };
       };
       android = {
         aarch64 = {
