@@ -621,8 +621,8 @@ in
       let driver =
         attrByPath [name]
           (if xorg ? ${"xf86video" + name}
-           then { modules = [xorg.${"xf86video" + name}]; }
-           else null)
+            then { modules = [xorg.${"xf86video" + name}]; }
+            else null)
           knownVideoDrivers;
       in optional (driver != null) ({ inherit name; modules = []; driverName = name; display = true; } // driver));
 
