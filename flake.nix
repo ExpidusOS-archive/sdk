@@ -72,56 +72,95 @@
           };
         });
 
-      expidusConfigurations.x86_64-linux.demo = lib.expidusSystem {
-        pkgs = self.legacyPackages.x86_64-linux;
+      expidusConfigurations = lib.expidus.system.default.forAllLinux (system:
+        let
+          pkgs = self.legacyPackages.${system};
+        in {
+          demo = lib.expidusSystem {
+            inherit pkgs;
 
-        modules = [({ pkgs, ... }: {
-          fileSystems = {
-            "/" = {
-              device = "/dev/vdb";
-            };
-            "/boot/efi" = {
-              device = "/dev/vda";
-            };
-            "/data" = {
-              device = "/dev/vdc";
-              neededForBoot = true;
-            };
+            modules = [{
+              fileSystems = {
+                "/" = {
+                  device = "/dev/vdb";
+                };
+                "/boot/efi" = {
+                  device = "/dev/vda";
+                };
+                "/data" = {
+                  device = "/dev/vdc";
+                  neededForBoot = true;
+                };
+              };
+
+              boot = {
+                initrd = rec {
+                  availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
+                  kernelModules = availableKernelModules;
+                };
+                plymouth.enable = true;
+                kernelParams = [ "root=/dev/vdb" "console=ttyS0,9600" ];
+              };
+
+              networking = {
+                useDHCP = false;
+                useNetworkd = false;
+              };
+
+              security.polkit.extraConfig = ''
+                polkit.addRule(function(action, subject) {
+                  return polkit.Result.YES;
+                });
+              '';
+
+              users.users.expidus = {
+                password = "expidus";
+                isNormalUser = true;
+                home = "/home/expidus";
+                description = "ExpidusOS Live User";
+                group = "wheel";
+                extraGroups = [ "video" "input" "tty" "users" "systemd-journal" ];
+              };
+
+              programs.genesis.enable = true;
+              services.getty.autologinUser = "expidus";
+            }];
           };
 
-          boot = {
-            initrd = rec {
-              availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
-              kernelModules = availableKernelModules;
-            };
-            plymouth.enable = true;
-            kernelParams = [ "root=/dev/vdb" "console=ttyS0,9600" ];
+          prod-mainline = lib.expidusSystem {
+            inherit pkgs;
+
+            modules = [{
+              fileSystems = {
+                "/" = {
+                  device = "/dev/disk/by-label/EXPIDUS_ROOT";
+                };
+                "/data" = {
+                  device = "/dev/disk/by-label/EXPIDUS_DATA";
+                };
+              };
+
+              system.rootfs.options = [ "-n EXPIDUS_ROOT" ];
+              system.datafs.options = [ "-L EXPIDUS_DATA" ];
+
+              boot = {
+                initrd = rec {
+                  availableKernelModules = [ "virtio_pci" "virtio_blk" "virtio_scsi" "nvme" "ahci" ];
+                  kernelModules = availableKernelModules;
+                };
+                plymouth.enable = true;
+                kernelParams = [ "root=/dev/disk/by-label/EXPIDUS_ROOT" ];
+              };
+
+              networking = {
+                useDHCP = false;
+                useNetworkd = false;
+              };
+
+              programs.genesis.enable = true;
+            }];
           };
-
-          networking = {
-            useDHCP = false;
-            useNetworkd = false;
-          };
-
-          security.polkit.extraConfig = ''
-            polkit.addRule(function(action, subject) {
-              return polkit.Result.YES;
-            });
-          '';
-
-          users.users.expidus = {
-            password = "expidus";
-            isNormalUser = true;
-            home = "/home/expidus";
-            description = "ExpidusOS Live User";
-            group = "wheel";
-            extraGroups = [ "video" "input" "tty" "users" "systemd-journal" ];
-          };
-
-          programs.genesis.enable = true;
-          services.getty.autologinUser = "expidus";
-        })];
-      };
+        });
 
       legacyPackages = lib.expidus.system.default.forAllSystems (system: localSystem: importPackage {
         inherit localSystem;

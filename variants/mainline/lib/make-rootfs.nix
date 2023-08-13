@@ -1,5 +1,6 @@
 { pkgs,
   lib ? pkgs.lib,
+  options ? [],
   config,
   diskSize ? "auto",
   format ? "raw",
@@ -39,8 +40,8 @@ let format' = format; in let
     rsync
     nix
     lkl
+    e2fsprogs
   ]
-    ++ (if mutable then [ e2fsprogs ] else [ squashfsTools ])
     ++ stdenv.initialPath);
 
   basePaths = [
@@ -185,11 +186,13 @@ let format' = format; in let
     ''}
 
     ${if mutable then ''
-      mkfs.ext4 -b ${blockSize} -F $out/img
+      mkfs.ext4 -b ${blockSize} ${lib.strings.concatMap (x: x + " ") options} -F $out/img
       cptofs -t ext4 -i $out $root/* / ||
         (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
     '' else ''
-      mksquashfs $root $out/img -noappend -comp lz4 -Xhc
+      mkfs.cramfs -b ${blockSize} ${lib.strings.concatMap (x: x + " ") options} $out/img
+      cptofs -t cramfs -i $out $root/* / ||
+        (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
     ''}
   '';
 
@@ -205,7 +208,7 @@ let format' = format; in let
   '';
 in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   preVM = prepareImage;
-  buildInputs = with pkgs; [ util-linux e2fsprogs dosfstools squashfsTools ];
+  buildInputs = with pkgs; [ util-linux e2fsprogs dosfstools ];
   postVM = moveImage + postVM;
   memSize = 1024 * 8;
 } ''
@@ -245,8 +248,7 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   mountPoint=/mnt
   mkdir $mountPoint
 
-  ${if mutable then "mount $rootDisk $mountPoint"
-  else "unsquashfs -dest $mountPoint $rootDisk"}
+  mount $rootDisk $mountPoint
 
   chown -R root $mountPoint
 
@@ -307,9 +309,5 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
     printf "  Disk image size: %d bytes\n" $diskSize
   ''}
 
-  ${if mutable then "umount -R /mnt"
-  else ''
-    rm $rootDisk
-    mksquashfs $mountPoint $rootDisk -noappend -comp lz4 -Xhc
-  ''}
+  umount -R /mnt
 '')

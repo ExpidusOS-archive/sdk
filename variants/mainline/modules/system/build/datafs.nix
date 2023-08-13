@@ -5,7 +5,7 @@ let
 
   datafs = import ../../../lib/make-datafs.nix {
     inherit config lib pkgs;
-    inherit (cfg) mutable additionalSpace diskSize;
+    inherit (cfg) mutable additionalSpace diskSize options;
   };
 in
 {
@@ -20,6 +20,11 @@ in
         type = types.str;
         default = "auto";
         description = mdDoc "The size to allocate for the disk image, auto to automatically allocate.";
+      };
+      options = mkOption {
+        type = with types; listOf str;
+        default = [];
+        description = mdDoc "The arguments to pass to mkfs";
       };
       additionalSpace = mkOption {
         type = types.str;

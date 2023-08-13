@@ -161,11 +161,11 @@ let format' = format; in let
         truncate -s ${toString diskSize} $diskImage
       ''}
 
-      mkfs.ext4 -b ${blockSize} -F $diskImage
+      mkfs.ext4 -b ${blockSize} ${lib.strings.concatMap (x: x + " ") options} -F $diskImage
       cptofs -t ext4 -i $diskImage $root/* / ||
         (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
     '' else ''
-      mksquashfs $root $diskImage -b ${blockSize}
+      mksquashfs $root $diskImage ${lib.strings.concatMap (x: x + " ") options} -b ${blockSize}
     ''}
   '';
 
