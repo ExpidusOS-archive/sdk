@@ -56,6 +56,7 @@ in
   ./system/build/activation.nix
   ./system/build/bootspec.nix
   ./system/build/datafs.nix
+  ./system/build/disk-archive.nix
   ./system/build/efipart.nix
   ./system/build/etc.nix
   ./system/build/rootfs.nix
