@@ -52,7 +52,9 @@ in
   ./system/boot/modprobe.nix
   ./system/boot/stage-2.nix
   (nixpkgsImport ./system/boot/systemd.nix)
+  ./system/build/activatable-system.nix
   ./system/build/activation.nix
+  ./system/build/bootspec.nix
   ./system/build/datafs.nix
   ./system/build/efipart.nix
   ./system/build/etc.nix
@@ -151,6 +153,7 @@ in
   "${nixpkgs}/nixos/modules/services/x11/desktop-managers/default.nix"
   "${nixpkgs}/nixos/modules/services/x11/display-managers/default.nix"
   "${nixpkgs}/nixos/modules/services/x11/window-managers/default.nix"
+  "${nixpkgs}/nixos/modules/system/activation/specialisation.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/coredump.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/initrd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/homed.nix")

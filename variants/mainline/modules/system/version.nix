@@ -54,6 +54,16 @@ in
         default = expidus.trivial.release;
         description = mdDoc "The ExpidusOS release";
       };
+      label = mkOption {
+        type = types.strMatching "[a-zA-Z0-9:_\\.-]*";
+        description = mdDoc "The generated boot label";
+      };
+      codeName = mkOption {
+        internal = true;
+        type = types.str;
+        default = "Willamette";
+        description = mdDoc "The ExpidusOS codename";
+      };
       versionSuffix = mkOption {
         internal = true;
         type = types.str;
@@ -94,6 +104,25 @@ in
         default = "mainline";
         description = mdDoc "A lower-case string identifying a specific variant or edition of the OS";
       };
+      tags = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = [ "with-xen" ];
+        description = lib.mdDoc ''
+          Strings to prefix to the default
+          {option}`system.expidus.label`.
+
+          Useful for not loosing track of configurations built with
+          different options, e.g.:
+
+          ```
+          {
+            system.expidus.tags = [ "with-xen" ];
+            virtualisation.xen.enable = true;
+          }
+          ```
+        '';
+      };
     };
 
     system.stateVersion = mkOption {
@@ -113,6 +142,8 @@ in
       };
       "os-release".text = attrsToText osReleaseContents;
     };
+
+    system.expidus.label = mkDefault (concatStringsSep "-" ((sort (x: y: x < y) cfg.tags) ++ [ cfg.version ]));
   };
 
   meta.buildDocsInSandbox = false;

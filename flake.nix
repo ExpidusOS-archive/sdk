@@ -135,7 +135,7 @@
                 };
               };
 
-              system.rootfs.options = [ "-n EXPIDUS_ROOT" ];
+              system.rootfs.options = [ "-L EXPIDUS_ROOT" ];
               system.datafs.options = [ "-L EXPIDUS_DATA" ];
 
               boot = {

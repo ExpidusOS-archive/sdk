@@ -41,6 +41,7 @@ let format' = format; in let
     nix
     lkl
     e2fsprogs
+    erofs-utils
   ]
     ++ stdenv.initialPath);
 
@@ -87,7 +88,7 @@ let format' = format; in let
     }
 
     mkdir $out
-    root="$PWD/root"
+    export root="$PWD/root"
     mkdir -p $root
 
     mkdir -p $root/{bin,boot,dev,home,lib,mnt,nix/store,opt,proc,root,run,sbin,sys,tmp,usr}
@@ -153,6 +154,16 @@ let format' = format; in let
       nix --extra-experimental-features nix-command copy --to $root --no-check-sigs ${concatStringsSep " " additionalPaths'}
     ''}
 
+    cp --no-preserve=ownership,mode -r $root "$out/root"
+
+    for path in $(find $root -type f -executable); do
+      rpath=$(echo $path | sed "s|$root|$out/root|g")
+      rm -rf "$rpath"
+      cp -r $path $rpath
+    done
+
+    export root="$out/root"
+
     ${if diskSize == "auto" then ''
       additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))
 
@@ -186,13 +197,11 @@ let format' = format; in let
     ''}
 
     ${if mutable then ''
-      mkfs.ext4 -b ${blockSize} ${lib.strings.concatMap (x: x + " ") options} -F $out/img
+      mkfs.ext4 -b ${blockSize} ${lib.concatMapStrings (x: x + " ") options} -F $out/img
       cptofs -t ext4 -i $out $root/* / ||
         (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
     '' else ''
-      mkfs.cramfs -b ${blockSize} ${lib.strings.concatMap (x: x + " ") options} $out/img
-      cptofs -t cramfs -i $out $root/* / ||
-        (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
+      mkfs.erofs ${lib.concatMapStrings (x: x + " ") options} $out/img $root
     ''}
   '';
 
@@ -208,7 +217,7 @@ let format' = format; in let
   '';
 in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   preVM = prepareImage;
-  buildInputs = with pkgs; [ util-linux e2fsprogs dosfstools ];
+  buildInputs = with pkgs; [ erofs-utils util-linux e2fsprogs dosfstools ];
   postVM = moveImage + postVM;
   memSize = 1024 * 8;
 } ''
@@ -248,7 +257,14 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   mountPoint=/mnt
   mkdir $mountPoint
 
-  mount $rootDisk $mountPoint
+  ${if mutable then ''
+    mount $rootDisk $mountPoint
+  '' else ''
+    mkdir /mnt-{upper,work}
+    mkdir /build
+    ln -s $out/root /build/root
+    mount -t overlay overlay -o lowerdir=$out/root,upperdir=/mnt-upper,workdir=/mnt-work $mountPoint
+  ''}
 
   chown -R root $mountPoint
 
@@ -309,5 +325,10 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
     printf "  Disk image size: %d bytes\n" $diskSize
   ''}
 
-  umount -R /mnt
+  ${if mutable then ''
+    umount -R $mountPoint
+  '' else ''
+    mkfs.erofs ${lib.concatMapStrings (x: x + " ") options} $rootDisk $mountPoint
+    umount -R $mountPoint
+  ''}
 '')
