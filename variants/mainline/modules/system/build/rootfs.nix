@@ -48,6 +48,6 @@ in
       inherit rootfs;
     };
 
-    boot.initrd.availableKernelModules = if cfg.mutable then [ "ext4" ] else [ "squashfs" ];
+    boot.initrd.availableKernelModules = if cfg.mutable then [ "ext4" ] else [ "erofs" ];
   };
 }

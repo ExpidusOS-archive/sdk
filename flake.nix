@@ -132,6 +132,7 @@
                 };
                 "/data" = {
                   device = "/dev/disk/by-label/EXPIDUS_DATA";
+                  neededForBoot = true;
                 };
               };
 
