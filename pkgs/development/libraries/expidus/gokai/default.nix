@@ -3,6 +3,7 @@
   fetchFromGitHub,
   fetchurl,
   targetPlatform,
+  flutter,
   runCommand,
   wayland-scanner,
   meson,
@@ -55,6 +56,7 @@ let
         cp $NIX_BUILD_TOP/source/libflutter_engine.so.$target $out/out/host_$target/libflutter_engine.so
         cp $NIX_BUILD_TOP/source/icudtl.dat $out/out/host_$target/icudtl.dat
         cp $NIX_BUILD_TOP/source/flutter_embedder.h $out/out/host_$target/flutter_embedder.h
+        ln -s ${flutter.dart} $out/out/host_$target/dart-sdk
       done
 
       mkdir -p $out/src
