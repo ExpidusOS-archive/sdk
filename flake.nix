@@ -118,6 +118,8 @@
               };
 
               programs.genesis.enable = true;
+              security.selinux.enable = true;
+              security.apparmor.enable = true;
               services.getty.autologinUser = "expidus";
             }];
           };
@@ -153,6 +155,8 @@
                 useNetworkd = false;
               };
 
+              security.selinux.enable = true;
+              security.apparmor.enable = true;
               programs.genesis.enable = true;
             }];
           };

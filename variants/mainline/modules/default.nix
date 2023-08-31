@@ -1,48 +1,10 @@
-{ nixpkgs, ... }:
-let
-  nixpkgsUtils = { lib, config, pkgs, ... }: import "${nixpkgs}/nixos/lib/utils.nix" { inherit lib config pkgs; };
-  nixpkgsImport = module: { config, lib, pkgs, ... }@args:
-    let
-      utils = nixpkgsUtils args;
-      _module = import module (args // {
-        inherit utils;
-      });
-    in _module // {
-      _file = module;
-      key = module;
-    };
-in
+{ nixpkgs, ... }@channels:
+with import ./utils.nix channels;
 [
-  ({ lib, ... }: {
-    disabledModules = [
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/xterm.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/phosh.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/xfce.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/plasma5.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/lumina.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/lxqt.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/enlightenment.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/gnome.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/retroarch.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/kodi.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/mate.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/pantheon.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/surf-display.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/cde.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/cinnamon.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/budgie.nix"
-      "${nixpkgs}/nixos/modules/services/x11/desktop-managers/deepin.nix"
-    ];
-
-    config = {
-      boot.tmp.useTmpfs = lib.mkForce true;
-
-      system.activationScripts.fonts = ''
-        mkdir -p /usr/share
-        ln -sf /run/current-system/sw/share/X11/fonts/ /usr/share/fonts
-      '';
-    };
-  })
+  ./defaults.nix
+  ./disabled.nix
+  ./security/lsm.nix
+  ./security/selinux.nix
   ./security/wrappers.nix
   ./services/desktops/genesis/default.nix
   ./services/ttys/getty.nix
