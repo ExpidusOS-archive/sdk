@@ -46,19 +46,22 @@ let
       mkdir $NIX_BUILD_TOP/source
       tar xvf $src -C $NIX_BUILD_TOP/source
 
-      mkdir -p $out/src/out/host_{release,debug,profile}
-      cp $NIX_BUILD_TOP/source/gen_snapshot_linux_*_profile $out/src/out/host_profile/gen_snapshot
-      cp $NIX_BUILD_TOP/source/gen_snapshot_linux_*_release $out/src/out/host_release/gen_snapshot
-      cp $NIX_BUILD_TOP/source/gen_snapshot_linux_*_release $out/src/out/host_debug/gen_snapshot
+      mkdir -p $out/out/host_{release,debug,profile}
+      cp $NIX_BUILD_TOP/source/gen_snapshot_linux_*_profile $out/out/host_profile/gen_snapshot
+      cp $NIX_BUILD_TOP/source/gen_snapshot_linux_*_release $out/out/host_release/gen_snapshot
+      cp $NIX_BUILD_TOP/source/gen_snapshot_linux_*_release $out/out/host_debug/gen_snapshot
 
       for target in profile debug release; do
-        cp $NIX_BUILD_TOP/source/libflutter_engine.so.$target $out/src/out/host_$target/libflutter_engine.so
-        cp $NIX_BUILD_TOP/source/icudtl.dat $out/src/out/host_$target/icudtl.dat
-        cp $NIX_BUILD_TOP/source/flutter_embedder.h $out/src/out/host_$target/flutter_embedder.h
+        cp $NIX_BUILD_TOP/source/libflutter_engine.so.$target $out/out/host_$target/libflutter_engine.so
+        cp $NIX_BUILD_TOP/source/icudtl.dat $out/out/host_$target/icudtl.dat
+        cp $NIX_BUILD_TOP/source/flutter_embedder.h $out/out/host_$target/flutter_embedder.h
       done
+
+      mkdir -p $out/src
+      ln -s $out/out $out/src/out
     '')
     {
-      "aarch64-generic" = lib.fakeHash;
+      "aarch64-generic" = "sha256-4F74ZvG05v6s/hat6f0OhRaRGPISqSO8Wk+8xUEof4E=";
     };
 
   flutter-engine = if pkgs.flutter-engine.meta.broken
