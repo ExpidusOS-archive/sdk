@@ -198,7 +198,7 @@ in
 
     security.wrapperDir = lib.mkOption {
       type        = lib.types.path;
-      default     = "/run/wrappers/bin";
+      default     = "/usr/libexec/wrappers/bin";
       internal    = true;
       description = lib.mdDoc ''
         This option defines the path to the wrapper programs. It
@@ -236,11 +236,6 @@ in
         umount = mkSetuidRoot "${lib.getBin pkgs.util-linux}/bin/umount";
       };
 
-    boot.specialFileSystems.${parentWrapperDir} = {
-      fsType = "tmpfs";
-      options = [ "nodev" "mode=755" "size=${config.security.wrapperDirSize}" ];
-    };
-
     # Make sure our wrapperDir exports to the PATH env variable when
     # initializing the shell
     environment.extraInit = ''
@@ -254,10 +249,36 @@ in
       ]}"
     '';
 
-    # TODO: put something in the initrd for this
+    system.activationScripts.wrappers =
+      lib.stringAfter [ "users" ]
+        ''
+          mkdir -p "${parentWrapperDir}"
+          chmod 755 "${parentWrapperDir}"
+
+          # We want to place the tmpdirs for the wrappers to the parent dir.
+          wrapperDir=$(mktemp --directory --tmpdir="${parentWrapperDir}" wrappers.XXXXXXXXXX)
+          chmod a+rx "$wrapperDir"
+
+          ${lib.concatStringsSep "\n" mkWrappedPrograms}
+
+          if [ -L ${wrapperDir} ]; then
+            # Atomically replace the symlink
+            # See https://axialcorps.com/2013/07/03/atomically-replacing-files-and-directories/
+            old=$(readlink -f ${wrapperDir})
+            if [ -e "${wrapperDir}-tmp" ]; then
+              rm --force --recursive "${wrapperDir}-tmp"
+            fi
+            ln --symbolic --force --no-dereference "$wrapperDir" "${wrapperDir}-tmp"
+            mv --no-target-directory "${wrapperDir}-tmp" "${wrapperDir}"
+            rm --force --recursive "$old"
+          else
+            # For initial setup
+            ln --symbolic "$wrapperDir" "${wrapperDir}"
+          fi
+        '';
 
     ###### wrappers consistency checks
-    system.extraDependencies = lib.singleton (pkgs.runCommandLocal
+    system.checks = lib.singleton (pkgs.runCommandLocal
       "ensure-all-wrappers-paths-exist" { }
       ''
         # make sure we produce output

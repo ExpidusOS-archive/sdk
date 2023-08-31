@@ -2,62 +2,47 @@
 with lib;
 let
   systemBuilder =
-    let
-      kernelPath = "${config.boot.kernelPackages.kernel}/" +
-        "${config.system.boot.loader.kernelFile}";
-    in ''
-      mkdir -p $out
-
-      ${optionalString config.boot.kernel.enable ''
-        if [ ! -f ${kernelPath} ]; then
-          echo "The bootloader cannot find the proper kernel image."
-          echo "(Expecting ${kernelPath})"
-          false
-        fi
-
-        ln -s ${kernelPath} $out/kernel
-        ln -s ${config.system.modulesTree} $out/kernel-modules
-        echo -n "$kernelParams" > $out/kernel-params
-        ${optionalString (config.hardware.deviceTree.package != null) ''
-          ln -s ${config.hardware.deviceTree.package} $out/dtbs
-        ''}
-
-        ln -s ${config.hardware.firmware}/lib/firmware $out/firmware
-      ''}
-
-      echo "$activationScript" > $out/activate
-      substituteInPlace $out/activate --subst-var out
-      chmod u+x $out/activate
-      unset activationScript
+    ''
+      mkdir $out
 
       ${if config.boot.initrd.systemd.enable then ''
         cp ${config.system.build.bootStage2} $out/prepare-root
         substituteInPlace $out/prepare-root --subst-var-by systemConfig $out
+        # This must not be a symlink or the abs_path of the grub builder for the tests
+        # will resolve the symlink and we end up with a path that doesn't point to a
+        # system closure.
         cp "$systemd/lib/systemd/systemd" $out/init
       '' else ''
         cp ${config.system.build.bootStage2} $out/init
         substituteInPlace $out/init --subst-var-by systemConfig $out
       ''}
 
-      echo -n "systemd ${toString config.systemd.package.interfaceVersion}" > $out/init-interface-version
-      echo -n "${config.boot.kernelPackages.stdenv.hostPlatform.system}" > $out/system
-
       ln -s ${config.system.build.etc}/etc $out/etc
       ln -s ${config.system.path} $out/sw
       ln -s "$systemd" $out/systemd
 
-      mkdir $out/bin
+      echo -n "systemd ${toString config.systemd.package.interfaceVersion}" > $out/init-interface-version
+      echo -n "${config.boot.kernelPackages.stdenv.hostPlatform.system}" > $out/system
 
       ${config.system.systemBuilderCommands}
-      echo -n "$extraDependencies" > $out/extra-dependencies
+
+      cp "$extraDependenciesPath" "$out/extra-dependencies"
+
+      ${optionalString (!config.boot.isContainer && config.boot.bootspec.enable) ''
+        ${config.boot.bootspec.writer}
+        ${optionalString config.boot.bootspec.enableValidation
+          ''${config.boot.bootspec.validator} "$out/${config.boot.bootspec.filename}"''}
+      ''}
+
       ${config.system.extraSystemBuilderCmds}
     '';
 
   baseSystem = pkgs.stdenvNoCC.mkDerivation ({
-    name = "expidus-system";
+    name = "expidus-system-${config.system.expidus.label}";
 
     preferLocalBuild = true;
     allowSubstitutes = false;
+    passAsFile = [ "extraDependencies" ];
     buildCommand = systemBuilder;
 
     inherit (pkgs) coreutils;
@@ -66,10 +51,14 @@ let
     su = "${pkgs.shadow.su}/bin/su";
     utillinux = pkgs.util-linux;
 
+    kernelParams = config.boot.kernelParams;
+    #installBootLoader = config.system.build.installBootLoader;
+    activationScript = config.system.activationScripts.script;
+
     inherit (config.system) extraDependencies;
 
-    kernelParams = config.boot.kernelParams;
-    activationScript = config.system.activationScripts.script;
+    # Needed by switch-to-configuration.
+    perl = pkgs.perl.withPackages (p: with p; [ ConfigIniFiles FileSlurp ]);
   } // config.system.systemBuilderArgs);
 
   failedAssertions = map (x: x.message) (filter (x: !x.assertion) config.assertions);
@@ -92,6 +81,15 @@ in
         type = types.str;
         description = lib.mdDoc ''
           Name of the kernel file to be passed to the bootloader.
+        '';
+      };
+
+      initrdFile = mkOption {
+        internal = true;
+        default = "initrd";
+        type = types.str;
+        description = lib.mdDoc ''
+          Name of the initrd file to be passed to the bootloader.
         '';
       };
     };
@@ -169,6 +167,18 @@ in
         name length, and ideally should have close-to-identical directory layout.
       '';
     };
+
+    checks = mkOption {
+      type = types.listOf types.package;
+      default = [];
+      description = lib.mdDoc ''
+        Packages that are added as dependencies of the system's build, usually
+        for the purpose of validating some part of the configuration.
+
+        Unlike `system.extraDependencies`, these store paths do not
+        become part of the built system configuration.
+      '';
+    };
   };
 
   config.system = {
@@ -181,7 +191,9 @@ in
       fi
     '';
 
-    systemBuilderArgs = lib.optionalAttrs (config.system.forbiddenDependenciesRegex != "") {
+    systemBuilderArgs = {
+      passedChecks = concatStringsSep " " config.system.checks;
+    } // lib.optionalAttrs (config.system.forbiddenDependenciesRegex != "") {
       inherit (config.system) forbiddenDependenciesRegex;
       closureInfo = pkgs.closureInfo { rootPaths = [
         # override to avoid  infinite recursion (and to allow using extraDependencies to add forbidden dependencies)

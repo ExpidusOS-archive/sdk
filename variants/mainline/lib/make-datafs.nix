@@ -1,5 +1,6 @@
 { pkgs,
   lib ? pkgs.lib,
+  options ? [],
   config,
   diskSize ? "auto",
   format ? "raw",
@@ -73,7 +74,7 @@ let format' = format; in let
 
     mkdir $out
     root="$PWD/root"
-    mkdir -p $root/{config,pkgs,users,var/{cache,db,lib,log}}
+    mkdir -p $root/{config,pkgs,users,var/{cache,db,lib,log,tmp}}
 
     ${optionalString config.system.vendorConfig.System.nix_daemon ''
       mkdir -p $root/nix/var/{log,nix}
@@ -161,11 +162,11 @@ let format' = format; in let
         truncate -s ${toString diskSize} $diskImage
       ''}
 
-      mkfs.ext4 -b ${blockSize} -F $diskImage
+      mkfs.ext4 -b ${blockSize} ${lib.concatMapStrings (x: x + " ") options} -F $diskImage
       cptofs -t ext4 -i $diskImage $root/* / ||
         (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
     '' else ''
-      mksquashfs $root $diskImage -b ${blockSize}
+      mksquashfs $root $diskImage ${lib.concatMapStrings (x: x + " ") options} -b ${blockSize}
     ''}
   '';
 

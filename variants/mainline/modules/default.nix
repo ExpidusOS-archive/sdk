@@ -1,27 +1,25 @@
-{ nixpkgs, ... }:
-let
-  nixpkgsUtils = { lib, config, pkgs, ... }: import "${nixpkgs}/nixos/lib/utils.nix" { inherit lib config pkgs; };
-  nixpkgsImport = module: { config, lib, pkgs, ... }@args:
-    let
-      utils = nixpkgsUtils args;
-      _module = import module (args // {
-        inherit utils;
-      });
-    in _module // {
-      _file = module;
-      key = module;
-    };
-in
+{ nixpkgs, ... }@channels:
+with import ./utils.nix channels;
 [
+  ./defaults.nix
+  ./disabled.nix
+  ./security/lsm.nix
+  ./security/selinux.nix
   ./security/wrappers.nix
+  ./services/desktops/genesis/default.nix
   ./services/ttys/getty.nix
-  ./services/x11/xserver.nix
+  (nixpkgsImport ./services/x11/xserver.nix)
+  (nixpkgsImport ./system/boot/systemd/tmpfiles.nix)
   (nixpkgsImport ./system/boot/initrd.nix)
   ./system/boot/modprobe.nix
   ./system/boot/stage-2.nix
   (nixpkgsImport ./system/boot/systemd.nix)
+  ./system/build/activatable-system.nix
   ./system/build/activation.nix
+  ./system/build/bootspec.nix
   ./system/build/datafs.nix
+  ./system/build/disk-archive.nix
+  ./system/build/efipart.nix
   ./system/build/etc.nix
   ./system/build/rootfs.nix
   ./system/build/system-path.nix
@@ -32,9 +30,16 @@ in
   (nixpkgsImport ./tasks/network-interfaces.nix)
   ./virtualisation/nixos-containers.nix
   "${nixpkgs}/nixos/modules/config/fonts/fontconfig.nix"
+  "${nixpkgs}/nixos/modules/config/fonts/fontdir.nix"
   "${nixpkgs}/nixos/modules/config/fonts/ghostscript.nix"
   "${nixpkgs}/nixos/modules/config/fonts/packages.nix"
   "${nixpkgs}/nixos/modules/config/krb5/default.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/portals/wlr.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/autostart.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/icons.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/menus.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/mime.nix"
+  "${nixpkgs}/nixos/modules/config/xdg/portal.nix"
   "${nixpkgs}/nixos/modules/config/console.nix"
   "${nixpkgs}/nixos/modules/config/i18n.nix"
   "${nixpkgs}/nixos/modules/config/iproute2.nix"
@@ -58,6 +63,7 @@ in
   "${nixpkgs}/nixos/modules/hardware/device-tree.nix"
   "${nixpkgs}/nixos/modules/hardware/opengl.nix"
   "${nixpkgs}/nixos/modules/hardware/uinput.nix"
+  "${nixpkgs}/nixos/modules/services/hardware/upower.nix"
   "${nixpkgs}/nixos/modules/misc/assertions.nix"
   "${nixpkgs}/nixos/modules/misc/ids.nix"
   "${nixpkgs}/nixos/modules/misc/lib.nix"
@@ -71,6 +77,8 @@ in
   "${nixpkgs}/nixos/modules/programs/less.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/programs/shadow.nix")
   "${nixpkgs}/nixos/modules/programs/ssh.nix"
+  "${nixpkgs}/nixos/modules/programs/xwayland.nix"
+  "${nixpkgs}/nixos/modules/security/audit.nix"
   "${nixpkgs}/nixos/modules/security/apparmor.nix"
   "${nixpkgs}/nixos/modules/security/oath.nix"
   "${nixpkgs}/nixos/modules/security/pam_mount.nix"
@@ -80,7 +88,9 @@ in
   "${nixpkgs}/nixos/modules/security/rtkit.nix"
   "${nixpkgs}/nixos/modules/security/sudo.nix"
   "${nixpkgs}/nixos/modules/services/audio/alsa.nix"
+  "${nixpkgs}/nixos/modules/services/desktops/accountsservice.nix"
   "${nixpkgs}/nixos/modules/services/desktops/geoclue2.nix"
+  "${nixpkgs}/nixos/modules/services/hardware/acpid.nix"
   "${nixpkgs}/nixos/modules/services/hardware/actkbd.nix"
   "${nixpkgs}/nixos/modules/services/hardware/bluetooth.nix"
   "${nixpkgs}/nixos/modules/services/hardware/udev.nix"
@@ -91,6 +101,7 @@ in
   "${nixpkgs}/nixos/modules/services/networking/ssh/sshd.nix"
   "${nixpkgs}/nixos/modules/services/networking/avahi-daemon.nix"
   "${nixpkgs}/nixos/modules/services/networking/dhcpcd.nix"
+  "${nixpkgs}/nixos/modules/services/networking/dnsmasq.nix"
   "${nixpkgs}/nixos/modules/services/networking/firewall.nix"
   "${nixpkgs}/nixos/modules/services/networking/nftables.nix"
   "${nixpkgs}/nixos/modules/services/networking/iwd.nix"
@@ -102,6 +113,10 @@ in
   "${nixpkgs}/nixos/modules/services/security/kanidm.nix"
   "${nixpkgs}/nixos/modules/services/system/dbus.nix"
   "${nixpkgs}/nixos/modules/services/system/nscd.nix"
+  "${nixpkgs}/nixos/modules/services/x11/desktop-managers/default.nix"
+  "${nixpkgs}/nixos/modules/services/x11/display-managers/default.nix"
+  "${nixpkgs}/nixos/modules/services/x11/window-managers/default.nix"
+  "${nixpkgs}/nixos/modules/system/activation/specialisation.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/coredump.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/initrd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/homed.nix")
@@ -110,7 +125,6 @@ in
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/nspawn.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/oomd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/shutdown.nix")
-  (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/tmpfiles.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/user.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd/userdbd.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/system/boot/systemd.nix")
@@ -119,6 +133,7 @@ in
   "${nixpkgs}/nixos/modules/system/boot/kernel_config.nix"
   "${nixpkgs}/nixos/modules/system/boot/plymouth.nix"
   "${nixpkgs}/nixos/modules/system/boot/resolved.nix"
+  "${nixpkgs}/nixos/modules/system/boot/tmp.nix"
   "${nixpkgs}/nixos/modules/system/etc/etc.nix"
   (nixpkgsImport "${nixpkgs}/nixos/modules/tasks/filesystems.nix")
   (nixpkgsImport "${nixpkgs}/nixos/modules/tasks/network-interfaces-scripted.nix")

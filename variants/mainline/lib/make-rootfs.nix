@@ -1,9 +1,10 @@
 { pkgs,
   lib ? pkgs.lib,
+  options ? [],
   config,
   diskSize ? "auto",
   format ? "raw",
-  additionalSpace ? "512M",
+  additionalSpace ? "1G",
   additionalPaths ? [],
   contents ? [],
   postVM ? "",
@@ -39,8 +40,9 @@ let format' = format; in let
     rsync
     nix
     lkl
+    e2fsprogs
+    erofs-utils
   ]
-    ++ (if mutable then [ e2fsprogs ] else [ squashfsTools ])
     ++ stdenv.initialPath);
 
   basePaths = [
@@ -64,7 +66,7 @@ let format' = format; in let
     }
 
     sectorsToBytes() {
-      echo $(( "$1" * 512  ))
+      echo $(( "$1" * 512 ))
     }
 
     # Given lines of numbers, adds them together
@@ -86,7 +88,7 @@ let format' = format; in let
     }
 
     mkdir $out
-    root="$PWD/root"
+    export root="$PWD/root"
     mkdir -p $root
 
     mkdir -p $root/{bin,boot,dev,home,lib,mnt,nix/store,opt,proc,root,run,sbin,sys,tmp,usr}
@@ -152,6 +154,16 @@ let format' = format; in let
       nix --extra-experimental-features nix-command copy --to $root --no-check-sigs ${concatStringsSep " " additionalPaths'}
     ''}
 
+    cp --no-preserve=ownership,mode -r $root "$out/root"
+
+    for path in $(find $root -type f -executable); do
+      rpath=$(echo $path | sed "s|$root|$out/root|g")
+      rm -rf "$rpath"
+      cp -r $path $rpath
+    done
+
+    export root="$out/root"
+
     ${if diskSize == "auto" then ''
       additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))
 
@@ -185,11 +197,11 @@ let format' = format; in let
     ''}
 
     ${if mutable then ''
-      mkfs.ext4 -b ${blockSize} -F $out/img
+      mkfs.ext4 -b ${blockSize} ${lib.concatMapStrings (x: x + " ") options} -F $out/img
       cptofs -t ext4 -i $out $root/* / ||
         (echo >&2 "ERROR: cptofs failed. diskSize might be too small for closure."; exit 1)
     '' else ''
-      mksquashfs $root $out/img -noappend -comp lz4 -Xhc
+      mkfs.erofs ${lib.concatMapStrings (x: x + " ") options} $out/img $root
     ''}
   '';
 
@@ -205,9 +217,9 @@ let format' = format; in let
   '';
 in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   preVM = prepareImage;
-  buildInputs = with pkgs; [ util-linux e2fsprogs dosfstools squashfsTools ];
+  buildInputs = with pkgs; [ erofs-utils util-linux e2fsprogs dosfstools ];
   postVM = moveImage + postVM;
-  memSize = 1024 * 2;
+  memSize = 1024 * 8;
 } ''
   export PATH=${binPath}:$PATH
 
@@ -217,7 +229,7 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   }
 
   sectorsToBytes() {
-    echo $(( "$1" * 512  ))
+    echo $(( "$1" * 512 ))
   }
 
   # Given lines of numbers, adds them together
@@ -245,8 +257,16 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   mountPoint=/mnt
   mkdir $mountPoint
 
-  ${if mutable then "mount $rootDisk $mountPoint"
-  else "unsquashfs -dest $mountPoint $rootDisk"}
+  ${if mutable then ''
+    mount $rootDisk $mountPoint
+  '' else ''
+    mkdir /mnt-{upper,work}
+    mkdir /build
+    ln -s $out/root /build/root
+    mount -t overlay overlay -o lowerdir=$out/root,upperdir=/mnt-upper,workdir=/mnt-work $mountPoint
+  ''}
+
+  chown -R root $mountPoint
 
   targets_=(${concatStringsSep " " targets})
   users_=(${concatStringsSep " " users})
@@ -272,6 +292,8 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   cp -r ${config.system.build.etc.outPath}/etc $mountPoint/etc/static
   # TODO: remove any already existing file from /etc/static
   # FIXME: out-of-space issues with immutable rootfs
+  rm -rf $mountPoint/nix/store/.links
+  rm -rf $mountPoint/nix/var
 
   ${optionalString (diskSize == "auto") ''
     additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))
@@ -303,6 +325,10 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
     printf "  Disk image size: %d bytes\n" $diskSize
   ''}
 
-  ${if mutable then "umount -R /mnt"
-  else "mksquashfs $mountPoint $rootDisk -noappend -comp lz4 -Xhc"}
+  ${if mutable then ''
+    umount -R $mountPoint
+  '' else ''
+    mkfs.erofs ${lib.concatMapStrings (x: x + " ") options} $rootDisk $mountPoint
+    umount -R $mountPoint
+  ''}
 '')

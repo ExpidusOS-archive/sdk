@@ -5,7 +5,7 @@ let
 
   datafs = import ../../../lib/make-datafs.nix {
     inherit config lib pkgs;
-    inherit (cfg) mutable additionalSpace diskSize;
+    inherit (cfg) mutable additionalSpace diskSize options;
   };
 in
 {
@@ -21,6 +21,11 @@ in
         default = "auto";
         description = mdDoc "The size to allocate for the disk image, auto to automatically allocate.";
       };
+      options = mkOption {
+        type = with types; listOf str;
+        default = [];
+        description = mdDoc "The arguments to pass to mkfs";
+      };
       additionalSpace = mkOption {
         type = types.str;
         default = "512M";
@@ -34,6 +39,9 @@ in
       inherit datafs;
     };
 
-    boot.initrd.availableKernelModules = if cfg.mutable then [ "ext4" ] else [ "squashfs" ];
+    boot.initrd = rec {
+      availableKernelModules = if cfg.mutable then [ "ext4" ] else [ "squashfs" ];
+      kernelModules = availableKernelModules;
+    };
   };
 }

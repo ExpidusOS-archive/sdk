@@ -48,6 +48,7 @@ mount --bind /data/var/cache /var/cache
 mount --bind /data/var/db /var/db
 mount --bind /data/var/lib /var/lib
 mount --bind /data/var/log /var/log
+mount --bind /data/var/tmp /var/tmp
 mount --bind /data/users /home
 
 # TODO: manage Nix store
