@@ -1,4 +1,4 @@
-{ lib, fetchFromGitHub, flutter, pkg-config, expidus }:
+{ lib, fetchFromGitHub, runCommand, flutter, pkg-config, expidus }@pkgs:
 let
   rev = "82aa28024ec804777a1b9469badd5b88fecc3f79";
 in
@@ -18,6 +18,11 @@ flutter.buildFlutterApplication {
 
   nativeBuildInputs = [
     pkg-config
+  ];
+
+  flutterBuildFlags = [
+    "--local-engine=${expidus.gokai.flutter-engine}/out/host_release"
+    "--local-engine-src-path=${expidus.gokai.flutter}"
   ];
 
   buildInputs = [
