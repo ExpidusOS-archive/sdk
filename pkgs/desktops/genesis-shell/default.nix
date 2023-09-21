@@ -22,7 +22,7 @@ flutter.buildFlutterApplication {
 
   flutterBuildFlags = [
     "--local-engine=${expidus.gokai.flutter-engine}/out/host_release"
-    "--local-engine-src-path=${expidus.gokai.flutter}"
+    "--local-engine-src-path=${expidus.gokai.flutter-engine}"
   ];
 
   buildInputs = [
