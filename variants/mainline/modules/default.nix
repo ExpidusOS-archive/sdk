@@ -1,6 +1,9 @@
 { nixpkgs, ... }@channels:
 with import ./utils.nix channels;
 [
+  {
+    _module.args.utils = nixpkgsUtils;
+  }
   ./defaults.nix
   ./disabled.nix
   ./security/lsm.nix
@@ -94,7 +97,7 @@ with import ./utils.nix channels;
   "${nixpkgs}/nixos/modules/services/hardware/actkbd.nix"
   "${nixpkgs}/nixos/modules/services/hardware/bluetooth.nix"
   "${nixpkgs}/nixos/modules/services/hardware/udev.nix"
-  "${nixpkgs}/nixos/modules/services/logging/logrotate.nix"
+  (nixpkgsImport "${nixpkgs}/nixos/modules/services/logging/logrotate.nix")
   "${nixpkgs}/nixos/modules/services/logging/rsyslogd.nix"
   "${nixpkgs}/nixos/modules/services/logging/syslog-ng.nix"
   "${nixpkgs}/nixos/modules/services/misc/sssd.nix"
