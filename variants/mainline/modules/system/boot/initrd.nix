@@ -274,6 +274,7 @@ let
     inherit (config.boot) resumeDevice;
     inherit (config.system.expidus) distroName;
     inherit (config.system.build) earlyMountScript;
+    inherit (config.security) wrapperDir;
 
     inherit (config.boot.initrd) checkJournalingFS verbose
       preLVMCommands preDeviceCommands postDeviceCommands

@@ -524,6 +524,7 @@ mount --move /run $targetRoot/run
 
 ln -s $currentSystem $targetRoot/run/booted-system
 ln -s $currentSystem $targetRoot/run/current-system
+ln -s $wrapperDir /run/wrappers
 
 exec env -i $(type -P switch_root) "$targetRoot" "$stage2Init"
 fail # should never be reached

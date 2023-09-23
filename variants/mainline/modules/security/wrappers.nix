@@ -244,7 +244,7 @@ in
     '';
 
     security.apparmor.includes = lib.mapAttrs' (wrapName: wrap: lib.nameValuePair
-      "nixos/security.wrappers/${wrapName}" ''
+      "expidus/security.wrappers/${wrapName}" ''
         include "${pkgs.apparmorRulesFromClosure { name="security.wrappers.${wrapName}"; } [
           (securityWrapper wrap.source)
         ]}"
