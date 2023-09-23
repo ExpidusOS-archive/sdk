@@ -244,12 +244,12 @@ in
     '';
 
     security.apparmor.includes = lib.mapAttrs' (wrapName: wrap: lib.nameValuePair
-     "nixos/security.wrappers/${wrapName}" ''
-      include "${pkgs.apparmorRulesFromClosure { name="security.wrappers.${wrapName}"; } [
-        (securityWrapper wrap.source)
-      ]}"
-      mrpx ${wrap.source},
-    '') wrappers;
+      "nixos/security.wrappers/${wrapName}" ''
+        include "${pkgs.apparmorRulesFromClosure { name="security.wrappers.${wrapName}"; } [
+          (securityWrapper wrap.source)
+        ]}"
+        mrpx ${wrap.source},
+      '') wrappers;
 
     system.activationScripts.wrappers =
       lib.stringAfter [ "users" ]
