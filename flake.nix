@@ -120,6 +120,7 @@
               programs.genesis.enable = true;
               security.selinux.enable = true;
               security.apparmor.enable = true;
+              services.dbus.apparmor = "enabled";
               services.getty.autologinUser = "expidus";
             }];
           };
@@ -157,6 +158,7 @@
 
               security.selinux.enable = true;
               security.apparmor.enable = true;
+              services.dbus.apparmor = "enabled";
               programs.genesis.enable = true;
             }];
           };

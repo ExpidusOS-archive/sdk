@@ -229,6 +229,9 @@ checkFS() {
   # Don't check ROM filesystems.
   if [ "$fsType" = iso9660 -o "$fsType" = udf ]; then return 0; fi
 
+  # Don't check EROFS
+  if [ "$fsType" = erofs ]; then return 0; fi
+
   # Don't check resilient COWs as they validate the fs structures at mount time
   if [ "$fsType" = btrfs -o "$fsType" = zfs -o "$fsType" = bcachefs ]; then return 0; fi
 
