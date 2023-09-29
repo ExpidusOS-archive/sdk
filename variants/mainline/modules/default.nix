@@ -28,7 +28,7 @@ with import ./utils.nix channels;
   ./system/build/system-path.nix
   ./system/build/toplevel.nix
   ./system/tools/default.nix
-  ./system/vendor-config.nix
+  ./system/config.nix
   ./system/version.nix
   (nixpkgsImport ./tasks/network-interfaces.nix)
   ./virtualisation/nixos-containers.nix

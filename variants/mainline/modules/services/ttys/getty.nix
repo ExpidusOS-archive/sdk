@@ -121,7 +121,7 @@ in
 
     environment.etc.issue = mkDefault {
       source = pkgs.writeText "issue" ''
-        [1;32m${config.services.getty.greetingLine}[0m
+        ^[[1;32m${config.services.getty.greetingLine}^[[0m
         ${config.services.getty.helpLine}
       '';
     };

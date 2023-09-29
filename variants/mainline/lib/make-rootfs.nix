@@ -98,7 +98,11 @@ let format' = format; in let
     mkdir -m 0755 -p $root/etc
     touch $root/etc/EXPIDUS
 
+    mkdir $root/etc/NetworkManager
+
     ln -s /data/config/machine-id $root/etc/machine-id
+    ln -s /data/config/resolv.conf $root/etc/resolv.conf
+    ln -s /data/config/networks $root/etc/NetworkManager/system-connections
     ln -s /data/var/cache $root/var/cache
     ln -s /data/var/db $root/var/db
     ln -s /data/var/lib $root/var/lib
