@@ -77,7 +77,7 @@ in
   };
 
   config = {
-    services.getty.greetingLine = mkDefault ''<<< Welcome to ${config.system.expidus.distroId} (\m) - \l >>>'';
+    services.getty.greetingLine = mkDefault ''<<< Welcome to ${config.system.expidus.distroName} ${config.system.expidus.codeName} ${config.system.expidus.version} (${config.system.expidus.variantName}, \m) - \l >>>'';
 
     systemd.services = {
       "getty@" = {
@@ -121,8 +121,10 @@ in
 
     environment.etc.issue = mkDefault {
       source = pkgs.writeText "issue" ''
-        ^[[1;32m${config.services.getty.greetingLine}^[[0m
+
+        \e[1;32m${config.services.getty.greetingLine}\e[0m
         ${config.services.getty.helpLine}
+
       '';
     };
   };

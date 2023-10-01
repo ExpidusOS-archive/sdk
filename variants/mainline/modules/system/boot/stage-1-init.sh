@@ -6,7 +6,7 @@ verbose="@verbose@"
 
 info() {
   if [[ -n "$verbose" ]]; then
-    echo "$@"
+    echo -e "$@"
   fi
 }
 
@@ -61,7 +61,7 @@ EOF
 trap 'fail' 0
 
 info
-info "[1;32m<<< @distroName@ Stage 1 >>>[0m"
+info "\033[1;32m<<< @distroName@ Stage 1 >>>\033[0m"
 info
 
 mkdir -p /etc/udev
