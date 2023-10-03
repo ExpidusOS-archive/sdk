@@ -1,6 +1,6 @@
 { lib, fetchFromGitHub, stdenv, zig }:
 let
-  rev = "f6c1a6348e8d006c3cb5fe9f035054b15d0a9ed8";
+  rev = "956c299546ce3c30d15a4d67404839182b701742";
 in
 stdenv.mkDerivation {
   pname = "expidus-config";
@@ -10,7 +10,7 @@ stdenv.mkDerivation {
     owner = "ExpidusOS";
     repo = "config";
     inherit rev;
-    hash = "sha256-4CBDOHCx+++u2frVRQJ28rr0rLtkiaFQ97178dv8nCo=";
+    hash = "sha256-fie2J9Dnejm6vBhu9q9LzlLtcSIy2PxTHMC1l93JuVg=";
   };
 
   nativeBuildInputs = [ zig ];

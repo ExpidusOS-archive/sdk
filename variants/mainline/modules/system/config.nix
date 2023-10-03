@@ -8,6 +8,8 @@ with lib;
     '';
     default = {
       hostname = config.networking.hostName;
+      locale = config.i18n.defaultLocale;
+      timezone = config.time.timeZone or "America/Los_Angeles";
     };
   };
 
