@@ -104,6 +104,11 @@ let
         copy_bin_and_libs ${pkgs.zfs}/bin/mount.zfs
       ''}
 
+      # Copy filesystem check tools.
+      copy_bin_and_libs ${pkgs.e2fsprogs}/bin/e2fsck
+      copy_bin_and_libs ${pkgs.e2fsprogs}/bin/fsck.ext4
+      copy_bin_and_libs ${pkgs.erofs-utils}/bin/fsck.erofs
+
       # Copy some util-linux stuff.
       copy_bin_and_libs ${pkgs.util-linux}/sbin/blkid
 
@@ -274,6 +279,7 @@ let
     inherit (config.boot) resumeDevice;
     inherit (config.system.expidus) distroName;
     inherit (config.system.build) earlyMountScript;
+    inherit (config.security) wrapperDir;
 
     inherit (config.boot.initrd) checkJournalingFS verbose
       preLVMCommands preDeviceCommands postDeviceCommands

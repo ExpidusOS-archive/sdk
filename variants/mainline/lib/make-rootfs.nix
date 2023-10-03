@@ -91,10 +91,24 @@ let format' = format; in let
     export root="$PWD/root"
     mkdir -p $root
 
-    mkdir -p $root/{bin,boot,dev,home,lib,mnt,nix/store,opt,proc,root,run,sbin,sys,tmp,usr}
-    mkdir -p $root/var/{cache,db,empty,lib,log,lock,spool,tmp}
+    mkdir -p $root/{bin,boot,dev,lib,mnt,nix/store,opt,proc,root,run,sbin,sys,tmp,usr}
+    mkdir -p $root/var/{empty,lock,spool}
     mkdir -p $root/data
 
+    mkdir -m 0755 -p $root/etc
+    touch $root/etc/EXPIDUS
+
+    mkdir $root/etc/NetworkManager
+
+    ln -s /data/config/machine-id $root/etc/machine-id
+    ln -s /data/config/resolv.conf $root/etc/resolv.conf
+    ln -s /data/config/networks $root/etc/NetworkManager/system-connections
+    ln -s /data/var/cache $root/var/cache
+    ln -s /data/var/db $root/var/db
+    ln -s /data/var/lib $root/var/lib
+    ln -s /data/var/log $root/var/log
+    ln -s /data/var/tmp $root/var/tmp
+    ln -s /data/users $root/home
     ln -s /run $root/var/run
 
     set -f
@@ -146,9 +160,6 @@ let format' = format; in let
       --system ${config.system.build.toplevel} \
       --no-channel-copy \
       --substituters ""
-
-    mkdir -m 0755 -p $root/etc
-    touch $root/etc/EXPIDUS
 
     ${optionalString (additionalPaths' != []) ''
       nix --extra-experimental-features nix-command copy --to $root --no-check-sigs ${concatStringsSep " " additionalPaths'}
@@ -266,7 +277,13 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
     mount -t overlay overlay -o lowerdir=$out/root,upperdir=/mnt-upper,workdir=/mnt-work $mountPoint
   ''}
 
+  mkdir -p /tmp/datafs
+  mkdir -p /tmp/datafs/users
+  mkdir -p /tmp/datafs/var/lib
+  mkdir -p /tmp/datafs/var/tmp
+
   chown -R root $mountPoint
+  mount --bind /tmp/datafs $mountPoint/data
 
   targets_=(${concatStringsSep " " targets})
   users_=(${concatStringsSep " " users})
@@ -294,6 +311,8 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
   # FIXME: out-of-space issues with immutable rootfs
   rm -rf $mountPoint/nix/store/.links
   rm -rf $mountPoint/nix/var
+
+  umount $mountPoint/data
 
   ${optionalString (diskSize == "auto") ''
     additionalSpace=$(($(numfmt --from=iec '${additionalSpace}')))

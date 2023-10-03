@@ -85,12 +85,12 @@ in
           User = "genesis";
           PAMName = "login";
 
-          TTYPath = "/dev/tty7";
+          TTYPath = "/dev/tty1";
           TTYReset = "yes";
           TTYVHangup = "yes";
           TTYVTDisallocate = "yes";
 
-          UtmpIdentifier = "tty7";
+          UtmpIdentifier = "tty1";
           UtmpMode = "user";
         };
       };

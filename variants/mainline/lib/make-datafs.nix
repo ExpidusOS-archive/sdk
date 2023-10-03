@@ -76,17 +76,10 @@ let format' = format; in let
     root="$PWD/root"
     mkdir -p $root/{config,pkgs,users,var/{cache,db,lib,log,tmp}}
 
-    ${optionalString config.system.vendorConfig.System.nix_daemon ''
-      mkdir -p $root/nix/var/{log,nix}
-    ''}
-
-    ${optionalString config.system.vendorConfig.System.nix_store ''
-      mkdir -p $root/nix/store
-    ''}
-
-    ${optionalString config.system.vendorConfig.VendorConfig.datafs ''
-      touch $root/data/vendor.conf
-    ''}
+    mkdir -m 0700 -p $root/config/networks
+    touch $root/config/machine-id
+    touch $root/config/resolv.conf
+    cp --no-preserve=mode,ownership ${config.system.build.systemConfig} $root/config/system.json
 
     set -f
     sources_=(${concatStringsSep " " sources})

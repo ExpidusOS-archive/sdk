@@ -6,7 +6,7 @@ verbose="@verbose@"
 
 info() {
   if [[ -n "$verbose" ]]; then
-    echo "$@"
+    echo -e "$@"
   fi
 }
 
@@ -61,7 +61,7 @@ EOF
 trap 'fail' 0
 
 info
-info "[1;32m<<< @distroName@ Stage 1 >>>[0m"
+info "\033[1;32m<<< @distroName@ Stage 1 >>>\033[0m"
 info
 
 mkdir -p /etc/udev
@@ -228,6 +228,9 @@ checkFS() {
 
   # Don't check ROM filesystems.
   if [ "$fsType" = iso9660 -o "$fsType" = udf ]; then return 0; fi
+
+  # Don't check EROFS
+  if [ "$fsType" = erofs ]; then return 0; fi
 
   # Don't check resilient COWs as they validate the fs structures at mount time
   if [ "$fsType" = btrfs -o "$fsType" = zfs -o "$fsType" = bcachefs ]; then return 0; fi
@@ -524,6 +527,7 @@ mount --move /run $targetRoot/run
 
 ln -s $currentSystem $targetRoot/run/booted-system
 ln -s $currentSystem $targetRoot/run/current-system
+ln -s $wrapperDir /run/wrappers
 
 exec env -i $(type -P switch_root) "$targetRoot" "$stage2Init"
 fail # should never be reached

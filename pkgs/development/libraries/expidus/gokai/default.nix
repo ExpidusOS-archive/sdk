@@ -34,7 +34,7 @@
   flutter-engine
 }@pkgs:
 let
-  rev = "6a11f0553efc79ed85199e7fa738718489b6a8dd";
+  rev = "37dd43cf87d0976af784257051686a9aad28574b";
 in
 stdenv.mkDerivation rec {
   pname = "gokai";
@@ -48,7 +48,7 @@ stdenv.mkDerivation rec {
     owner = "ExpidusOS";
     repo = "gokai";
     inherit rev;
-    sha256 = "sha256-tJXPCCgzAnbRTwPNT9pK0q7GlZErdMYihDIsIliv6mU=";
+    sha256 = "sha256-0bSldPyFyj2n4hIal5aEUkTj9KX3fvhm+6kVJ0ylZY0=";
   };
 
   passthru = {

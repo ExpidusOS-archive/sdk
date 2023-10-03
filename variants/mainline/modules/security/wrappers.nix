@@ -5,8 +5,8 @@ let
 
   parentWrapperDir = dirOf wrapperDir;
 
-  securityWrapper = pkgs.callPackage "${lib.expidus.channels.nixpkgs}/nixos/modules/security/wrappers/wrapper.nix" {
-    inherit parentWrapperDir;
+  securityWrapper = sourceProg: pkgs.callPackage "${lib.expidus.channels.nixpkgs}/nixos/modules/security/wrappers/wrapper.nix" {
+    inherit sourceProg;
   };
 
   fileModeType =
@@ -91,7 +91,7 @@ let
     , ...
     }:
     ''
-      cp ${securityWrapper}/bin/security-wrapper "$wrapperDir/${program}"
+      cp ${securityWrapper source}/bin/security-wrapper "$wrapperDir/${program}"
       echo -n "${source}" > "$wrapperDir/${program}.real"
 
       # Prevent races
@@ -119,7 +119,7 @@ let
     , ...
     }:
     ''
-      cp ${securityWrapper}/bin/security-wrapper "$wrapperDir/${program}"
+      cp ${securityWrapper source}/bin/security-wrapper "$wrapperDir/${program}"
       echo -n "${source}" > "$wrapperDir/${program}.real"
 
       # Prevent races
@@ -243,11 +243,13 @@ in
       export PATH="${wrapperDir}:$PATH"
     '';
 
-    security.apparmor.includes."expidus/security.wrappers" = ''
-      include "${pkgs.apparmorRulesFromClosure { name="security.wrappers"; } [
-        securityWrapper
-      ]}"
-    '';
+    security.apparmor.includes = lib.mapAttrs' (wrapName: wrap: lib.nameValuePair
+      "expidus/security.wrappers/${wrapName}" ''
+        include "${pkgs.apparmorRulesFromClosure { name="security.wrappers.${wrapName}"; } [
+          (securityWrapper wrap.source)
+        ]}"
+        mrpx ${wrap.source},
+      '') wrappers;
 
     system.activationScripts.wrappers =
       lib.stringAfter [ "users" ]
