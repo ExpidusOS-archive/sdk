@@ -9,7 +9,7 @@
   contents ? [],
   postVM ? "",
   mutable ? false,
-  name ? "expidus-rootfs"
+  name ? "${config.system.build.toplevel.name}-rootfs"
 }:
 assert (lib.assertMsg (lib.all
   (attrs: ((attrs.user  or null) == null)

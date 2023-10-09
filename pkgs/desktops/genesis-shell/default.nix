@@ -1,6 +1,6 @@
 { lib, fetchFromGitHub, runCommand, flutter, pkg-config, expidus }@pkgs:
 let
-  rev = "bb27f2ef05d3aa8c3250d06df94451dbcf795150";
+  rev = "cc0df545568a68265a44643ce7a568966a99a55d";
 in
 flutter.buildFlutterApplication {
   pname = "genesis-shell";
@@ -10,11 +10,11 @@ flutter.buildFlutterApplication {
     owner = "ExpidusOS";
     repo = "genesis";
     inherit rev;
-    sha256 = "sha256-M4rlp4QQsN+LX+q+tnFQVJ1NkbTC6p4xoXuB4FqBMwc=";
+    sha256 = "sha256-JE3RYL7zAkQSSDkBQxVKuwtVDHqURzN0RcyqQP3Kb58=";
   };
 
   depsListFile = ./deps.json;
-  vendorHash = "sha256-MFiWD7KGrjMga4SxGUNmUIh986xtXM1QjGRK83ENgmI=";
+  vendorHash = "sha256-1x4683cdTslj6udQKloqwGSs76fCoMSTQ4+aMDnMtPM=";
 
   nativeBuildInputs = [
     pkg-config
@@ -23,6 +23,7 @@ flutter.buildFlutterApplication {
   flutterBuildFlags = [
     "--local-engine=${expidus.gokai.flutter-engine}/out/host_release"
     "--local-engine-src-path=${expidus.gokai.flutter-engine}"
+    "--dart-define=COMMIT_HASH=${rev}"
   ];
 
   buildInputs = [

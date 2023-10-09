@@ -5,7 +5,7 @@
   format ? "raw",
   contents ? [],
   postVM ? "",
-  name ? "expidus-efipart"
+  name ? "${config.system.build.toplevel.name}-efipart"
 }:
 assert (lib.assertMsg (lib.all
   (attrs: ((attrs.user  or null) == null)

@@ -48,7 +48,7 @@
           };
 
           trivial = prev.trivial.extend (f: p: {
-            revision = "${self.rev or "diry"}";
+            revision = "${self.rev or "dirty"}";
           });
         });
       });
