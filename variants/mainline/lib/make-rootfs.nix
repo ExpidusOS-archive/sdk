@@ -96,9 +96,8 @@ let format' = format; in let
     mkdir -p $root/data
 
     mkdir -m 0755 -p $root/etc
+    mkdir -p $root/etc/NetworkManager/dispatcher.d
     touch $root/etc/EXPIDUS
-
-    mkdir $root/etc/NetworkManager
 
     ln -s /data/config/machine-id $root/etc/machine-id
     ln -s /data/config/resolv.conf $root/etc/resolv.conf
