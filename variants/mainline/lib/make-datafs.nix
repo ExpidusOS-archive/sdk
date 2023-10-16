@@ -83,7 +83,6 @@ let format' = format; in let
     mkdir -m 0700 -p $root/config/networks
     touch $root/config/machine-id
     touch $root/config/resolv.conf
-    cp --no-preserve=mode,ownership ${config.system.build.systemConfig} $root/config/system.json
 
     set -f
     sources_=(${concatStringsSep " " sources})

@@ -5,7 +5,7 @@ let
 
   efipart = import ../../../lib/make-efipart.nix {
     inherit config lib pkgs;
-    inherit (cfg) diskSize;
+    inherit (cfg) diskSize contents;
   };
 in
 {
@@ -15,6 +15,19 @@ in
       type = types.str;
       default = "512M";
       description = mdDoc "The size to allocate for the disk image, auto to automatically allocate.";
+    };
+    contents = mkOption {
+      example = literalExpression ''
+        [ { source = pkgs.memtest86 + "/memtest.bin";
+            target = "boot/memtest.bin";
+          }
+        ]
+      '';
+      default = [];
+      description = mdDoc ''
+        This option lists files to be copied to fixed locations in the
+        generated image.
+      '';
     };
     volume = mkOption {
       type = types.str;
