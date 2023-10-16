@@ -53,7 +53,7 @@ let format' = format; in let
     cp -r ${pkgs.refind}/share/refind/fonts $root/EFI/refind/fonts
 
     ${optionalString (config.boot.efi.populateRootfs == false) ''
-      cp ${config.system.build.kernel}/bzImage $root/EFI/expidus/vmlinuz
+      cp ${config.system.build.kernel}/${pkgs.stdenv.hostPlatform.linux-kernel.target} $root/EFI/expidus/vmlinuz
       cp ${config.system.build.initialRamdisk}/initrd $root/EFI/expidus/initramfs.img
     ''}
 
