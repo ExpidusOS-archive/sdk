@@ -5,7 +5,7 @@ let
 
   datafs = import ../../../lib/make-datafs.nix {
     inherit config lib pkgs;
-    inherit (cfg) mutable additionalSpace diskSize options;
+    inherit (cfg) mutable additionalSpace diskSize options contents;
   };
 in
 {
@@ -20,6 +20,19 @@ in
         type = types.str;
         default = "auto";
         description = mdDoc "The size to allocate for the disk image, auto to automatically allocate.";
+      };
+      contents = mkOption {
+        example = literalExpression ''
+          [ { source = pkgs.memtest86 + "/memtest.bin";
+              target = "boot/memtest.bin";
+            }
+          ]
+        '';
+        default = [];
+        description = mdDoc ''
+          This option lists files to be copied to fixed locations in the
+          generated image.
+        '';
       };
       options = mkOption {
         type = with types; listOf str;

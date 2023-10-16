@@ -8,7 +8,7 @@
   contents ? [],
   postVM ? "",
   mutable ? false,
-  name ? "expidus-datafs"
+  name ? "${config.system.build.toplevel.name}-datafs"
 }:
 assert (lib.assertMsg (lib.all
   (attrs: ((attrs.user  or null) == null)
@@ -76,10 +76,13 @@ let format' = format; in let
     root="$PWD/root"
     mkdir -p $root/{config,pkgs,users,var/{cache,db,lib,log,tmp}}
 
+    ${concatMapStrings (user: optionalString user.isNormalUser ''
+      mkdir -p $root/users/${user.name}
+    '') (attrValues config.users.users)}
+
     mkdir -m 0700 -p $root/config/networks
     touch $root/config/machine-id
     touch $root/config/resolv.conf
-    cp --no-preserve=mode,ownership ${config.system.build.systemConfig} $root/config/system.json
 
     set -f
     sources_=(${concatStringsSep " " sources})
@@ -210,9 +213,13 @@ in pkgs.vmTools.runInLinuxVM (pkgs.runCommand filename {
     group="''${groups_[$i]}"
 
     if [ -n "$user$group" ]; then
-      chroot $mountPoint chown -R "$user:$group" "/var/run/expidus/$target"
+      chroot $mountPoint chown -R "$user:$group" "/data/$target"
     fi
   done
+
+  ${concatMapStrings (user: optionalString user.isNormalUser ''
+    chroot "$mountPoint" chown -R ${user.name} /data/users/${user.name}
+  '') (attrValues config.users.users)}
 
   umount $mountPoint/data
   umount $mountPoint

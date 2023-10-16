@@ -83,6 +83,7 @@ with import ./utils.nix channels;
   "${nixpkgs}/nixos/modules/programs/xwayland.nix"
   "${nixpkgs}/nixos/modules/security/audit.nix"
   "${nixpkgs}/nixos/modules/security/apparmor.nix"
+  "${nixpkgs}/nixos/modules/security/ca.nix"
   "${nixpkgs}/nixos/modules/security/oath.nix"
   "${nixpkgs}/nixos/modules/security/pam_mount.nix"
   "${nixpkgs}/nixos/modules/security/pam_usb.nix"

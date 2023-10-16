@@ -1,4 +1,4 @@
-{ lib, fetchFromGitHub, stdenv, zig }:
+{ lib, fetchFromGitHub, targetPlatform, stdenv, zig }:
 let
   rev = "956c299546ce3c30d15a4d67404839182b701742";
 in
@@ -34,5 +34,6 @@ stdenv.mkDerivation {
     maintainers = with maintainers; [ RossComputerGuy ];
     platforms = platforms.linux;
     mainProgram = "expidus-config";
+    broken = targetPlatform.isAarch64;
   };
 }

@@ -5,7 +5,7 @@ let
 
   rootfs = import ../../../lib/make-rootfs.nix {
     inherit config lib pkgs;
-    inherit (cfg) mutable additionalSpace diskSize options;
+    inherit (cfg) mutable additionalSpace diskSize options contents;
     additionalPaths = cfg.storePaths;
   };
 in
@@ -26,6 +26,19 @@ in
         type = with types; listOf str;
         default = [];
         description = mdDoc "The arguments to pass to mkfs";
+      };
+      contents = mkOption {
+        example = literalExpression ''
+          [ { source = pkgs.memtest86 + "/memtest.bin";
+              target = "boot/memtest.bin";
+            }
+          ]
+        '';
+        default = [];
+        description = mdDoc ''
+          This option lists files to be copied to fixed locations in the
+          generated image.
+        '';
       };
       additionalSpace = mkOption {
         type = types.str;

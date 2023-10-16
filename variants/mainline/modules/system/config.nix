@@ -13,9 +13,15 @@ with lib;
     };
   };
 
-  config = {
+  config = mkIf (pkgs.targetPlatform.isAarch64 == false) {
     system.build.systemConfig = pkgs.writers.writeJSON "expidus-system.json" config.system.config;
     environment.etc."expidus/default-system.json".source = config.system.build.systemConfig;
     environment.systemPackages = with pkgs; [ expidus.config ];
+    system.datafs.contents = [
+      {
+        source = config.system.build.systemConfig;
+        target = "config/system.json";
+      }
+    ];
   };
 }
